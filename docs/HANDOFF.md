@@ -13,14 +13,14 @@ Only four files are added relative to the base:
 - `docs/C3_3_4_ADAPTER.md`
 - `docs/HANDOFF.md`
 
-The first three are the previously tested C3.3.4 implementation, unchanged for
-publication. This handoff is the fourth file. Existing source and trading logic
+The first three contain the C3.3.4 implementation and review fixes described below.
+This handoff is the fourth file. Existing base source and trading logic
 are unchanged. The main branch remains at the base commit.
 
 ## Verification
 
 Full offline regression repeated on 2026-10-19 in an isolated development copy:
-**459 tests passed, 0 failures, 0 errors**, including 22 new adapter tests and
+**467 tests passed, 0 failures, 0 errors**, including 30 new adapter tests and
 437 existing tests. Python 3.12.10 on Windows, using the existing local project
 dependencies. Test discovery: `python -m unittest discover -p "test_*.py"`.
 The sandbox run set Python's temporary directory to a writable isolated directory.
@@ -58,6 +58,17 @@ block D. The existing reasoner's legacy-role mismatch is not patched by this
 isolated addition. See `docs/C3_3_4_ADAPTER.md` for the exact API and semantics.
 
 ## Next step
+
+Review revision after `3cb20a90b468eeabea8cd9809409dd7d62c2c30d`:
+- Addressed backdated interpretation concern with explicit `post_event` versus
+  `pre_event_hypothesis` timing and interpretation generation/availability checks.
+- Addressed observation provenance concern by checking supported direct/nested
+  identity and time bindings, and explicitly recording inherited validator trust
+  when individual anchors are absent. This is not independent origin verification.
+- Added 8 targeted regression tests; full offline regression is now 467/467.
+- Only the same four feature files changed. No live integration or main update.
+- Status remains IMPLEMENTED / AWAITING INDEPENDENT REVIEW; the previous review
+  was CHANGES REQUESTED. These fixes require a new independent review.
 
 The independent reviewer should inspect the exact branch commit, review the
 contract, time logic, immutable scenario behavior and test coverage, and rerun

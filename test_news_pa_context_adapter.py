@@ -30,6 +30,78 @@ def explain(s, i=None, v=None, **kwargs):
 
 
 class NewsPAContextTests(unittest.TestCase):
+    def test_backdated_interpretation_rejected_with_or_without_own_event(self):
+        for explicit in [False, True]:
+            s, i, v = fixtures()
+            i["available_at_utc"] = "2026-10-09T17:59:00Z"
+            if explicit:
+                i["payload"]["event_time_utc"] = "2026-10-09T18:00:14Z"
+            self.assertEqual(explain(s, i, v)["news_context"]["reason"], "interpretation_precedes_event")
+
+    def test_interpretation_own_event_not_just_validation_anchor(self):
+        s, i, v = fixtures()
+        i["payload"]["event_time_utc"] = "2026-10-09T18:02:00Z"
+        self.assertEqual(explain(s, i, v)["news_context"]["reason"], "interpretation_precedes_event")
+
+    def test_explicit_pre_event_hypothesis_allowed_after_observation(self):
+        s, i, v = fixtures()
+        i.update(available_at_utc="2026-10-09T17:59:00Z", timing_mode="pre_event_hypothesis")
+        i["payload"]["event_time_utc"] = "2026-10-09T18:00:00Z"
+        original = copy.deepcopy((s, i, v))
+        result = explain(s, i, v)
+        self.assertEqual(result["news_context"]["relation"], "supports")
+        self.assertEqual(result["scenario"], s)
+        self.assertEqual((s, i, v), original)
+        self.assertFalse(any(result["news_context"]["permissions"].values()))
+        v["available_at_utc"] = "2026-10-09T20:00:00Z"
+        self.assertEqual(explain(s, i, v)["news_context"]["reason"], "future_data")
+
+    def test_interpretation_generation_and_validation_chronology(self):
+        s, i, v = fixtures()
+        i["payload"]["generated_at_utc"] = "2026-10-09T18:02:00Z"
+        self.assertEqual(explain(s, i, v)["news_context"]["reason"], "interpretation_generated_after_availability")
+        i["available_at_utc"] = "2026-10-09T19:02:00Z"
+        self.assertEqual(explain(s, i, v)["news_context"]["reason"], "validation_precedes_interpretation")
+
+    def test_observation_anchors_checked_directly_and_in_provenance(self):
+        for nested in [False, True]:
+            for key, value in {"event_id": "wrong", "story_id": "wrong", "window": "post_4h",
+                               "event_time_utc": "2026-10-09T17:00:00Z",
+                               "as_of_utc": "2026-10-09T18:59:00Z",
+                               "available_at_utc": "2026-10-09T19:02:00Z"}.items():
+                with self.subTest(nested=nested, key=key):
+                    s, i, v = fixtures()
+                    observation = v["payload"]["mechanisms"][0]["observations"][0]
+                    target = observation.setdefault("provenance", {}) if nested else observation
+                    target[key] = value
+                    before = copy.deepcopy((s, i, v))
+                    result = explain(s, i, v)
+                    self.assertEqual(result["news_context"]["relation"], "insufficient_data")
+                    self.assertEqual(result["scenario"], s)
+                    self.assertEqual((s, i, v), before)
+
+    def test_matching_observation_anchors_accept_timezone_equivalence(self):
+        s, i, v = fixtures()
+        v["payload"]["mechanisms"][0]["observations"][0]["provenance"] = {
+            "event_id": "synthetic", "story_id": "synthetic", "window": "post_60m",
+            "event_time_utc": "2026-10-09T19:00:00+01:00", "as_of_utc": "2026-10-09T19:00:00Z",
+            "available_at_utc": "2026-10-09T19:01:00Z"}
+        self.assertEqual(explain(s, i, v)["news_context"]["relation"], "supports")
+
+    def test_unanchored_observations_explicitly_inherit_validator_trust(self):
+        s, i, v = fixtures()
+        binding = explain(s, i, v)["news_context"]["provenance"]["observation_binding"]
+        self.assertFalse(binding["independent_origin_verification"])
+        self.assertEqual(binding["trust"], "caller_supplied_validator_output")
+        del v["payload"]["interpretation"]
+        self.assertEqual(explain(s, i, v)["news_context"]["reason"], "unsupported_validator_contract")
+
+    def test_malformed_observation_time_or_provenance_fails_closed(self):
+        for fields in [{"event_time_utc": "2026-10-09T18:00:00"}, {"as_of_utc": None}, {"provenance": None}]:
+            s, i, v = fixtures()
+            v["payload"]["mechanisms"][0]["observations"][0].update(fields)
+            self.assertEqual(explain(s, i, v)["news_context"]["relation"], "insufficient_data")
+
     def test_four_acceptance_cases_preserve_entire_scenario_and_inputs(self):
         s, i, v = fixtures()
         _, opposed_i, opposed_v = fixtures("bearish")

@@ -83,6 +83,32 @@ def explain_scenario(scenario, interpretation=None, validation=None, *,
             return finish("not_evaluated", "future_data")
         if event > observed or observed > va:
             return finish("insufficient_data", "invalid_chronology")
+        timing_mode = interpretation.get("timing_mode", "post_event")
+        interpretation_event = _time(ip["event_time_utc"]) if "event_time_utc" in ip else event
+        context["provenance"]["interpretation_timing"] = {
+            "mode": timing_mode, "event_time_utc": interpretation_event.isoformat(),
+            "event_time_source": "interpretation" if "event_time_utc" in ip else "validation_anchor",
+        }
+        if timing_mode not in {"post_event", "pre_event_hypothesis"}:
+            return finish("insufficient_data", "unknown_interpretation_timing_mode")
+        if interpretation_event > cutoff:
+            return finish("not_evaluated", "future_interpretation_event")
+        if ia < max(interpretation_event, event) and timing_mode != "pre_event_hypothesis":
+            return finish("insufficient_data", "interpretation_precedes_event")
+        if "generated_at_utc" in ip and _time(ip["generated_at_utc"]) > ia:
+            return finish("insufficient_data", "interpretation_generated_after_availability")
+        if ia > va:
+            return finish("insufficient_data", "validation_precedes_interpretation")
+        # Existing C3.3.3 observations lack individual anchors. Origin then
+        # inherits the report's contract; asset completeness cannot prove it.
+        if vp.get("schema_version") != 1 or vp.get("interpretation") != "directional_consistency_only_not_causal_attribution":
+            return finish("insufficient_data", "unsupported_validator_contract")
+        context["provenance"]["observation_binding"] = {
+            "contract": "story_intermarket_validation_engine.evaluate_story/schema_v1",
+            "trust": "caller_supplied_validator_output",
+            "independent_origin_verification": False,
+            "rule": "Missing anchors inherit the report; supplied anchors must match. Asset completeness does not prove origin.",
+        }
         if cutoff - observed > timedelta(seconds=max_age_seconds):
             return finish("not_evaluated", "stale_observation")
         sid = ip.get("story_id")
@@ -106,6 +132,21 @@ def explain_scenario(scenario, interpretation=None, validation=None, *,
             expected = indexed[mechanism["mechanism_id"]].get("expected", {}).get("gold")
             status = mechanism.get("status")
             observations = mechanism.get("observations") or []
+            for observation in observations:
+                bindings = [observation]
+                if "provenance" in observation:
+                    if not isinstance(observation["provenance"], dict):
+                        return finish("insufficient_data", "invalid_observation_provenance")
+                    bindings.append(observation["provenance"])
+                for binding in bindings:
+                    for key, value in (("event_id", vp["event_id"]), ("story_id", sid), ("window", window)):
+                        if key in binding and binding[key] != value:
+                            return finish("insufficient_data", "observation_identity_or_window_mismatch")
+                    for key, value in (("event_time_utc", event), ("as_of_utc", observed)):
+                        if key in binding and _time(binding[key]) != value:
+                            return finish("insufficient_data", "observation_time_mismatch")
+                    if "available_at_utc" in binding and not observed <= _time(binding["available_at_utc"]) <= va:
+                        return finish("insufficient_data", "invalid_observation_availability")
             valid_observations = bool(observations) and all(
                 o.get("result") == "supported" and isinstance(o.get("move_percent"), (int, float))
                 and not isinstance(o.get("move_percent"), bool) and math.isfinite(o["move_percent"])

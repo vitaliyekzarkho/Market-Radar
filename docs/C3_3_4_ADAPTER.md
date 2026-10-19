@@ -60,6 +60,37 @@ path until an explicitly reviewed integration. Connecting the new chain to
 
 ## Verification
 
+## Review revision: chronology and observation provenance
+
+The interpretation envelope now accepts `timing_mode`: default `post_event`, or
+explicit `pre_event_hypothesis` for a hypothesis prepared for a scheduled event.
+Default interpretation availability must not precede either its own payload
+`event_time_utc` (when supplied) or the validation anchor. If the payload has no
+event time, the validation anchor is the declared fallback, recorded in provenance.
+The forecast mode permits preparation before the event but never permits future
+validation data. Own event time must still be within the decision cutoff. Optional
+`generated_at_utc` cannot follow interpretation availability; validation availability
+cannot precede the interpretation version it claims to validate.
+
+Optional observation bindings, both directly and in `provenance`, are checked:
+`story_id`, `event_id`, `window`, `event_time_utc`, `as_of_utc`, and
+`available_at_utc`. Identity/window must match the validation report; event and
+as-of timestamps must be equal instants (timezone offsets are normalized).
+Availability must fall between report observation time and validation availability.
+Null, malformed or contradictory supplied bindings fail closed. These are the
+supported binding fields; callers must normalize other source schemas first.
+
+The current C3.3.3 validator emits observations without individual anchors. Such
+observations inherit the report binding under its schema-v1 directional-consistency
+contract. The result explicitly labels `caller_supplied_validator_output` and
+`independent_origin_verification: false`. Contract markers are consistency checks,
+not authentication. The caller must supply unmodified validator output and retain
+the underlying source report; matching asset sets alone do not prove provenance.
+No upstream validator or technical module is modified by this revision.
+
+Revision regression: 467/467 passed, including 8 additional targeted tests
+(30 adapter tests total). This remains a local implementing-agent result.
+
 Tests use synthetic inputs and real `evaluate_story` output. They check the four
 acceptance variants against an identical serialized technical scenario, input
 immutability, output isolation, role semantics, identity, version expectations,
