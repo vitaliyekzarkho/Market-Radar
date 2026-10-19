@@ -1,0 +1,30 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*
+secrets*
+config.local.*
+# Runtime data and broker exports
+data/
+logs/
+snapshots/
+replays/
+*.log
+# Python and local tooling
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+.idea/
+.vscode/
+# OS and temporary files
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
