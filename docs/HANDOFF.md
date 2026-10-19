@@ -1,8 +1,10 @@
 # MarketRadar handoff — C3.3.4
 
 Date: 2026-10-19
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
-Branch: `feature/c3-3-4-news-pa-htf`
+Status: **C3.3.4 CLOSED / CODE REVIEW APPROVED / REGRESSION PASSED**
+Accepted branch: `main`
+Review branch retained: `feature/c3-3-4-news-pa-htf`
+Approved implementation: `78065a187b440aff061490801ffc6dd6b3fe339f`
 Base commit: `10f2f821e649eb39b165b2b045d4e53fac3ce5c8`
 
 ## Scope of this handoff
@@ -15,7 +17,8 @@ Only four files are added relative to the base:
 
 The first three contain the C3.3.4 implementation and review fixes described below.
 This handoff is the fourth file. Existing base source and trading logic
-are unchanged. The main branch remains at the base commit.
+are unchanged. The approved implementation was fast-forwarded into main after
+code review approval and a fresh 467/467 local regression on the identical source.
 
 ## Verification
 
@@ -57,22 +60,23 @@ No connection to `run_radar.py` or `run_cycle.py` is included. Live integration 
 block D. The existing reasoner's legacy-role mismatch is not patched by this
 isolated addition. See `docs/C3_3_4_ADAPTER.md` for the exact API and semantics.
 
-## Next step
+## Review acceptance and next step
 
-Review revision after `3cb20a90b468eeabea8cd9809409dd7d62c2c30d`:
-- Addressed backdated interpretation concern with explicit `post_event` versus
-  `pre_event_hypothesis` timing and interpretation generation/availability checks.
-- Addressed observation provenance concern by checking supported direct/nested
-  identity and time bindings, and explicitly recording inherited validator trust
-  when individual anchors are absent. This is not independent origin verification.
-- Added 8 targeted regression tests; full offline regression is now 467/467.
-- Only the same four feature files changed. No live integration or main update.
-- Status remains IMPLEMENTED / AWAITING INDEPENDENT REVIEW; the previous review
-  was CHANGES REQUESTED. These fixes require a new independent review.
+The user supplied CODE REVIEW APPROVED for exact commit
+`78065a187b440aff061490801ffc6dd6b3fe339f`. The reviewer inspected the code,
+contract and tests but did not independently execute the full regression.
+Codex repeated all 467 offline tests successfully and verified that the tested
+files match the approved GitHub tree before accepting the implementation in main.
+C3.3.4 is now closed as an isolated implementation, not a live deployment.
 
-The independent reviewer should inspect the exact branch commit, review the
-contract, time logic, immutable scenario behavior and test coverage, and rerun
-the offline regression. Report findings against that SHA. Do not mark C3.3.4
-closed or merge into main until review is accepted. After acceptance, proceed to
-C3.3.5 — News Lifecycle / Telegram Deduplication. Keep the working Radar unchanged
-and do not start live services as part of this review.
+Both review findings were addressed: explicit interpretation chronology including
+pre-event hypotheses, and observation binding checks with documented inherited
+validator trust. No existing technical modules or live pipelines changed.
+
+Next: C3.3.5 — News Lifecycle / Telegram Deduplication. Develop it in a separate
+branch from the current main. Its implementation has not started in this handoff.
+Preserve trading permissions and keep the Radar stopped. Block D still requires
+trustworthy available_at_utc and an approved max_age_seconds policy.
+
+This handoff supersedes older progress statements in the October 19 snapshot
+documents. Those historical statements do not describe the current acceptance state.
