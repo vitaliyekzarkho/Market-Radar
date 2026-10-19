@@ -28,3 +28,24 @@ venv/
 Thumbs.db
 *.tmp
 *.bak
+
+# Local exports and share packages
+*.zip
+*.7z
+*.tar
+*.gz
+*.csv
+*.parquet
+*.sqlite*
+*.db
+*.pfx
+*.p12
+*.crt
+test_results*.txt
+/fast_news_stories.json
+/fast_news_interpretations.json
+/diesel_historical_reaction.json
+/diesel_story_validation.json
+/reproduced_diesel.json
+outputs/
+

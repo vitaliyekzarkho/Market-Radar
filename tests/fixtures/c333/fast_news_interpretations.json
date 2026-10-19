@@ -1,0 +1,24 @@
+{
+  "interpretations": [
+    {
+      "story_id": "story_4eea0c019e02a0b0",
+      "mechanism_candidates": [
+        {
+          "mechanism_id": "synthetic_supply",
+          "expected": {
+            "oil": "bearish",
+            "yields": "falling"
+          }
+        },
+        {
+          "mechanism_id": "synthetic_secondary",
+          "expected": {
+            "gold": "bullish",
+            "usd": "bearish",
+            "yields": "falling"
+          }
+        }
+      ]
+    }
+  ]
+}

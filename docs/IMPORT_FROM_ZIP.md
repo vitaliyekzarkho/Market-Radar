@@ -14,3 +14,7 @@ Source: `MarketRadar_chat_2026-10-19_110207.zip` (137 archive entries, root dire
 The archived snapshot was previously reported as passing 425 tests in an isolated environment. This is historical evidence, not a new CI result and not proof of live MT5/Telegram operation.
 
 Do not merge unverified experimental branches into `main` automatically.
+
+## Import completed — current PC source
+The repository was populated from the newer cleaned PC folder, including C3.3.3, rather than blindly restoring the older archive. See [publication report](SOURCE_IMPORT_2026-10-19.md). Old installation documents and runtime files were not restored. Live smoke tests remain a separate explicitly authorized operation.
+

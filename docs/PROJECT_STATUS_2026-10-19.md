@@ -21,7 +21,7 @@ Market Radar is a read-only market-observation and scenario engine, initially fo
 - C3.2: story clustering — reported completed.
 - C3.3.1: story classification / mechanism candidates — reported completed.
 - C3.3.2: causal transmission mapping — reported completed in prior chat; verify against code/tests.
-- **C3.3.3 NEXT:** measure actual oil/yields/USD/Gold reaction to causal hypotheses, with event time, windows, data availability and weekend handling.
+- **C3.3.3 IN PROGRESS (validator and bridge implemented):** measure actual oil/yields/USD/Gold reaction to causal hypotheses, with event time, windows, data availability and weekend handling.
 - C3.3.4: integrate news interpretation with PA/HTF.
 - C3.3.5: story lifecycle and Telegram dedup.
 - C3.3.6: historical/live tests.
@@ -48,3 +48,7 @@ The shared ZIP named `MarketRadar_chat_2026-10-19_110207.zip` contained 137 entr
 - Notion: approved requirements and decisions.
 
 Never commit credentials, account identifiers, personal information, or unreviewed broker data.
+
+## Current code import update
+The current cleaned PC source, including the C3.3.3 validator, bridge and export utility, is now included. Local integration passed 437/437 offline tests on Python 3.12.10. Public bridge tests use synthetic fixtures; actual broker/news snapshots remain local. Missing yields/inflation observations and incomplete 24h windows prevent closure of the research validation. No live MT5/Telegram verification was performed and the Radar was not started. Earlier snapshot counts above are historical.
+

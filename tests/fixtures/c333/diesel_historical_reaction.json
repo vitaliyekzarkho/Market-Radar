@@ -1,0 +1,51 @@
+{
+  "event_id": "story_68317846dddd9807",
+  "event_time_utc": "2026-10-09T18:46:00+00:00",
+  "assets": {
+    "oil": {
+      "source": "synthetic_test_fixture",
+      "symbol": "oil",
+      "post_event": {
+        "post_60m": {
+          "complete": true,
+          "available": true,
+          "move_percent": 0.5
+        },
+        "post_24h": {
+          "complete": false,
+          "available": false
+        }
+      }
+    },
+    "usd": {
+      "source": "synthetic_test_fixture",
+      "symbol": "usd",
+      "post_event": {
+        "post_60m": {
+          "complete": true,
+          "available": true,
+          "move_percent": -0.1
+        },
+        "post_24h": {
+          "complete": false,
+          "available": false
+        }
+      }
+    },
+    "gold": {
+      "source": "synthetic_test_fixture",
+      "symbol": "gold",
+      "post_event": {
+        "post_60m": {
+          "complete": true,
+          "available": true,
+          "move_percent": 0.2
+        },
+        "post_24h": {
+          "complete": false,
+          "available": false
+        }
+      }
+    }
+  }
+}

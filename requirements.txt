@@ -1,0 +1,7 @@
+pandas==3.0.5
+numpy==2.5.3
+pypdf==6.20.0
+python-dateutil==2.9.0.post0
+six==1.17.0
+tzdata==2026.4
+MetaTrader5==5.0.6180; sys_platform == "win32"

@@ -1,0 +1,1 @@
+Synthetic unit-test fixtures. Prices and moves are invented; these are not broker exports or historical evidence. IDs and timestamps preserve the case-specific bridge contract. Actual historical data remain local.

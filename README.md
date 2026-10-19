@@ -1,24 +1,36 @@
 # Market Radar
 
-A read-only market analysis and scenario-monitoring system for XAU/USD (MT5 GOLD.pro), with HTF structure, scenario lifecycle, intermarket context, causal news interpretation and Telegram notifications.
+Read-only market observation and scenario analysis for XAU/USD (MT5 GOLD.pro), with PA/HTF context, news hypotheses, intermarket observations and Telegram notifications. No automated trade execution.
 
-**Status (19 October 2026):** active live-shadow validation; October news block C is in progress. Next development step is **C3.3.3 — observed intermarket reaction**, followed by C3.3.4–C3.3.6, integration block D, then deferred technical audit.
+## Current snapshot — 19 October 2026
+The repository now includes the current Python source and tests, including C3.3.3 intermarket validation and the historical diesel bridge. Technical integration is verified; C3.3.3 research validation is still incomplete. C3.3.4 has not been started in this import. Trading logic, PA/HTF and trade permissions were not changed.
 
-> No automated trade execution. Market narratives and news hypotheses are not trading signals. Market evidence, risk decisions and execution remain with the operator.
+See [status and roadmap](docs/PROJECT_STATUS_2026-10-19.md), [C3.3.3 handoff](C3_3_3_HANDOFF.md), [bridge notes](README_C3_3_3_BRIDGE.md) and [publication report](docs/SOURCE_IMPORT_2026-10-19.md).
 
-## Project handoff
+## Development setup
+Python 3.12 is the verified interpreter. Create an isolated environment and install dependencies:
 
-- [Project status and roadmap](docs/PROJECT_STATUS_2026-10-19.md)
-- [Importing the October 19 source snapshot](docs/IMPORT_FROM_ZIP.md)
-- [Canonical Notion technical hub](https://app.notion.com/p/3d75e4544f3a816a9f4af8a22df4a024)
+```sh
+python -m venv .venv
+python -m pip install -r requirements.txt
+python -m unittest discover -p "test_*.py"
+```
 
-## Source-code availability
+Activate the virtual environment before the pip/test commands (Windows PowerShell: `.\.venv\Scripts\Activate.ps1`; Linux: `source .venv/bin/activate`). Requirements pin the versions present in the verified local environment; a clean installation has not yet been verified.
 
-This repository is being populated from the reviewed October 19 source archive. **The documentation commits do not yet contain the full Python source tree.** Runtime logs, broker data and credentials are excluded from publication. Verify source version and run tests after the import.
+Windows with a configured MT5 terminal is required for live broker integration. Web/Linux environments can edit code and run offline tests; they do not reproduce the local MT5 runtime. Never run live collection or Telegram delivery as part of ordinary tests.
 
-## Development rules
+## PC and web workflow
+Clone this repository into a separate development folder; do not overwrite an existing runtime directory. Use a branch for each change, run tests, then commit and push. In the other environment, pull the accepted changes before continuing. GitHub stores committed changes; it does not automatically synchronize unsaved local files or chat memory.
 
-- Approved Notion trading specifications take precedence over earlier chat notes.
-- Do not modify scenario scoring, PA rules or trading direction based on an unconfirmed news hypothesis.
-- Keep secrets and runtime data out of Git.
-- Prefer reviewed commits and tests over automatic pushes of incomplete experiments.
+```sh
+git clone https://github.com/vitaliyekzarkho/Market-Radar.git
+cd Market-Radar
+git switch -c work/my-change
+```
+
+Keep a short handoff in the relevant PR or project status document: changed behavior, tests, remaining work. The approved Notion specification remains authoritative for trading requirements.
+
+## Private local configuration
+Credentials are read from environment variables by the adapters. Supply your own values locally; do not paste secrets into commits, issues or documentation. No credentials, MT5 account state, broker exports, runtime data, virtual environments or archives are included. Public test fixtures are synthetic. See [AGENTS.md](AGENTS.md) for contributor safeguards.
+

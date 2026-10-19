@@ -1,0 +1,18 @@
+{
+  "stories": [
+    {
+      "story_id": "story_4eea0c019e02a0b0",
+      "members": [
+        {
+          "event_id": "fast_7dc1052a23f19abf74ac",
+          "published_at_utc": "2026-10-09T18:46:14+00:00",
+          "verification": "synthetic_test_fixture"
+        }
+      ]
+    },
+    {
+      "story_id": "story_68317846dddd9807",
+      "first_seen_utc": "2026-10-09T18:47:46+00:00"
+    }
+  ]
+}
