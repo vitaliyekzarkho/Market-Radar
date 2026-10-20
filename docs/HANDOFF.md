@@ -1,82 +1,92 @@
-# MarketRadar handoff — C3.3.4
+# MarketRadar handoff — C3.3.5
 
-Date: 2026-10-19
-Status: **C3.3.4 CLOSED / CODE REVIEW APPROVED / REGRESSION PASSED**
-Accepted branch: `main`
-Review branch retained: `feature/c3-3-4-news-pa-htf`
-Approved implementation: `78065a187b440aff061490801ffc6dd6b3fe339f`
-Base commit: `10f2f821e649eb39b165b2b045d4e53fac3ce5c8`
+Date: 2026-10-20
+Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
+Branch: `feature/c3-3-5-news-lifecycle`
+Base/main: `048763eefaa094a611cec64f89bab287b54bd0d9`
+Implementation SHA: recorded by the following documentation-only commit.
 
-## Scope of this handoff
+C3.3.4 is accepted and closed in the base. C3.3.5 adds an isolated news lifecycle,
+semantic deduplication and informational notification ledger. No live transport
+or integration, technical scenario or trading-permission change is included.
 
-Only four files are added relative to the base:
-- `news_pa_context_adapter.py`
-- `test_news_pa_context_adapter.py`
-- `docs/C3_3_4_ADAPTER.md`
-- `docs/HANDOFF.md`
+## Files
 
-The first three contain the C3.3.4 implementation and review fixes described below.
-This handoff is the fourth file. Existing base source and trading logic
-are unchanged. The approved implementation was fast-forwarded into main after
-code review approval and a fresh 467/467 local regression on the identical source.
+New:
+- `news_lifecycle_engine.py`
+- `news_notification_policy.py`
+- `news_lifecycle_store.py`
+- `news_delivery_state.py`
+- `test_news_lifecycle_engine.py`
+- `test_news_notification_policy.py`
+- `test_news_lifecycle_store.py`
+- `test_news_delivery_state.py`
+- `tests/fixtures/c335/policy.json`
+- `tests/fixtures/c335/README.md`
+- `docs/C3_3_5_CONTRACT.md`
+
+Updated: `docs/HANDOFF.md`. No other base files are part of this change.
+
+## Preflight and workspace
+
+Main was verified at the accepted base, including before publication. The feature
+branch started there. Development/regression use separate `work/c335_lifecycle`.
+The earlier C3.3.4 development copy contained accepted Python code but an old
+handoff. The working Radar copy lacked the isolated C3.3.4 files and had a different
+C3.3.3 test file associated with local fixtures. Neither earlier copy was overwritten
+or synchronized. Existing source modules are preserved against GitHub. External
+temporary SQLite databases and backups are excluded from publication.
 
 ## Verification
 
-Full offline regression repeated on 2026-10-19 in an isolated development copy:
-**467 tests passed, 0 failures, 0 errors**, including 30 new adapter tests and
-437 existing tests. Python 3.12.10 on Windows, using the existing local project
-dependencies. Test discovery: `python -m unittest discover -p "test_*.py"`.
-The sandbox run set Python's temporary directory to a writable isolated directory.
-This is the implementing agent's local result, not an independent reviewer or CI
-result, and not a fresh dependency installation or Linux compatibility check.
-Tests use synthetic fixtures. No Radar, MT5 connection or Telegram delivery was
-started. No runtime logs, broker exports or credentials are part of this change.
+Full offline regression: **524/524 passed**, zero failures/errors:
+467 existing tests and 57 new. Python 3.12.10, Windows, 2026-10-20.
+Existing installed dependencies, isolated copy, synthetic fixtures. No fresh
+installation, Linux/CI run or independent reviewer result is claimed.
+Unittest discovery/external-temp setup and test coverage are documented in
+[C3_3_5_CONTRACT.md](C3_3_5_CONTRACT.md).
 
-## Architecture and decisions
+Coverage includes identity/migration, materiality, correction/contradiction,
+per-recipient idempotency, immutable evidence, chronology/replay, SQLite rollback
+and concurrency, subprocess crashes, retry/unknown outcomes, expiry, corruption,
+backup, complete scenario preservation and no-network boundaries.
 
-- C3.3.3 is closed by user decision as a historical research block, with its
-  evidence limitations retained. Older base documents describe the earlier status.
-- C3.3.4 is an isolated explanatory adapter, not a PA/HTF or scenario recalculator.
-- Legacy roles (including `confirmed_driver`) are labelled claims, separate from
-  independent C3.3.3 validation. They never establish causality or trading approval.
-- Outcomes are `supports`, `conflicts`, `insufficient_data`, `not_evaluated`.
-- The complete selected technical scenario is deep-copied without edits; direction,
-  score, targets, invalidation and original permissions remain unchanged.
-- Explanatory context has no entry, direction-switch, scoring or causal permissions.
-- Availability, observation timestamps, identity and window checks prevent using
-  evidence outside the decision cutoff; stale or future evidence is not evaluated.
-- Contradicted mechanisms do not imply an opposite trade. Ambiguous evidence stays
-  insufficient. Audit identity, observations and bridge provenance are retained.
+## Decisions
 
-## Limitations and mandatory prerequisites for block D
+- NEW, DEVELOPING, RESOLVED, EXPIRED are episode states. MATERIAL_UPDATE is an event.
+- Stable aliases/member history; ambiguous identity yields no notification.
+  Merge/split requires an explicit audited decision.
+- Semantic fields and stable references drive versioning, not display text.
+- Contradictions may notify without a setup, but need a delivered hypothesis for
+  that recipient and later admissible targeted evidence. PA conflict is not disproof.
+- SQLite commits transitions and outbox atomically. Unknown delivery never auto
+  retries; a recorded risk-acknowledged decision is required. No exactly-once claim.
+- Lifetime, freshness, suppression and retry parameters are explicit/versioned.
+  Fixture values are synthetic, not production recommendations.
 
-1. A reliable source of `available_at_utc` for each input version is required.
-   Publication time is not availability time. Upstream historical versioning and
-   trustworthy timestamps must be established; the adapter cannot prove them.
-2. An evidence-based freshness policy must be approved. The caller must explicitly
-   supply `max_age_seconds`; no universal production threshold has been selected.
+## Notion changes reviewed
 
-No connection to `run_radar.py` or `run_cycle.py` is included. Live integration is
-block D. The existing reasoner's legacy-role mismatch is not patched by this
-isolated addition. See `docs/C3_3_4_ADAPTER.md` for the exact API and semantics.
+[11 — Market Reasoning Engine: Product Vision & Codex Contract](https://app.notion.com/p/3fe5e4544f3a8114a87ed8cf0e8fdf0c)
+was updated on 2026-10-19. It confirms the reasoning/attention focus and separates
+full analysis from short notifications while preserving this block's scope.
+It does not authorize PA/HTF or permission changes. Older hub/roadmap counters
+are historical; accepted GitHub defines the code baseline. Notion was read only.
 
-## Review acceptance and next step
+## Limitations and next step
 
-The user supplied CODE REVIEW APPROVED for exact commit
-`78065a187b440aff061490801ffc6dd6b3fe339f`. The reviewer inspected the code,
-contract and tests but did not independently execute the full regression.
-Codex repeated all 467 offline tests successfully and verified that the tested
-files match the approved GitHub tree before accepting the implementation in main.
-C3.3.4 is now closed as an isolated implementation, not a live deployment.
+The subsystem validates contracts, not source independence, clock authenticity,
+significance or human identity decisions. Replay requires real availability
+metadata. Split history is conservatively inherited and needs external review.
+Serialize initial DB provisioning. Subscription backfill and live receipt
+reconciliation are not implemented. See the contract for exact boundaries.
 
-Both review findings were addressed: explicit interpretation chronology including
-pre-event hypotheses, and observation binding checks with documented inherited
-validator trust. No existing technical modules or live pipelines changed.
+Block D still requires trustworthy available_at_utc, an approved C3.3.4
+max_age_seconds, approved C3.3.5 policies, provenance/identity authority and
+separately authorized transport/integration.
 
-Next: C3.3.5 — News Lifecycle / Telegram Deduplication. Develop it in a separate
-branch from the current main. Its implementation has not started in this handoff.
-Preserve trading permissions and keep the Radar stopped. Block D still requires
-trustworthy available_at_utc and an approved max_age_seconds policy.
+Next: independent review of implementation SHA and offline rerun. Do not mark
+C3.3.5 accepted or merge main before review and user acceptance. C3.3.6 offline
+validation follows under a separate task.
 
-This handoff supersedes older progress statements in the October 19 snapshot
-documents. Those historical statements do not describe the current acceptance state.
+**Do not start Radar, connect MT5, call Telegram, place orders, change permissions,
+deploy or modify/synchronize the working Radar directory.**

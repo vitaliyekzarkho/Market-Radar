@@ -1,0 +1,11 @@
+{
+  "version": "synthetic_test_v1",
+  "episode_max_seconds": 3600,
+  "inactivity_seconds": 600,
+  "notification_ttl_seconds": 300,
+  "suppression_seconds": 30,
+  "evidence_max_age_seconds": 7200,
+  "retry_max_attempts": 3,
+  "retry_backoff_seconds": 10,
+  "attempt_timeout_seconds": 20
+}
