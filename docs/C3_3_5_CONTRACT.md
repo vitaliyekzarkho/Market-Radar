@@ -1,6 +1,6 @@
 # C3.3.5 — News lifecycle, semantic deduplication and notification state
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**  
+Status: **C3.3.5 — ACCEPTED / CLOSED**  
 Base: `048763eefaa094a611cec64f89bab287b54bd0d9`  
 Branch: `feature/c3-3-5-news-lifecycle`  
 Verification date: 2026-10-20.
@@ -246,8 +246,13 @@ It preserves C3.3.5 scope. Full analysis, short attention messages and broader
 hypothesis modeling do not authorize trading-methodology changes here.
 Older hub/roadmap progress counters do not override the GitHub code baseline.
 
-Next: independent review of the exact implementation SHA and offline rerun.
-Do not merge before acceptance. C3.3.6 remains offline validation. Block D requires
+The user approved the code review. Fresh GitHub checkout verification of exact SHA
+`39d220302c678e1777709c73d42406449f135976` passed 530/530 on 2026-10-20.
+This was a separate-checkout rerun by Codex using existing Windows dependencies,
+not an independently executed reviewer/CI test run. See HANDOFF.md for evidence.
+The acceptance documentation does not change tested source code.
+
+Next: C3.3.6 — Offline Validation in a separate branch. Block D requires
 trustworthy availability/provenance, approved C3.3.4 max_age_seconds and C3.3.5
 lifecycle/delivery policies, identity authority and separately authorized integration.
 **Do not start Radar, MT5 or Telegram or synchronize the working Radar folder.**

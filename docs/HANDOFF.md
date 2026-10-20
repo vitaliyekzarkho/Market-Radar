@@ -1,11 +1,23 @@
 # MarketRadar handoff — C3.3.5
 
 Date: 2026-10-20
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
-Branch: `feature/c3-3-5-news-lifecycle`
+Status: **C3.3.5 — ACCEPTED / CLOSED**
+Accepted branch: `main`
+Review branch retained: `feature/c3-3-5-news-lifecycle`
 Base/main: `048763eefaa094a611cec64f89bab287b54bd0d9`
 Previous reviewed head: `db69d4a3f3dbec0ea14d5343e93604ba2c243604`
 Revision implementation SHA: `642de3835f6ed5eded2118414f71874f7b5b32e4` (530/530 tested). The following commit only records this SHA.
+
+Accepted and tested SHA: `39d220302c678e1777709c73d42406449f135976`.
+The user supplied CODE REVIEW APPROVED and authorized acceptance after a successful
+offline regression of this exact SHA. On 2026-10-20 Codex cloned GitHub into a new
+isolated directory, checked out that SHA detached, and ran all 530 tests:
+530 passed, 0 failures, 0 errors. Git status was clean before and after the run.
+Python 3.12.10 on Windows, existing installed dependencies and external temporary
+SQLite storage. This was a fresh-checkout rerun by the implementing agent, not a
+different reviewer's execution, CI run, fresh environment or live verification.
+The acceptance commit changes only this handoff and the contract's status text;
+the tested source code is unchanged.
 
 C3.3.4 is accepted and closed in the base. C3.3.5 adds an isolated news lifecycle,
 semantic deduplication and informational notification ledger. No live transport
@@ -73,7 +85,8 @@ The reviewer requested revisions, not acceptance. Changed only
 
 Six targeted tests added. Five failed before the fix, reproducing the interface
 gap and both mixed-change failures. Full regression after the fix: 530/530.
-Delivery-state implementation is unchanged. Independent review is still required.
+Delivery-state implementation is unchanged. These revisions subsequently received
+CODE REVIEW APPROVED from the user; the acceptance verification is recorded above.
 
 ## Decisions
 
@@ -108,9 +121,9 @@ Block D still requires trustworthy available_at_utc, an approved C3.3.4
 max_age_seconds, approved C3.3.5 policies, provenance/identity authority and
 separately authorized transport/integration.
 
-Next: independent review of implementation SHA and offline rerun. Do not mark
-C3.3.5 accepted or merge main before review and user acceptance. C3.3.6 offline
-validation follows under a separate task.
+Next: C3.3.6 — Offline Validation, in a separate feature branch under its own
+validation contract. C3.3.5 is closed as an isolated implementation, not a live
+deployment or proof of market efficacy. Block D remains untouched.
 
 **Do not start Radar, connect MT5, call Telegram, place orders, change permissions,
 deploy or modify/synchronize the working Radar directory.**
