@@ -4,7 +4,7 @@ Date: 2026-10-20
 Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
 Branch: `feature/c3-3-5-news-lifecycle`
 Base/main: `048763eefaa094a611cec64f89bab287b54bd0d9`
-Implementation SHA: recorded by the following documentation-only commit.
+Implementation SHA: `9029b103644682cdfbb88259b4ef99c8c6e202dc` (524/524 tested). The following commit updates only this SHA reference.
 
 C3.3.4 is accepted and closed in the base. C3.3.5 adds an isolated news lifecycle,
 semantic deduplication and informational notification ledger. No live transport
