@@ -18,6 +18,8 @@ references. A meaning change requires a changed reference or semantic field.
 established here. Outlet count cannot establish independence. Block D needs a
 reviewed adapter and provenance authority. Chronology checks cannot authenticate
 clocks; publication/collection times are never substituted for availability.
+Block D must verify provenance before accepting `independent=True`; forwarding
+that flag from an untrusted source is not an approved integration contract.
 
 ## Modules and API
 
@@ -108,6 +110,16 @@ verified fact/supports attestations. Fact removal/replacement requires the expli
 correction/resolution path. Mechanism/interpretation changes require changed
 semantic fields or stable version references.
 
+If a proposed fact-set change lacks the required attestations, the accepted
+semantic snapshot retains both previous fact_refs and fact_status. Independently
+admissible changes to the other dimensions can still advance the semantic version
+and produce an intent. This does not prove that an interpretation is independent
+of those rejected facts: that remains the upstream validation contract.
+The original normalized input remains immutable, FACT_CHANGE_REJECTED records
+proposed and retained fact fields, and the result exposes rejected_semantic_fields.
+A rejected fact-only change does not advance version or lifetime. Fingerprints
+and transition journals use the accepted snapshot, not the rejected fact proposal.
+
 Resolution requires reason verified_correction, documented_cancellation or
 authorized_manual plus verified resolution/resolves evidence. Its scope and
 authorization are upstream attestations. Elapsed time and feed absence never
@@ -145,8 +157,16 @@ suppression interval. Corrections/contradictions bypass it. TTL can expire delay
 work; suppression never extends validity.
 
 Input IDs are immutable; identical retries return duplicate with no new intents.
-Changing recipients on an already processed input is not a subscription/backfill
-API. Supply recipients together for that input; delivery outcomes remain independent.
+The first call persists the sorted unique recipient_keys (including an empty set).
+A retry with a different set raises ValueError and rolls back the entire transaction;
+ordering and duplicate entries do not change the set. The constraint survives
+restart. Legacy stored inputs without recipient_keys fail closed on retry and need
+an explicitly reviewed offline migration; no recipient set is guessed from outbox
+rows, since suppressed events may have no rows.
+This is not a subscription/backfill API. Block D must supply its complete intended
+recipient set in the first call; this module cannot detect a recipient omitted
+from that initial call. A later subscription needs a separately designed backfill
+operation, not a new input ID invented to bypass the guard.
 
 ## Time and configuration
 
@@ -198,7 +218,7 @@ transport, receipt reconciliation, retention and monitoring remain block D.
 
 ## Verification and next step
 
-2026-10-20: **524 passed, 0 failures, 0 errors** (467 existing + 57 new).
+2026-10-20 revision: **530 passed, 0 failures, 0 errors** (467 existing + 63 new).
 Python 3.12.10 on Windows, existing installed dependencies, isolated source copy,
 synthetic fixtures, external disposable SQLite directory. This is a local
 implementer result, not independent review, clean installation, Linux or live
@@ -213,6 +233,12 @@ multiple recipients, wording, chronology/replay, rollback/concurrency, actual
 subprocess termination before commit and after attempted send, queued restart,
 retry/unknown/expiry, corruption/backup, scenario preservation and network guards.
 No tests invoke a real sender.
+
+Six revision tests cover recipient set changes/atomic rollback, equivalent sets,
+restart/empty sets, missing legacy contracts, mixed unsupported fact changes with
+validated PA conflict or targeted hypothesis contradiction, and fact-only
+nonmaterial changes. Before the fix, five of these tests failed against the
+reviewed implementation; all pass after the fix.
 
 Reviewed the 2026-10-19 update to
 [11 — Market Reasoning Engine: Product Vision & Codex Contract](https://app.notion.com/p/3fe5e4544f3a8114a87ed8cf0e8fdf0c).

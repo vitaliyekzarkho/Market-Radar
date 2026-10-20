@@ -71,6 +71,78 @@ class Fixture(unittest.TestCase):
 
 
 class LifecycleTests(Fixture):
+    def test_duplicate_input_rejects_changed_recipient_set_atomically(self):
+        first = self.process(recipients=["recipient_a", "recipient_b"])
+        before = list(self.s.db.iterdump())
+        for recipients in [["recipient_a"], ["recipient_a", "recipient_b", "recipient_c"], []]:
+            with self.assertRaisesRegex(ValueError, "recipient"):
+                self.engine.process(event(), recipients, now=tm(1))
+            self.assertEqual(list(self.s.db.iterdump()), before)
+        result = self.process(recipients=["recipient_b", "recipient_a", "recipient_a"])
+        self.assertTrue(result["duplicate"])
+        self.assertFalse(result["notification_ids"])
+        self.assertEqual(len(self.s.outbox()), len(first["notification_ids"]))
+
+    def test_recipient_contract_survives_restart_and_empty_initial_set(self):
+        self.engine.process(event(), [], now=tm())
+        self.s.close()
+        self.s = Store(self.path, namespace="synthetic", mode="offline")
+        self.addCleanup(self.s.close)
+        self.engine = Lifecycle(self.s, policy())
+        with self.assertRaisesRegex(ValueError, "recipient"):
+            self.process(seconds=1)
+        self.assertTrue(self.engine.process(event(), [], now=tm(1))["duplicate"])
+        self.assertFalse(self.s.outbox())
+
+    def test_legacy_input_without_recipient_contract_fails_closed(self):
+        self.process()
+        row = self.s.db.execute("SELECT result FROM inputs").fetchone()
+        result = json.loads(row[0])
+        result.pop("recipient_keys", None)
+        self.s.db.execute("UPDATE inputs SET result=?", (json.dumps(result),))
+        with self.assertRaisesRegex(ValueError, "recipient"):
+            self.process(seconds=1)
+
+    def test_unconfirmed_fact_change_does_not_hide_validated_context_change(self):
+        first = self.process()
+        value = event(2, 10, assessment="conflicts", fact_refs=["unconfirmed_claim"],
+                      fact_status="corroborated")
+        before = copy.deepcopy(value)
+        result = self.process(value, 10)
+        ep = self.s.episode(first["canonical_story_id"])
+        self.assertEqual(result["semantic_version"], 2)
+        self.assertEqual(ep["semantic"]["assessment"], "conflicts")
+        self.assertEqual(ep["semantic"]["fact_refs"], ["claim_a"])
+        self.assertEqual(ep["semantic"]["fact_status"], "verified")
+        self.assertEqual(value, before)
+        self.assertEqual(self.s.outbox()[-1]["payload"]["notification_kind"], "PA_HTF_CONTEXT_CONFLICT")
+        stored = json.loads(self.s.db.execute("SELECT payload FROM inputs WHERE id='input_2'").fetchone()[0])
+        self.assertEqual(stored["fact_refs"], ["unconfirmed_claim"])
+        self.assertEqual(result["rejected_semantic_fields"], ["fact_refs", "fact_status"])
+        duplicate = self.process(value, 10)
+        self.assertTrue(duplicate["duplicate"])
+        self.assertFalse(duplicate["notification_ids"])
+
+    def test_unconfirmed_fact_addition_does_not_hide_targeted_contradiction(self):
+        first = self.process()
+        self.delivered(first["notification_ids"][0])
+        value = contradiction()
+        value["fact_refs"].append("unconfirmed_claim")
+        result = self.process(value, 10)
+        self.assertEqual(result["semantic_version"], 2)
+        self.assertEqual(self.s.episode(first["canonical_story_id"])["semantic"]["fact_refs"], ["claim_a"])
+        self.assertEqual(self.s.outbox()[-1]["payload"]["notification_kind"], "MARKET_HYPOTHESIS_CONTRADICTED")
+
+    def test_rejected_fact_only_update_does_not_advance_version_or_lifetime(self):
+        first = self.process()
+        result = self.process(event(2, 10, fact_refs=["unconfirmed_claim"],
+                                    fact_status="corroborated"), 10)
+        ep = self.s.episode(first["canonical_story_id"])
+        self.assertEqual(result["semantic_version"], 1)
+        self.assertFalse(result["notification_ids"])
+        self.assertEqual(ep["last_material_at_utc"], tm())
+        self.assertEqual(ep["semantic"]["fact_status"], "verified")
+
     def test_stable_identity_after_regrouping_and_missing_members(self):
         first = self.process(event(member_event_ids=["member_a", "member_b"]))
         next_ = self.process(event(2, 10, upstream_story_id="upstream_b", member_event_ids=["member_b"]), 10)

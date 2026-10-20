@@ -4,7 +4,8 @@ Date: 2026-10-20
 Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
 Branch: `feature/c3-3-5-news-lifecycle`
 Base/main: `048763eefaa094a611cec64f89bab287b54bd0d9`
-Implementation SHA: `9029b103644682cdfbb88259b4ef99c8c6e202dc` (524/524 tested). The following commit updates only this SHA reference.
+Previous reviewed head: `db69d4a3f3dbec0ea14d5343e93604ba2c243604`
+Revision implementation SHA: recorded by the following documentation-only commit.
 
 C3.3.4 is accepted and closed in the base. C3.3.5 adds an isolated news lifecycle,
 semantic deduplication and informational notification ledger. No live transport
@@ -39,8 +40,8 @@ temporary SQLite databases and backups are excluded from publication.
 
 ## Verification
 
-Full offline regression: **524/524 passed**, zero failures/errors:
-467 existing tests and 57 new. Python 3.12.10, Windows, 2026-10-20.
+Full offline regression: **530/530 passed**, zero failures/errors:
+467 existing tests and 63 new. Python 3.12.10, Windows, 2026-10-20.
 Existing installed dependencies, isolated copy, synthetic fixtures. No fresh
 installation, Linux/CI run or independent reviewer result is claimed.
 Unittest discovery/external-temp setup and test coverage are documented in
@@ -50,6 +51,29 @@ Coverage includes identity/migration, materiality, correction/contradiction,
 per-recipient idempotency, immutable evidence, chronology/replay, SQLite rollback
 and concurrency, subprocess crashes, retry/unknown outcomes, expiry, corruption,
 backup, complete scenario preservation and no-network boundaries.
+
+## Review revision
+
+The reviewer requested revisions, not acceptance. Changed only
+`news_lifecycle_engine.py`, `test_news_lifecycle_engine.py`, this handoff and
+`docs/C3_3_5_CONTRACT.md` relative to the previous reviewed head.
+
+1. Recipient contract: the normalized first-call set is persisted. A different set
+   on retry raises an explicit error atomically, including after restart. Equivalent
+   ordering/duplicates are accepted. Empty sets are preserved. Legacy input records
+   without this contract fail closed pending explicit offline migration. Block D
+   still must know the complete initial recipient set; no automatic backfill exists.
+2. Confirmed bug: unsupported fact changes suppressed valid changes to other
+   semantic dimensions. Rejected fact_refs/fact_status now retain the accepted
+   snapshot, with an explicit journal/result marker. Validated assessment or
+   contradiction changes proceed. Raw inputs remain immutable; fact-only rejection
+   does not refresh lifetime or advance version.
+3. Independence remains an upstream attestation. Block D must validate provenance
+   before accepting the flag; blindly forwarding independent=True is not approved.
+
+Six targeted tests added. Five failed before the fix, reproducing the interface
+gap and both mixed-change failures. Full regression after the fix: 530/530.
+Delivery-state implementation is unchanged. Independent review is still required.
 
 ## Decisions
 

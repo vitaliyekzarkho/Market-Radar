@@ -148,6 +148,10 @@ class Lifecycle:
                 if existing["hash"] != input_hash:
                     raise ValueError("input version mutated")
                 result = json.loads(existing["result"])
+                if "recipient_keys" not in result:
+                    raise ValueError("legacy input has no recipient contract; explicit offline migration required")
+                if result["recipient_keys"] != recipients:
+                    raise ValueError("recipient set changed for processed input")
                 result.update(duplicate=True, notification_ids=[])
                 return {**result, "scenario": deepcopy(scenario)}
             self._expire(moment)
@@ -158,7 +162,8 @@ class Lifecycle:
                     raise ValueError("immutable evidence version changed")
                 s.db.execute("INSERT OR IGNORE INTO evidence VALUES (?,?,?)", (s.ns, evidence["ref"], encoded))
             story, identity_status = self._identity(value)
-            result = {"identity_status": identity_status, "notification_ids": [], "duplicate": False}
+            result = {"identity_status": identity_status, "notification_ids": [], "duplicate": False,
+                      "recipient_keys": recipients}
             if identity_status in {"ambiguous", "requiring_review"}:
                 s.log("IDENTITY_REVIEW", moment, {"input_id": value["input_id"], "status": identity_status})
             else:
@@ -202,15 +207,24 @@ class Lifecycle:
                     raise ValueError("resolution requires explicit evidence")
                 if kind == "resolution" and not any(e["verified"] and e["kind"] == "resolution" and e["relation"] == "resolves" for e in value["evidence"]):
                     raise ValueError("explicit resolution evidence relation required")
-                changed = sem != previous or (kind == "resolution" and ep and ep["state"] not in {"RESOLVED", "EXPIRED"})
-                material = changed and kind not in {"repeat", "redistribution", "recalculation"}
-                if previous and sem["fact_refs"] != previous["fact_refs"] and kind not in {"fact_correction", "resolution"} and not independent:
-                    material = False
                 if previous and sem["fact_refs"] != previous["fact_refs"] and kind not in {"fact_correction", "resolution"}:
                     additions = set(sem["fact_refs"]) - set(previous["fact_refs"])
                     attestations = {e["subject_ref"] for e in value["evidence"] if e["kind"] == "fact" and e["verified"] and e["independent"] and e["relation"] == "supports"}
                     if not additions <= attestations or set(previous["fact_refs"]) - set(sem["fact_refs"]):
-                        material = False
+                        # Reject the proposed fact snapshot, not an independent
+                        # validated interpretation change in the same input.
+                        result["rejected_semantic_fields"] = ["fact_refs", "fact_status"]
+                        s.log("FACT_CHANGE_REJECTED", moment, {
+                            "input_id": value["input_id"], "story": story,
+                            "proposed_fact_refs": sem["fact_refs"],
+                            "proposed_fact_status": sem["fact_status"],
+                            "retained_fact_refs": previous["fact_refs"],
+                            "retained_fact_status": previous["fact_status"],
+                        })
+                        sem["fact_refs"] = deepcopy(previous["fact_refs"])
+                        sem["fact_status"] = previous["fact_status"]
+                changed = sem != previous or (kind == "resolution" and ep and ep["state"] not in {"RESOLVED", "EXPIRED"})
+                material = changed and kind not in {"repeat", "redistribution", "recalculation"}
                 if ep and utc(value["available_at_utc"]) < utc(ep["last_available_at_utc"]):
                     material = False
                     result["reason"] = "late_version_journal_only"
