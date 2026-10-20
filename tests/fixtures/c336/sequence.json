@@ -1,0 +1,1558 @@
+{
+  "classification": "synthetic",
+  "policy": {
+    "version": "c336_synthetic_v1",
+    "episode_max_seconds": 3600,
+    "inactivity_seconds": 600,
+    "notification_ttl_seconds": 300,
+    "suppression_seconds": 30,
+    "evidence_max_age_seconds": 7200,
+    "retry_max_attempts": 3,
+    "retry_backoff_seconds": 10,
+    "attempt_timeout_seconds": 20
+  },
+  "scenario": {
+    "direction": "bearish",
+    "score": 70,
+    "targets": [
+      90
+    ],
+    "invalidation": {
+      "price": 110
+    },
+    "permissions": {
+      "entry": false,
+      "manual_review": true
+    },
+    "primary": {
+      "id": "primary_htf",
+      "direction": "bearish"
+    },
+    "countertrend": {
+      "id": "nested_bull",
+      "direction": "bullish",
+      "state": "forming"
+    },
+    "alternative": {
+      "id": "conditional_reversal",
+      "direction": "bullish",
+      "state": "conditional"
+    }
+  },
+  "operations": [
+    {
+      "id": "first_significant",
+      "at": "2026-10-19T12:01:00+00:00",
+      "order": 0,
+      "kind": "chain",
+      "chain": {
+        "provenance": "declared_synthetic_test_attestations",
+        "events": [
+          {
+            "event_id": "event_a",
+            "title": "Real yields rise, yields spike",
+            "summary": "Synthetic test only",
+            "published_at_utc": "2026-10-19T11:00:00+00:00",
+            "observed_at_utc": "2026-10-19T11:00:01+00:00",
+            "available_at_utc": "2026-10-19T11:00:02+00:00",
+            "source": "synthetic",
+            "topics": [
+              "rates"
+            ]
+          }
+        ],
+        "event_time_utc": "2026-10-19T11:00:00+00:00",
+        "interpretation_available_at_utc": "2026-10-19T11:00:03+00:00",
+        "validation_available_at_utc": "2026-10-19T12:01:00+00:00",
+        "assets": {
+          "gold": {
+            "source": "synthetic",
+            "symbol": "gold",
+            "timeframe": "M15",
+            "candles": [
+              {
+                "utc_time": "2026-10-19T09:00:00+00:00",
+                "available_at_utc": "2026-10-19T09:15:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:15:00+00:00",
+                "available_at_utc": "2026-10-19T09:30:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:30:00+00:00",
+                "available_at_utc": "2026-10-19T09:45:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:45:00+00:00",
+                "available_at_utc": "2026-10-19T10:00:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:00:00+00:00",
+                "available_at_utc": "2026-10-19T10:15:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:15:00+00:00",
+                "available_at_utc": "2026-10-19T10:30:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:30:00+00:00",
+                "available_at_utc": "2026-10-19T10:45:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:45:00+00:00",
+                "available_at_utc": "2026-10-19T11:00:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:00:00+00:00",
+                "available_at_utc": "2026-10-19T11:15:10+00:00",
+                "is_closed": true,
+                "open": 99,
+                "high": 99.2,
+                "low": 98.8,
+                "close": 99,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:15:00+00:00",
+                "available_at_utc": "2026-10-19T11:30:10+00:00",
+                "is_closed": true,
+                "open": 98,
+                "high": 98.2,
+                "low": 97.8,
+                "close": 98,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:30:00+00:00",
+                "available_at_utc": "2026-10-19T11:45:10+00:00",
+                "is_closed": true,
+                "open": 97,
+                "high": 97.2,
+                "low": 96.8,
+                "close": 97,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:45:00+00:00",
+                "available_at_utc": "2026-10-19T12:00:10+00:00",
+                "is_closed": true,
+                "open": 96,
+                "high": 96.2,
+                "low": 95.8,
+                "close": 96,
+                "tick_volume": 100
+              }
+            ]
+          },
+          "real_yields": {
+            "source": "synthetic",
+            "symbol": "real_yields",
+            "timeframe": "M15",
+            "candles": [
+              {
+                "utc_time": "2026-10-19T09:00:00+00:00",
+                "available_at_utc": "2026-10-19T09:15:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:15:00+00:00",
+                "available_at_utc": "2026-10-19T09:30:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:30:00+00:00",
+                "available_at_utc": "2026-10-19T09:45:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:45:00+00:00",
+                "available_at_utc": "2026-10-19T10:00:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:00:00+00:00",
+                "available_at_utc": "2026-10-19T10:15:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:15:00+00:00",
+                "available_at_utc": "2026-10-19T10:30:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:30:00+00:00",
+                "available_at_utc": "2026-10-19T10:45:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:45:00+00:00",
+                "available_at_utc": "2026-10-19T11:00:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:00:00+00:00",
+                "available_at_utc": "2026-10-19T11:15:10+00:00",
+                "is_closed": true,
+                "open": 101,
+                "high": 101.2,
+                "low": 100.8,
+                "close": 101,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:15:00+00:00",
+                "available_at_utc": "2026-10-19T11:30:10+00:00",
+                "is_closed": true,
+                "open": 102,
+                "high": 102.2,
+                "low": 101.8,
+                "close": 102,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:30:00+00:00",
+                "available_at_utc": "2026-10-19T11:45:10+00:00",
+                "is_closed": true,
+                "open": 103,
+                "high": 103.2,
+                "low": 102.8,
+                "close": 103,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:45:00+00:00",
+                "available_at_utc": "2026-10-19T12:00:10+00:00",
+                "is_closed": true,
+                "open": 104,
+                "high": 104.2,
+                "low": 103.8,
+                "close": 104,
+                "tick_volume": 100
+              }
+            ]
+          },
+          "nominal_yields": {
+            "source": "synthetic",
+            "symbol": "nominal_yields",
+            "timeframe": "M15",
+            "candles": [
+              {
+                "utc_time": "2026-10-19T09:00:00+00:00",
+                "available_at_utc": "2026-10-19T09:15:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:15:00+00:00",
+                "available_at_utc": "2026-10-19T09:30:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:30:00+00:00",
+                "available_at_utc": "2026-10-19T09:45:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:45:00+00:00",
+                "available_at_utc": "2026-10-19T10:00:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:00:00+00:00",
+                "available_at_utc": "2026-10-19T10:15:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:15:00+00:00",
+                "available_at_utc": "2026-10-19T10:30:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:30:00+00:00",
+                "available_at_utc": "2026-10-19T10:45:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:45:00+00:00",
+                "available_at_utc": "2026-10-19T11:00:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:00:00+00:00",
+                "available_at_utc": "2026-10-19T11:15:10+00:00",
+                "is_closed": true,
+                "open": 101,
+                "high": 101.2,
+                "low": 100.8,
+                "close": 101,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:15:00+00:00",
+                "available_at_utc": "2026-10-19T11:30:10+00:00",
+                "is_closed": true,
+                "open": 102,
+                "high": 102.2,
+                "low": 101.8,
+                "close": 102,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:30:00+00:00",
+                "available_at_utc": "2026-10-19T11:45:10+00:00",
+                "is_closed": true,
+                "open": 103,
+                "high": 103.2,
+                "low": 102.8,
+                "close": 103,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:45:00+00:00",
+                "available_at_utc": "2026-10-19T12:00:10+00:00",
+                "is_closed": true,
+                "open": 104,
+                "high": 104.2,
+                "low": 103.8,
+                "close": 104,
+                "tick_volume": 100
+              }
+            ]
+          },
+          "usd": {
+            "source": "synthetic",
+            "symbol": "usd",
+            "timeframe": "M15",
+            "candles": [
+              {
+                "utc_time": "2026-10-19T09:00:00+00:00",
+                "available_at_utc": "2026-10-19T09:15:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:15:00+00:00",
+                "available_at_utc": "2026-10-19T09:30:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:30:00+00:00",
+                "available_at_utc": "2026-10-19T09:45:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T09:45:00+00:00",
+                "available_at_utc": "2026-10-19T10:00:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:00:00+00:00",
+                "available_at_utc": "2026-10-19T10:15:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:15:00+00:00",
+                "available_at_utc": "2026-10-19T10:30:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:30:00+00:00",
+                "available_at_utc": "2026-10-19T10:45:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T10:45:00+00:00",
+                "available_at_utc": "2026-10-19T11:00:10+00:00",
+                "is_closed": true,
+                "open": 100,
+                "high": 100.2,
+                "low": 99.8,
+                "close": 100,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:00:00+00:00",
+                "available_at_utc": "2026-10-19T11:15:10+00:00",
+                "is_closed": true,
+                "open": 101,
+                "high": 101.2,
+                "low": 100.8,
+                "close": 101,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:15:00+00:00",
+                "available_at_utc": "2026-10-19T11:30:10+00:00",
+                "is_closed": true,
+                "open": 102,
+                "high": 102.2,
+                "low": 101.8,
+                "close": 102,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:30:00+00:00",
+                "available_at_utc": "2026-10-19T11:45:10+00:00",
+                "is_closed": true,
+                "open": 103,
+                "high": 103.2,
+                "low": 102.8,
+                "close": 103,
+                "tick_volume": 100
+              },
+              {
+                "utc_time": "2026-10-19T11:45:00+00:00",
+                "available_at_utc": "2026-10-19T12:00:10+00:00",
+                "is_closed": true,
+                "open": 104,
+                "high": 104.2,
+                "low": 103.8,
+                "close": 104,
+                "tick_volume": 100
+              }
+            ]
+          }
+        },
+        "scenario": {
+          "direction": "bearish",
+          "score": 70,
+          "targets": [
+            90
+          ],
+          "invalidation": {
+            "price": 110
+          },
+          "permissions": {
+            "entry": false,
+            "manual_review": true
+          },
+          "primary": {
+            "id": "primary_htf",
+            "direction": "bearish"
+          },
+          "countertrend": {
+            "id": "nested_bull",
+            "direction": "bullish",
+            "state": "forming"
+          },
+          "alternative": {
+            "id": "conditional_reversal",
+            "direction": "bullish",
+            "state": "conditional"
+          }
+        },
+        "max_age_seconds": 7200,
+        "lifecycle": {
+          "input_id": "input_1",
+          "upstream_story_id": "story_d1c5386506eba77a",
+          "member_event_ids": [
+            "event_a"
+          ],
+          "published_at_utc": "2026-10-19T11:00:00+00:00",
+          "observed_at_utc": "2026-10-19T12:00:59+00:00",
+          "available_at_utc": "2026-10-19T12:01:00+00:00",
+          "significant": true,
+          "change_kind": "initial",
+          "assessment": "supports",
+          "fact_status": "verified",
+          "hypothesis_status": "supported",
+          "hypothesis_id": "hypothesis_a",
+          "fact_refs": [
+            "claim_a"
+          ],
+          "mechanism_refs": [
+            "real_yield_opportunity_cost_up"
+          ],
+          "evidence": [
+            {
+              "ref": "fact_1",
+              "origin_ref": "synthetic_origin",
+              "subject_ref": "claim_a",
+              "relation": "supports",
+              "kind": "fact",
+              "verified": true,
+              "independent": true,
+              "observed_at_utc": "2026-10-19T12:00:59+00:00",
+              "available_at_utc": "2026-10-19T12:01:00+00:00"
+            },
+            {
+              "ref": "validation_1",
+              "origin_ref": "synthetic_measurement",
+              "subject_ref": "hypothesis_a",
+              "relation": "supports",
+              "kind": "validation",
+              "verified": true,
+              "independent": false,
+              "observed_at_utc": "2026-10-19T12:01:00+00:00",
+              "available_at_utc": "2026-10-19T12:01:00+00:00"
+            }
+          ]
+        }
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "semantic_version": 1,
+        "notification_kind": [
+          "FIRST_SIGNIFICANT_STORY"
+        ],
+        "assessment": "supports"
+      }
+    },
+    {
+      "id": "communicated",
+      "at": "2026-10-19T12:01:01+00:00",
+      "order": 1,
+      "kind": "delivery",
+      "target": "first_significant",
+      "outcome": "delivered"
+    },
+    {
+      "id": "duplicate",
+      "at": "2026-10-19T12:01:02+00:00",
+      "order": 2,
+      "kind": "news",
+      "input": {
+        "input_id": "input_1",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:00:59+00:00",
+        "available_at_utc": "2026-10-19T12:01:00+00:00",
+        "significant": true,
+        "change_kind": "initial",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_1",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:00:59+00:00",
+            "available_at_utc": "2026-10-19T12:01:00+00:00"
+          },
+          {
+            "ref": "validation_1",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:00+00:00",
+            "available_at_utc": "2026-10-19T12:01:00+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "duplicate": true,
+        "notification_kind": []
+      }
+    },
+    {
+      "id": "redistribution",
+      "at": "2026-10-19T12:01:03+00:00",
+      "order": 3,
+      "kind": "news",
+      "input": {
+        "input_id": "input_2",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:02+00:00",
+        "available_at_utc": "2026-10-19T12:01:03+00:00",
+        "significant": true,
+        "change_kind": "redistribution",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_2",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:02+00:00",
+            "available_at_utc": "2026-10-19T12:01:03+00:00"
+          },
+          {
+            "ref": "validation_2",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:02+00:00",
+            "available_at_utc": "2026-10-19T12:01:03+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "semantic_version": 1,
+        "notification_kind": []
+      }
+    },
+    {
+      "id": "late_publication",
+      "at": "2026-10-19T12:01:04+00:00",
+      "order": 4,
+      "kind": "news",
+      "input": {
+        "input_id": "input_3",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T10:01:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:03+00:00",
+        "available_at_utc": "2026-10-19T12:01:04+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_3",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:03+00:00",
+            "available_at_utc": "2026-10-19T12:01:04+00:00"
+          },
+          {
+            "ref": "validation_3",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:03+00:00",
+            "available_at_utc": "2026-10-19T12:01:04+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "semantic_version": 1,
+        "notification_kind": []
+      }
+    },
+    {
+      "id": "independent_development",
+      "at": "2026-10-19T12:01:10+00:00",
+      "order": 5,
+      "kind": "news",
+      "input": {
+        "input_id": "input_4",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:09+00:00",
+        "available_at_utc": "2026-10-19T12:01:10+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_4",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_b",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:09+00:00",
+            "available_at_utc": "2026-10-19T12:01:10+00:00"
+          },
+          {
+            "ref": "validation_4",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:09+00:00",
+            "available_at_utc": "2026-10-19T12:01:10+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "semantic_version": 2,
+        "notification_kind": [
+          "MATERIAL_UPDATE"
+        ]
+      }
+    },
+    {
+      "id": "fact_correction",
+      "at": "2026-10-19T12:01:20+00:00",
+      "order": 6,
+      "kind": "news",
+      "input": {
+        "input_id": "input_5",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:19+00:00",
+        "available_at_utc": "2026-10-19T12:01:20+00:00",
+        "significant": true,
+        "change_kind": "fact_correction",
+        "assessment": "supports",
+        "fact_status": "corrected",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_5",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "corrects",
+            "kind": "correction",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:19+00:00",
+            "available_at_utc": "2026-10-19T12:01:20+00:00"
+          },
+          {
+            "ref": "validation_5",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:19+00:00",
+            "available_at_utc": "2026-10-19T12:01:20+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "semantic_version": 3,
+        "notification_kind": [
+          "FACT_CORRECTION"
+        ]
+      }
+    },
+    {
+      "id": "hypothesis_contradiction",
+      "at": "2026-10-19T12:01:30+00:00",
+      "order": 7,
+      "kind": "news",
+      "input": {
+        "input_id": "input_6",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:29+00:00",
+        "available_at_utc": "2026-10-19T12:01:30+00:00",
+        "significant": true,
+        "change_kind": "hypothesis_contradiction",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "contradicted",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_6",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:29+00:00",
+            "available_at_utc": "2026-10-19T12:01:30+00:00"
+          },
+          {
+            "ref": "validation_6",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "contradicts",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:29+00:00",
+            "available_at_utc": "2026-10-19T12:01:30+00:00"
+          }
+        ],
+        "contradicts_hypothesis_id": "hypothesis_a"
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "semantic_version": 4,
+        "notification_kind": [
+          "MARKET_HYPOTHESIS_CONTRADICTED"
+        ]
+      }
+    },
+    {
+      "id": "pa_conflict",
+      "at": "2026-10-19T12:01:40+00:00",
+      "order": 8,
+      "kind": "news",
+      "input": {
+        "input_id": "input_7",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:39+00:00",
+        "available_at_utc": "2026-10-19T12:01:40+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "conflicts",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_7",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:39+00:00",
+            "available_at_utc": "2026-10-19T12:01:40+00:00"
+          },
+          {
+            "ref": "validation_7",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:39+00:00",
+            "available_at_utc": "2026-10-19T12:01:40+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "semantic_version": 5,
+        "notification_kind": [
+          "PA_HTF_CONTEXT_CONFLICT"
+        ]
+      }
+    },
+    {
+      "id": "mixed_unsupported_fact",
+      "at": "2026-10-19T12:01:50+00:00",
+      "order": 9,
+      "kind": "news",
+      "input": {
+        "input_id": "input_8",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:49+00:00",
+        "available_at_utc": "2026-10-19T12:01:50+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b",
+          "unsupported_claim"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_8",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:49+00:00",
+            "available_at_utc": "2026-10-19T12:01:50+00:00"
+          },
+          {
+            "ref": "validation_8",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:49+00:00",
+            "available_at_utc": "2026-10-19T12:01:50+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "semantic_version": 6,
+        "notification_kind": [
+          "MATERIAL_UPDATE"
+        ],
+        "assessment": "supports"
+      }
+    },
+    {
+      "id": "recipient_mismatch",
+      "at": "2026-10-19T12:01:51+00:00",
+      "order": 10,
+      "kind": "news",
+      "input": {
+        "input_id": "input_8",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:49+00:00",
+        "available_at_utc": "2026-10-19T12:01:50+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b",
+          "unsupported_claim"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_8",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:49+00:00",
+            "available_at_utc": "2026-10-19T12:01:50+00:00"
+          },
+          {
+            "ref": "validation_8",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:49+00:00",
+            "available_at_utc": "2026-10-19T12:01:50+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a",
+        "recipient_b"
+      ],
+      "expect": {},
+      "expected_error": "recipient set changed"
+    },
+    {
+      "id": "future_rejected",
+      "at": "2026-10-19T12:01:52+00:00",
+      "order": 11,
+      "kind": "news",
+      "input": {
+        "input_id": "input_9",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:51+00:00",
+        "available_at_utc": "2026-10-19T12:16:00+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_9",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:51+00:00",
+            "available_at_utc": "2026-10-19T12:01:52+00:00"
+          },
+          {
+            "ref": "validation_9",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:51+00:00",
+            "available_at_utc": "2026-10-19T12:01:52+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {},
+      "expected_error": "INPUT_CHRONOLOGY"
+    },
+    {
+      "id": "unverified_rejected",
+      "at": "2026-10-19T12:01:53+00:00",
+      "order": 12,
+      "kind": "news",
+      "input": {
+        "input_id": "input_10",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:52+00:00",
+        "available_at_utc": "2026-10-19T12:01:53+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_10",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:52+00:00",
+            "available_at_utc": "2026-10-19T12:01:53+00:00"
+          },
+          {
+            "ref": "validation_10",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": false,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:52+00:00",
+            "available_at_utc": "2026-10-19T12:01:53+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {},
+      "expected_error": "validated assessment requires evidence"
+    },
+    {
+      "id": "resolution",
+      "at": "2026-10-19T12:02:00+00:00",
+      "order": 13,
+      "kind": "news",
+      "input": {
+        "input_id": "input_11",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:01:59+00:00",
+        "available_at_utc": "2026-10-19T12:02:00+00:00",
+        "significant": true,
+        "change_kind": "resolution",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b"
+        ],
+        "mechanism_refs": [
+          "real_yield_opportunity_cost_up"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_11",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:59+00:00",
+            "available_at_utc": "2026-10-19T12:02:00+00:00"
+          },
+          {
+            "ref": "validation_11",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:01:59+00:00",
+            "available_at_utc": "2026-10-19T12:02:00+00:00"
+          },
+          {
+            "ref": "resolution_test",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "resolves",
+            "kind": "resolution",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:01:59+00:00",
+            "available_at_utc": "2026-10-19T12:02:00+00:00"
+          }
+        ],
+        "resolution_reason": "authorized_manual"
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "state": "RESOLVED",
+        "notification_kind": [
+          "EPISODE_RESOLVED"
+        ]
+      }
+    },
+    {
+      "id": "linked_episode",
+      "at": "2026-10-19T12:02:10+00:00",
+      "order": 14,
+      "kind": "news",
+      "input": {
+        "input_id": "input_12",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:02:09+00:00",
+        "available_at_utc": "2026-10-19T12:02:10+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b"
+        ],
+        "mechanism_refs": [
+          "new_mechanism"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_12",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:02:09+00:00",
+            "available_at_utc": "2026-10-19T12:02:10+00:00"
+          },
+          {
+            "ref": "validation_12",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:02:09+00:00",
+            "available_at_utc": "2026-10-19T12:02:10+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "state": "NEW",
+        "semantic_version": 1,
+        "notification_kind": [
+          "FIRST_SIGNIFICANT_STORY"
+        ]
+      }
+    },
+    {
+      "id": "unknown_delivery",
+      "at": "2026-10-19T12:02:11+00:00",
+      "order": 15,
+      "kind": "delivery",
+      "target": "linked_episode",
+      "outcome": "timeout"
+    },
+    {
+      "id": "unknown_no_retry",
+      "at": "2026-10-19T12:02:40+00:00",
+      "order": 16,
+      "kind": "unknown_probe",
+      "target": "linked_episode"
+    },
+    {
+      "id": "expiry",
+      "at": "2026-10-19T12:12:40+00:00",
+      "order": 17,
+      "kind": "expire"
+    },
+    {
+      "id": "future_development",
+      "at": "2026-10-19T12:14:20+00:00",
+      "order": 18,
+      "kind": "news",
+      "input": {
+        "input_id": "input_13",
+        "upstream_story_id": "story_d1c5386506eba77a",
+        "member_event_ids": [
+          "event_a"
+        ],
+        "published_at_utc": "2026-10-19T11:00:00+00:00",
+        "observed_at_utc": "2026-10-19T12:14:19+00:00",
+        "available_at_utc": "2026-10-19T12:14:20+00:00",
+        "significant": true,
+        "change_kind": "development",
+        "assessment": "supports",
+        "fact_status": "verified",
+        "hypothesis_status": "supported",
+        "hypothesis_id": "hypothesis_a",
+        "fact_refs": [
+          "claim_a",
+          "claim_b"
+        ],
+        "mechanism_refs": [
+          "later_mechanism"
+        ],
+        "evidence": [
+          {
+            "ref": "fact_13",
+            "origin_ref": "synthetic_origin",
+            "subject_ref": "claim_a",
+            "relation": "supports",
+            "kind": "fact",
+            "verified": true,
+            "independent": true,
+            "observed_at_utc": "2026-10-19T12:14:19+00:00",
+            "available_at_utc": "2026-10-19T12:14:20+00:00"
+          },
+          {
+            "ref": "validation_13",
+            "origin_ref": "synthetic_measurement",
+            "subject_ref": "hypothesis_a",
+            "relation": "supports",
+            "kind": "validation",
+            "verified": true,
+            "independent": false,
+            "observed_at_utc": "2026-10-19T12:14:19+00:00",
+            "available_at_utc": "2026-10-19T12:14:20+00:00"
+          }
+        ]
+      },
+      "recipients": [
+        "recipient_a"
+      ],
+      "expect": {
+        "state": "NEW",
+        "semantic_version": 1,
+        "notification_kind": [
+          "FIRST_SIGNIFICANT_STORY"
+        ]
+      }
+    }
+  ]
+}
