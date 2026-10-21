@@ -77,13 +77,16 @@ is accepted without rerunning it; no independent test execution is claimed.
 The acceptance commit fast-forwards main from the base through the approved HEAD.
 Final accepted main SHA: `5bf112b1648ac6186399e93edcd9a53dc8ca642e`.
 
-Block D: **PLANNED / AWAITING REVIEW**.
+Block D architecture: **APPROVED / ACCEPTED** (2026-10-21).
+D1: **AUTHORIZED FOR IMPLEMENTATION**.
+Approved planning HEAD: `eba6a53083161757b94f8bc2c4fcd152fdf5bf3f`.
 Planning branch: `feature/block-d-controlled-integration-plan`.
 See [technical plan](BLOCK_D_CONTROLLED_INTEGRATION_PLAN.md).
 D1 offline evidence ledger; D2 immutable scenario/decision ledger; D3 offline
 notification audit bridge; D4 read-only shadow boundary; D5 controlled shadow
 assessment; D6 optional controlled transport. D4-D6 require separate authorization.
-No implementation is included. Do not merge this planning branch before independent review.
+Approved planning branch fast-forwarded into main; this separate acceptance changes HANDOFF only.
+D1 must use a new isolated branch based on this acceptance commit. D1-D6 are not accepted implementations.
 Freshness, clock uncertainty, source trust, movement definitions, private retention
 and subscription/retry policies remain explicit decisions before runtime.
 No live deployment is authorized. Historical/XAUUSD remains
