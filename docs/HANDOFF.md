@@ -75,10 +75,17 @@ This closure changes documentation only. The implementer's 2026-10-20 regression
 is accepted without rerunning it; no independent test execution is claimed.
 
 The acceptance commit fast-forwards main from the base through the approved HEAD.
-Its exact resulting main SHA will be recorded in the subsequent Block D planning
-branch HANDOFF (a commit cannot embed its own SHA).
+Final accepted main SHA: `5bf112b1648ac6186399e93edcd9a53dc8ca642e`.
 
-Next: a separate Block D technical planning branch for independent review.
+Block D: **PLANNED / AWAITING REVIEW**.
+Planning branch: `feature/block-d-controlled-integration-plan`.
+See [technical plan](BLOCK_D_CONTROLLED_INTEGRATION_PLAN.md).
+D1 offline evidence ledger; D2 immutable scenario/decision ledger; D3 offline
+notification audit bridge; D4 read-only shadow boundary; D5 controlled shadow
+assessment; D6 optional controlled transport. D4-D6 require separate authorization.
+No implementation is included. Do not merge this planning branch before independent review.
+Freshness, clock uncertainty, source trust, movement definitions, private retention
+and subscription/retry policies remain explicit decisions before runtime.
 No live deployment is authorized. Historical/XAUUSD remains
 INSUFFICIENT_EVIDENCE; neither historical forecast timeliness nor trading
 performance has been established.
