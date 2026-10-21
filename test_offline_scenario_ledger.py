@@ -211,6 +211,7 @@ class ScenarioTests(unittest.TestCase):
         self.policy["inputs"]["news"]["required"] = True
         result = self.evaluate(self.record(), news=news)
         self.assertEqual(result["knowledge"], "UNKNOWN")
+        self.assertIn("INSUFFICIENT_INTERPRETATION", [r["reason"] for r in result["uncertainty"]])
         self.assertEqual(result["technical_context"], self.scenario)
 
     def test_stale_news_not_evaluated(self):

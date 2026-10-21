@@ -367,7 +367,8 @@ class ScenarioLedger:
                            technical_context=copy(version["scenario"]), news_status=news_status,
                            assessments=assessments, knowledge="UNKNOWN" if mandatory_unknown else "KNOWN",
                            action="WAIT" if wait else "RECORDED", reasons=reasons,
-                           uncertainty=[r for r in reasons if assessments[r["role"]]["knowledge"] == "UNKNOWN"],
+                           uncertainty=[r for r in reasons if assessments[r["role"]]["knowledge"] == "UNKNOWN"
+                                        or r["reason"] in {"INSUFFICIENT_INTERPRETATION", "INTERPRETATION_NOT_SUPPLIED"}],
                            evaluated_at_utc=clock["at_utc"], policy_hash=fingerprint(policy))
             payload["evaluation_id"] = fingerprint(payload)
             if prior_policy is None:
