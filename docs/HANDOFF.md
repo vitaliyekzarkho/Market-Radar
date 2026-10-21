@@ -1,10 +1,10 @@
 # MarketRadar handoff — C3.3.6
 
-Date: 2026-10-20
-Status: **C3.3.6 — IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
+Date: 2026-10-21
+Status: **C3.3.6 — ACCEPTED / CLOSED**
 Base: `8af2c7439fd63a2bad2fcf4945ae0f26b5db5d38`
 Branch: `feature/c3-3-6-offline-validation`
-Implementation SHA: `926e19155a3475438b0a6f72d238bee3129cf5b0` (559/559 tested). The following commit only records this SHA.
+Implementation SHA: `926e19155a3475438b0a6f72d238bee3129cf5b0` (559/559 tested). Approved branch HEAD: `ddc2ca5603df2e8535d5b351193afc06b8ea8add`.
 
 C3.3.5 remains ACCEPTED / CLOSED in the base. This feature validates contracts;
 it does not deploy them or establish historical forecast quality.
@@ -28,7 +28,7 @@ checkout, `work/c336_validation`, created from the exact accepted GitHub base.
 
 ## Validation results
 
-Full regression: **559/559 passed**, 0 failures/errors (530 existing + 29 new).
+Implementer-reported full regression: **559/559 passed**, 0 failures/errors (530 existing + 29 new).
 Python 3.12.10, Windows, existing installed dependencies, 2026-10-20.
 Used Python -B with unittest discovery and an explicit writable temporary directory
 outside every repository. No fresh dependency installation or Linux/CI result is
@@ -66,15 +66,22 @@ The legacy historical assessor is intentionally conservative: it cannot certify 
 new trusted ledger format. Concurrent archive modification prevents reproducible
 assessment; use fixed private archives. No production database is opened or migrated.
 
-## Next step
+## Acceptance and next step
 
-Independent review of this exact implementation, fixture coverage and contract;
-then a fresh offline regression. Do not merge into main or mark C3.3.6 accepted
-until explicitly approved. No accepted-module incompatibility required a source
-change during this implementation.
+Independent code review APPROVED; closure authorized on 2026-10-21.
+The approved branch is a direct descendant of the unchanged base main, two
+commits ahead. Acceptance preserves all implementation, tests and dependencies.
+This closure changes documentation only. The implementer's 2026-10-20 regression
+is accepted without rerunning it; no independent test execution is claimed.
 
-Block D still owns live adapters, provenance authority, production freshness and
-lifecycle/retry policy, Telegram transport and runtime integration.
+The acceptance commit fast-forwards main from the base through the approved HEAD.
+Its exact resulting main SHA will be recorded in the subsequent Block D planning
+branch HANDOFF (a commit cannot embed its own SHA).
+
+Next: a separate Block D technical planning branch for independent review.
+No live deployment is authorized. Historical/XAUUSD remains
+INSUFFICIENT_EVIDENCE; neither historical forecast timeliness nor trading
+performance has been established.
 
 **Do not start Radar, connect MT5, send Telegram messages, place trades, change
 PA/HTF or permissions, or modify/synchronize the working Radar directory.**

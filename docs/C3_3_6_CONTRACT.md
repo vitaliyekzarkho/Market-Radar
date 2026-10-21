@@ -1,6 +1,6 @@
 # C3.3.6 — Offline Validation
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
+Status: **ACCEPTED / CLOSED**
 Contract: `c336_v1`
 Base: `8af2c7439fd63a2bad2fcf4945ae0f26b5db5d38`
 Branch: `feature/c3-3-6-offline-validation`
@@ -199,9 +199,12 @@ the synthetic suite. Report fixtures do not claim market success.
 
 ## Next step and exclusions
 
-Independent review of the exact implementation and a fresh offline regression.
-Do not merge or mark accepted before approval. Genuine accepted-module
-incompatibilities must be reported rather than patched to make this suite pass.
+Independent code review APPROVED for implementation `926e19155a3475438b0a6f72d238bee3129cf5b0`
+and branch HEAD `ddc2ca5603df2e8535d5b351193afc06b8ea8add`.
+Closure authorized 2026-10-21. The implementer's 2026-10-20 result of 559/559
+on Windows/Python 3.12.10 is accepted; no new or independent regression is claimed.
+Only acceptance documentation changes; implementation and dependencies are unchanged.
+Next: independently reviewed Block D technical plan. No live deployment authorization.
 
 Block D retains live adapters, provenance authority, production policy approval,
 Telegram transport and runtime integration. No trading/PA/HTF behavior, permissions,
