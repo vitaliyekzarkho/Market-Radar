@@ -1,0 +1,21 @@
+{
+  "classification": "synthetic",
+  "instrument": "SYNTHETIC_XAU",
+  "timeframe": "H1",
+  "point_a": {"price": 110, "time": "2026-10-21T08:00:00Z", "definition": "synthetic swing high"},
+  "point_b": {"price": 100, "time": "2026-10-21T09:00:00Z", "definition": "synthetic current reference"},
+  "direction": "bearish",
+  "primary": {"id": "primary", "direction": "bearish", "state": "active", "parent_id": null},
+  "nested": [{"id": "nested", "direction": "bullish", "state": "candidate", "parent_id": "primary"}],
+  "alternatives": [{"id": "alternative", "direction": "bullish", "state": "conditional", "parent_id": "primary"}],
+  "htf": {"D1": "bearish", "H4": "range"},
+  "market_structure": {"leg": "synthetic-leg", "state": "delivery"},
+  "FTA": 95,
+  "TA": 90,
+  "liquidity_objectives": ["synthetic PWL"],
+  "invalidation": {"condition": "close above point A", "price": 110},
+  "permissions": {"entry": false, "manual_review": true},
+  "score": 70,
+  "confidence": "synthetic medium",
+  "unknown_extension": {"nested_values": [1, false, null, {"future_field": "retained"}]}
+}

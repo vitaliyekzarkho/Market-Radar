@@ -1,4 +1,27 @@
-# MarketRadar handoff — C3.3.6
+# MarketRadar handoff — D2
+
+## Current work — D2
+
+Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Branch: `feature/d2-scenario-decision-ledger`.
+Accepted D1 main: `2465cb7532c0be3dff259d48eb22ea78a56638e5`.
+D1 was accepted for offline use after independent code review of
+`82577797a8d9cbc623edc7a5f7ad6e9d3e7acc54`; implementation/tests unchanged.
+Its 603/603 result is the implementer's Windows/Python 3.12.10 run, not independent
+test execution. Synthetic clocks, unverified source authenticity, external retention
+dependency and absent production freshness policy remain limitations.
+
+D2 adds `offline_scenario_ledger.py`, `test_offline_scenario_ledger.py`,
+`tests/fixtures/d2/scenario.json` and `docs/D2_SCENARIO_DECISION_LEDGER_CONTRACT.md`.
+Only this HANDOFF changes among existing files on the D2 branch.
+See [D2 contract](D2_SCENARIO_DECISION_LEDGER_CONTRACT.md) for API, schema,
+transaction, provenance and temporal boundaries. Exact tested SHA and results will
+be recorded after the implementation commit is tested.
+
+No D2 merge/acceptance, D3-D6 implementation or live authorization. Work is isolated
+from the working Radar; no MT5, Telegram or trading operations are involved.
+
+## Prior accepted stages
 
 Date: 2026-10-21
 Status: **C3.3.6 — ACCEPTED / CLOSED**
@@ -123,8 +146,8 @@ notification audit bridge; D4 read-only shadow boundary; D5 controlled shadow
 assessment; D6 optional controlled transport. D4-D6 require separate authorization.
 Approved planning branch fast-forwarded into main; this separate acceptance changes HANDOFF only.
 D1 is accepted. D2 is authorized in an isolated branch from the new acceptance main.
-D2-D6 are not accepted implementations. The exact D1 acceptance SHA will be recorded
-in the D2 handoff after the acceptance commit exists.
+D2-D6 are not accepted implementations. Exact D1 acceptance main:
+`2465cb7532c0be3dff259d48eb22ea78a56638e5`.
 Freshness, clock uncertainty, source trust, movement definitions, private retention
 and subscription/retry policies remain explicit decisions before runtime.
 No live deployment is authorized. Historical/XAUUSD remains
