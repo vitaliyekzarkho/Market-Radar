@@ -1,6 +1,36 @@
 # D3 — Offline Notification & Delivery Audit
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
+## D3 acceptance — 2026-10-21
+
+**D3 — ACCEPTED / CLOSED** as an offline component.
+Independent review approved the correction and closed the blocking retry issue.
+Approved implementation: `489e1a4093ffc5d4166e0044f759a772494516f6`.
+Approved published HEAD: `82e8a97c19c5f4cdbcab4a5cfa0cfec79c569c7a`.
+Verified pre-merge main: `54f92effad0515757ca8bfd9ae5263f41e5aa14d`.
+Only documentation changed after the tested implementation. This acceptance commit
+changes only HANDOFF and the D3 contract; implementation, fixtures and tests remain
+unchanged. Main is fast-forwarded through the approved history without force-push.
+The resulting acceptance SHA is reported in the final handoff (a commit cannot
+embed its own SHA in its own contents).
+
+Accepted results: D3 **60/60**, full offline regression **730/730**, no failures,
+errors or skips. These are the implementer's 2026-10-21 Windows/CPython 3.12.10
+results, not an independent reviewer test run. No regression is rerun for this
+pure documentation acceptance.
+
+Retry after uncertainty requires confirmed_not_accepted plus the explicit synthetic
+policy and risk acknowledgment. still_unknown/provider_accepted never authorize
+retry. Provider acknowledgment is not proof of recipient delivery or reading.
+Synthetic clocks/authorities, unverified source authenticity, external retention
+and absent production freshness/recipient/retry policies remain limitations.
+No historical forecasting performance or live deployment readiness is established.
+
+Next: separately scope and review D4 planning. No Radar startup, MT5 connection,
+Telegram messages, trading operation, working-folder synchronization or D4
+implementation is authorized by this acceptance.
+
+
+Status: **ACCEPTED / CLOSED**
 Contract: `d3_v1`; date: 2026-10-21.
 Base: accepted D2 main `54f92effad0515757ca8bfd9ae5263f41e5aa14d`.
 Branch: `feature/d3-offline-notification-audit`.
@@ -246,7 +276,7 @@ Corrected implementation SHA: `489e1a4093ffc5d4166e0044f759a772494516f6`.
 0 failures/errors/skips, CPython 3.12.10 64-bit, Windows-11-10.0.26200-SP0.
 The HANDOFF commands were rerun on this exact SHA. These implementer results
 supersede the earlier verification counts below for this correction. D3 remains
-IMPLEMENTED / AWAITING INDEPENDENT REVIEW.
+ACCEPTED / CLOSED.
 
 Tests: `test_offline_notification_audit.py`; synthetic policy fixture:
 `tests/fixtures/d3/policy.json`; synthetic scenario reuses the accepted D2 fixture.
@@ -278,5 +308,4 @@ Limits: synthetic authorities and recipient attestations, no production provenan
 verification, external retention dependency, and no approved production notification,
 freshness, clock, recipient/backfill or retry policy. No clean-environment/Linux
 verification or historical forecasting performance is implied. Real transport receipt
-validation and recipient delivery/read evidence remain absent. D3 needs independent
-review; no merge, D4 implementation or live operation is authorized by this contract.
+validation and recipient delivery/read evidence remain absent. D3 has passed independent code review and is accepted for offline use. No D4 implementation or live operation is authorized by this contract.

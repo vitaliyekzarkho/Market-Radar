@@ -1,10 +1,40 @@
 # MarketRadar handoff — D3
 
+## D3 acceptance — 2026-10-21
+
+**D3 — ACCEPTED / CLOSED** as an offline component.
+Independent review approved the correction and closed the blocking retry issue.
+Approved implementation: `489e1a4093ffc5d4166e0044f759a772494516f6`.
+Approved published HEAD: `82e8a97c19c5f4cdbcab4a5cfa0cfec79c569c7a`.
+Verified pre-merge main: `54f92effad0515757ca8bfd9ae5263f41e5aa14d`.
+Only documentation changed after the tested implementation. This acceptance commit
+changes only HANDOFF and the D3 contract; implementation, fixtures and tests remain
+unchanged. Main is fast-forwarded through the approved history without force-push.
+The resulting acceptance SHA is reported in the final handoff (a commit cannot
+embed its own SHA in its own contents).
+
+Accepted results: D3 **60/60**, full offline regression **730/730**, no failures,
+errors or skips. These are the implementer's 2026-10-21 Windows/CPython 3.12.10
+results, not an independent reviewer test run. No regression is rerun for this
+pure documentation acceptance.
+
+Retry after uncertainty requires confirmed_not_accepted plus the explicit synthetic
+policy and risk acknowledgment. still_unknown/provider_accepted never authorize
+retry. Provider acknowledgment is not proof of recipient delivery or reading.
+Synthetic clocks/authorities, unverified source authenticity, external retention
+and absent production freshness/recipient/retry policies remain limitations.
+No historical forecasting performance or live deployment readiness is established.
+
+Next: separately scope and review D4 planning. No Radar startup, MT5 connection,
+Telegram messages, trading operation, working-folder synchronization or D4
+implementation is authorized by this acceptance.
+
+
 ## Current work — D3
 
 ### Retry/reconciliation review correction — 2026-10-21
 
-Status remains **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Status remains **ACCEPTED / CLOSED**.
 Tested corrected implementation: `489e1a4093ffc5d4166e0044f759a772494516f6`.
 Fresh tests: **60/60 D3**, **730/730 full offline regression**, 0 failures,
 0 errors, 0 skipped. CPython 3.12.10 64-bit (MSC v.1943 AMD64),
@@ -21,11 +51,11 @@ still_unknown persistence across restart and atomic retry rejection afterwards.
 
 Correction changes only offline_notification_audit.py, its test module, D3 contract
 and HANDOFF. Accepted D1/D2, eligibility, recipient invariants and schemas are unchanged.
-The next documentation-only commit records this result; do not merge D3.
+The next documentation-only commit records this result; D3 offline acceptance is authorized.
 
 ### Earlier D3 implementation record
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Status: **ACCEPTED / CLOSED**.
 Branch: `feature/d3-offline-notification-audit`.
 Accepted D2 main: `54f92effad0515757ca8bfd9ae5263f41e5aa14d`.
 Part A was already completed in that separate documentation-only acceptance commit.
@@ -67,7 +97,7 @@ Synthetic authorities/clocks, unverified authenticity, external payload retentio
 no production freshness/recipient/retry policy and no historical forecasting evidence
 remain limitations. Accepted D1/D2 source/tests and PA/HTF permissions are unchanged.
 Working Radar untouched; no MT5, Telegram, trades or D4-D6 implementation.
-Do not merge D3. Stop after publication for independent review.
+D3 is accepted for offline use; D4 requires a separate planning task.
 
 ## Earlier accepted stages
 
