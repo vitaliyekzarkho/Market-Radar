@@ -1,6 +1,32 @@
 # D2 — Immutable Scenario & Decision Ledger
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
+## D2 acceptance — 2026-10-21
+
+**D2 — ACCEPTED / CLOSED** for offline use.
+Independent code review APPROVED for implementation
+`822c6cadcbb48e3bbbf9b41c56f4fa1c79b0efd9` and published HEAD
+`f40d3d0ed484de0766037c6734d85d5c83fbb19c`.
+Verified pre-merge main: `2465cb7532c0be3dff259d48eb22ea78a56638e5`.
+The acceptance commit is a direct child of the approved HEAD and changes only
+this documentation and the companion D2 contract/HANDOFF. All implementation,
+fixtures, accepted D1 modules and tests remain unchanged. Main is fast-forwarded
+through the approved branch; no force-push.
+
+Accepted regression: **670/670**, focused lifecycle **14/14**, D2 **67/67**,
+0 failures/errors/skips, implementer's Windows/Python 3.12.10 run on 2026-10-21.
+No independent Python execution or new regression is claimed at closure.
+Synthetic clocks/technical authority, unverified source authenticity, external
+payload retention dependency and absent production freshness policy remain.
+Historical/XAUUSD remains INSUFFICIENT_EVIDENCE; no forecast timeliness,
+performance or live deployment authorization is established.
+
+Next stage: D3 offline notification/delivery audit, pending a separate scoped task.
+No D3 implementation, Radar/MT5/Telegram launch or runtime folder synchronization.
+The acceptance commit's SHA is reported in the final handoff; it cannot embed its
+own SHA in its own contents.
+
+
+Status: **ACCEPTED / CLOSED**
 Contract: `d2_v1`; date: 2026-10-21.
 Base: accepted D1 main `2465cb7532c0be3dff259d48eb22ea78a56638e5`.
 Branch: `feature/d2-scenario-decision-ledger`.
@@ -208,7 +234,7 @@ Windows-11-10.0.26200-SP0, existing dependencies. Exact commands are in HANDOFF.
 All new rejection tests compare the entire journal and projection before/after;
 valid formation remains idempotent after restart. Accepted D1 is unchanged.
 These fresh results supersede the earlier implementation results below for review
-of the correction. Status remains IMPLEMENTED / AWAITING INDEPENDENT REVIEW.
+of the correction. Status remains ACCEPTED / CLOSED.
 
 Synthetic fixtures: `tests/fixtures/d2/scenario.json` and inline synthetic D1 inputs.
 Earlier implementation tests: `test_offline_scenario_ledger.py` (53 tests).
@@ -240,4 +266,4 @@ No accepted code/tests or production policies change. D2 does not authenticate t
 technical authority, recalculate PA/HTF, establish causality, provide notifications
 or prove trading performance. C3.3.6 historical/XAUUSD remains INSUFFICIENT_EVIDENCE.
 Production source trust, retention, freshness, clock policy and any D3-D6 integration
-remain separate review/authorization decisions. Stop for independent D2 review.
+remain separate review/authorization decisions. D2 accepted for offline use after independent code review; D3 requires a separate implementation task.

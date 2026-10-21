@@ -1,10 +1,36 @@
 # MarketRadar handoff — D2
 
+## D2 acceptance — 2026-10-21
+
+**D2 — ACCEPTED / CLOSED** for offline use.
+Independent code review APPROVED for implementation
+`822c6cadcbb48e3bbbf9b41c56f4fa1c79b0efd9` and published HEAD
+`f40d3d0ed484de0766037c6734d85d5c83fbb19c`.
+Verified pre-merge main: `2465cb7532c0be3dff259d48eb22ea78a56638e5`.
+The acceptance commit is a direct child of the approved HEAD and changes only
+this documentation and the companion D2 contract/HANDOFF. All implementation,
+fixtures, accepted D1 modules and tests remain unchanged. Main is fast-forwarded
+through the approved branch; no force-push.
+
+Accepted regression: **670/670**, focused lifecycle **14/14**, D2 **67/67**,
+0 failures/errors/skips, implementer's Windows/Python 3.12.10 run on 2026-10-21.
+No independent Python execution or new regression is claimed at closure.
+Synthetic clocks/technical authority, unverified source authenticity, external
+payload retention dependency and absent production freshness policy remain.
+Historical/XAUUSD remains INSUFFICIENT_EVIDENCE; no forecast timeliness,
+performance or live deployment authorization is established.
+
+Next stage: D3 offline notification/delivery audit, pending a separate scoped task.
+No D3 implementation, Radar/MT5/Telegram launch or runtime folder synchronization.
+The acceptance commit's SHA is reported in the final handoff; it cannot embed its
+own SHA in its own contents.
+
+
 ## Current work — D2
 
 ### Lifecycle review correction — 2026-10-21
 
-Status remains **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Status remains **ACCEPTED / CLOSED**.
 Independent review requested a fix for new hypothesis IDs entering through revision
 or invalidation targeting an old ID. Corrected implementation SHA:
 `822c6cadcbb48e3bbbf9b41c56f4fa1c79b0efd9`.
@@ -30,11 +56,11 @@ python -B -c "import tempfile,unittest; tempfile.tempdir=r'C:\Users\User\AppData
 Correction changes only offline_scenario_ledger.py, test_offline_scenario_ledger.py,
 the D2 contract and this HANDOFF. Accepted D1 source/tests, news interpretation,
 cutoff/provenance rules, PA/HTF, permissions and notification engines are unchanged.
-No schema change, D3-D6 work, main merge or runtime operation. Await independent review.
+The review correction made no schema change, D3-D6 implementation or runtime change. Independent code review APPROVED; offline acceptance authorized.
 
 ### Earlier D2 implementation record
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Status: **ACCEPTED / CLOSED**.
 Branch: `feature/d2-scenario-decision-ledger`.
 Accepted D1 main: `2465cb7532c0be3dff259d48eb22ea78a56638e5`.
 D1 was accepted for offline use after independent code review of
@@ -70,7 +96,7 @@ caller-owned external retention, and no approved production freshness policy.
 Each evaluation is tied to its scenario version's original cutoff; newer inputs
 require a new explicit scenario version. No historical forecast quality is claimed.
 
-No D2 merge/acceptance, D3-D6 implementation or live authorization. Work is isolated
+D2 offline acceptance and fast-forward merge authorized; no D3-D6 implementation or live authorization. Work is isolated
 from the working Radar; no MT5, Telegram or trading operations are involved.
 
 ## Prior accepted stages
@@ -198,7 +224,7 @@ notification audit bridge; D4 read-only shadow boundary; D5 controlled shadow
 assessment; D6 optional controlled transport. D4-D6 require separate authorization.
 Approved planning branch fast-forwarded into main; this separate acceptance changes HANDOFF only.
 D1 is accepted. D2 is authorized in an isolated branch from the new acceptance main.
-D2-D6 are not accepted implementations. Exact D1 acceptance main:
+D2 is accepted for offline use. D3-D6 are not accepted implementations. Exact D1 acceptance main:
 `2465cb7532c0be3dff259d48eb22ea78a56638e5`.
 Freshness, clock uncertainty, source trust, movement definitions, private retention
 and subscription/retry policies remain explicit decisions before runtime.
