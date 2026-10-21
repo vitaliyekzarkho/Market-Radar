@@ -16,7 +16,24 @@ D3 adds `offline_notification_audit.py`, `test_offline_notification_audit.py`,
 `tests/fixtures/d3/policy.json` and `docs/D3_OFFLINE_NOTIFICATION_AUDIT_CONTRACT.md`.
 Only this HANDOFF changes among existing tracked files on the D3 branch.
 See [D3 technical contract](D3_OFFLINE_NOTIFICATION_AUDIT_CONTRACT.md).
-Exact tested implementation SHA/results will be recorded after committing and testing.
+Tested implementation SHA: `b9f49d55d31468958d3a8c1f43a0f23fcf900abb`.
+2026-10-21: D3 **57/57**, full offline regression **727/727** (670 accepted + 57 D3),
+0 failures, 0 errors, 0 skipped in both runs. CPython 3.12.10 64-bit
+(MSC v.1943 AMD64), Windows-11-10.0.26200-SP0, existing installed dependencies.
+Implementer validation, not independent reviewer execution or clean/Linux verification.
+The following documentation-only commit records the result without implementation changes.
+
+Exact commands from the isolated D3 checkout:
+
+```powershell
+python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D3_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromName('test_offline_notification_audit')); print('D3',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
+python -B -c "import tempfile,unittest; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D3_OfflineTests'; r=unittest.TextTestRunner().run(unittest.defaultTestLoader.discover('.', pattern='test_*.py')); print('FULL',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
+```
+
+Synthetic validation includes all requested 30 categories, exact five-prefix replay,
+concurrent duplicate preparation, real process exits before/after commit, separate
+upstream immutability checks and fail-closed corrupted D1/D2 references. No real
+message/recipient history is used. The public fixtures contain only synthetic data.
 
 Eligibility, generation, preparation, start, provider acknowledgment/failure/unknown
 and reconciliation are separate immutable events. Provider acceptance never proves

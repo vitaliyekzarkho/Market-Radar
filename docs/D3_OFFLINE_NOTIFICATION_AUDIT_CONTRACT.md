@@ -233,8 +233,13 @@ A process crash between recorded start and actual result remains uncertain.
 
 Tests: `test_offline_notification_audit.py`; synthetic policy fixture:
 `tests/fixtures/d3/policy.json`; synthetic scenario reuses the accepted D2 fixture.
-No accepted tests are modified. Exact tested SHA, environment, commands and final
-counts are recorded in HANDOFF after the committed implementation is tested.
+No accepted tests are modified. Tested implementation SHA:
+`b9f49d55d31468958d3a8c1f43a0f23fcf900abb`.
+2026-10-21: D3 **57/57**, full offline regression **727/727** (670 existing + 57 new),
+0 failures/errors/skips. CPython 3.12.10 64-bit, Windows-11-10.0.26200-SP0,
+existing installed dependencies. This is the implementer's run, not independent
+reviewer execution. HANDOFF records exact commands. The following commit updates
+only these verification documents; implementation remains the tested SHA.
 
 Coverage includes all 30 requested categories, linked terminal episodes, recipient
 immutability, policy conflicts, preparation/generation rollback, real process exits
