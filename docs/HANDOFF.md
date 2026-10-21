@@ -2,6 +2,29 @@
 
 ## Current work — D3
 
+### Retry/reconciliation review correction — 2026-10-21
+
+Status remains **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Tested corrected implementation: `489e1a4093ffc5d4166e0044f759a772494516f6`.
+Fresh tests: **60/60 D3**, **730/730 full offline regression**, 0 failures,
+0 errors, 0 skipped. CPython 3.12.10 64-bit (MSC v.1943 AMD64),
+Windows-11-10.0.26200-SP0, existing dependencies. Implementer execution only.
+The exact D3/full commands below were rerun on this SHA. The earlier 57/57 and
+727/727 results apply only to the earlier implementation, not this correction.
+
+Review finding: still_unknown previously permitted retry with duplicate-risk
+acknowledgment. Now only confirmed_not_accepted can authorize retry; policy,
+attempt limit and explicit risk acknowledgment remain necessary. provider_accepted
+and still_unknown forbid retry at both reconciliation and attempt preparation.
+Tests cover rejected authorization with complete journal/projection equality,
+still_unknown persistence across restart and atomic retry rejection afterwards.
+
+Correction changes only offline_notification_audit.py, its test module, D3 contract
+and HANDOFF. Accepted D1/D2, eligibility, recipient invariants and schemas are unchanged.
+The next documentation-only commit records this result; do not merge D3.
+
+### Earlier D3 implementation record
+
 Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
 Branch: `feature/d3-offline-notification-audit`.
 Accepted D2 main: `54f92effad0515757ca8bfd9ae5263f41e5aa14d`.

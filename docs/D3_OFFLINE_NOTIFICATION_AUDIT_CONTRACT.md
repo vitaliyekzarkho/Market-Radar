@@ -204,7 +204,10 @@ allow_reconciled_unknown_retry booleans. PREPARED, STARTED, UNKNOWN and ACKNOWLE
 block a new attempt. FAILED may permit one under the policy. UNKNOWN first requires
 reconciliation specifying provider_accepted, confirmed_not_accepted or still_unknown,
 an evidence reference, explicit authorize_retry and (for retry) duplicate-risk
-acknowledgment. provider_accepted cannot authorize retry. Even after reconciliation,
+acknowledgment. Only confirmed_not_accepted may authorize retry. Both provider_accepted
+and still_unknown forbid retry, regardless of duplicate-risk acknowledgment. This
+condition is enforced at reconciliation and again at attempt preparation, including
+when reading an older journal. Even after reconciliation,
 the policy and attempt limit must permit a new preparation. D3 never executes it
 automatically. Exactly-once external delivery is not claimed.
 
@@ -230,6 +233,20 @@ PREPARED: no start can be inferred. Recovery does not send, reconcile or retry.
 A process crash between recorded start and actual result remains uncertain.
 
 ## Verification and remaining decisions
+
+Independent review requested a stricter retry boundary: the earlier implementation
+allowed still_unknown plus duplicate-risk acknowledgment to authorize retry. That
+behavior is removed. Inconclusive reconciliation may be recorded with
+authorize_retry=false but cannot unlock a new attempt, including after restart.
+Rejected authorization leaves the entire journal/projection unchanged. No schema,
+D1/D2, eligibility, recipient or transport integration changes are included.
+
+Corrected implementation SHA: `489e1a4093ffc5d4166e0044f759a772494516f6`.
+2026-10-21 fresh verification: **60/60 D3**, **730/730 full regression**,
+0 failures/errors/skips, CPython 3.12.10 64-bit, Windows-11-10.0.26200-SP0.
+The HANDOFF commands were rerun on this exact SHA. These implementer results
+supersede the earlier verification counts below for this correction. D3 remains
+IMPLEMENTED / AWAITING INDEPENDENT REVIEW.
 
 Tests: `test_offline_notification_audit.py`; synthetic policy fixture:
 `tests/fixtures/d3/policy.json`; synthetic scenario reuses the accepted D2 fixture.
