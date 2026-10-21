@@ -228,6 +228,11 @@ class ScenarioLedger:
                     raise LedgerError("existing hypothesis cannot be newly formed")
                 if kind != "HYPOTHESIS_FORMED" and target not in previous_hypotheses:
                     raise LedgerError("new hypothesis requires formation event")
+                new_ids = set(hypotheses) - set(previous_hypotheses)
+                if len(new_ids) > 1:
+                    raise LedgerError("each new hypothesis requires its own formation event")
+                if new_ids and (kind != "HYPOTHESIS_FORMED" or new_ids != {target}):
+                    raise LedgerError("new hypothesis requires individually targeted formation event")
                 if not set(previous_hypotheses).issubset(hypotheses):
                     raise LedgerError("retain existing hypothesis identities, including terminal ones")
                 if any(hypotheses[i].get("parent_id") != h.get("parent_id") for i, h in previous_hypotheses.items()):

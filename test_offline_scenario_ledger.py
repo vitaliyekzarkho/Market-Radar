@@ -334,6 +334,90 @@ class ScenarioTests(unittest.TestCase):
         with self.assertRaisesRegex(LedgerError, "identities"):
             self.record("revision", kind="HYPOTHESIS_REVISED", predecessor_version_id=first["version_id"])
 
+    def lifecycle_reject(self, collection, kind, *, two=False, target="primary"):
+        first = self.record()
+        self.scenario[collection].append(dict(id="new", direction="bullish", state="candidate", parent_id="primary"))
+        if two:
+            self.scenario["alternatives"].append(dict(id="second", direction="bullish", state="conditional", parent_id="primary"))
+        if kind == "HYPOTHESIS_INVALIDATED":
+            self.scenario["primary"]["state"] = "invalidated"
+        events, projection = self.d2.events(), self.d2.projection()
+        with self.assertRaises(LedgerError):
+            self.record("rejected", kind=kind, hypothesis_id=target, predecessor_version_id=first["version_id"])
+        self.assertEqual(self.d2.events(), events)
+        self.assertEqual(self.d2.projection(), projection)
+
+    def test_lifecycle_nested_revision_rejected(self):
+        self.lifecycle_reject("nested", "HYPOTHESIS_REVISED")
+
+    def test_lifecycle_alternative_revision_rejected(self):
+        self.lifecycle_reject("alternatives", "HYPOTHESIS_REVISED")
+
+    def test_lifecycle_nested_invalidation_rejected(self):
+        self.lifecycle_reject("nested", "HYPOTHESIS_INVALIDATED")
+
+    def test_lifecycle_alternative_invalidation_rejected(self):
+        self.lifecycle_reject("alternatives", "HYPOTHESIS_INVALIDATED")
+
+    def test_lifecycle_two_new_ids_rejected(self):
+        self.lifecycle_reject("nested", "HYPOTHESIS_FORMED", two=True, target="new")
+
+    def test_lifecycle_wrong_formation_target_rejected(self):
+        self.lifecycle_reject("nested", "HYPOTHESIS_FORMED", target="primary")
+
+    def test_lifecycle_unknown_formation_target_rejected(self):
+        self.lifecycle_reject("nested", "HYPOTHESIS_FORMED", target="not-in-snapshot")
+
+    def lifecycle_form(self, collection, legacy=False):
+        first = self.record(kind="SCENARIO_OBSERVED_EXISTING" if legacy else "HYPOTHESIS_FORMED")
+        self.clock.later()
+        self.scenario[collection].append(dict(id="new", direction="bullish", state="candidate", parent_id="primary"))
+        result = self.record("new", kind="HYPOTHESIS_FORMED", hypothesis_id="new", predecessor_version_id=first["version_id"])
+        self.assertEqual(result["hypothesis_id"], "new")
+        self.assertEqual(result["hypothesis_history"]["new"]["formed_at_utc"], result["created_at_utc"])
+        self.assertEqual(result["hypothesis_history"]["primary"], first["hypothesis_history"]["primary"])
+        self.assertEqual(self.d2.projection()["versions"][first["version_id"]], first)
+        return first, result
+
+    def test_lifecycle_single_nested_formation(self):
+        self.lifecycle_form("nested")
+
+    def test_lifecycle_single_alternative_formation(self):
+        self.lifecycle_form("alternatives")
+
+    def test_lifecycle_no_new_ids_revision(self):
+        first = self.record()
+        result = self.record("revision", kind="HYPOTHESIS_REVISED", predecessor_version_id=first["version_id"])
+        self.assertEqual(result["hypothesis_history"], first["hypothesis_history"])
+
+    def test_lifecycle_no_new_ids_invalidation(self):
+        first = self.record()
+        self.scenario["primary"]["state"] = "invalidated"
+        result = self.record("invalid", kind="HYPOTHESIS_INVALIDATED", predecessor_version_id=first["version_id"])
+        self.assertEqual(result["hypothesis_history"], first["hypothesis_history"])
+
+    def test_lifecycle_legacy_multiple_unknown(self):
+        result = self.record(kind="SCENARIO_OBSERVED_EXISTING")
+        self.assertEqual(len(result["hypothesis_history"]), 3)
+        for h in result["hypothesis_history"].values():
+            self.assertIsNone(h["formed_at_utc"])
+            self.assertEqual(h["formation_authority"], "UNKNOWN")
+
+    def test_lifecycle_formation_after_legacy(self):
+        first, result = self.lifecycle_form("nested", legacy=True)
+        self.assertIsNone(result["formation_at_utc"])
+        self.assertEqual(result["formation_authority"], "UNKNOWN")
+
+    def test_lifecycle_valid_formation_replay_after_restart(self):
+        first, result = self.lifecycle_form("alternatives")
+        events, projection = self.d2.events(), self.d2.projection()
+        self.d2.close()
+        self.d2 = self.open()
+        replay = self.record("new", kind="HYPOTHESIS_FORMED", hypothesis_id="new", predecessor_version_id=first["version_id"])
+        self.assertEqual(replay, result)
+        self.assertEqual(self.d2.events(), events)
+        self.assertEqual(self.d2.projection(), projection)
+
     def test_new_nested_hypothesis_has_own_formation(self):
         first = self.record()
         self.clock.later()
