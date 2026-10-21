@@ -4,7 +4,7 @@ Date: 2026-10-20
 Status: **C3.3.6 — IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
 Base: `8af2c7439fd63a2bad2fcf4945ae0f26b5db5d38`
 Branch: `feature/c3-3-6-offline-validation`
-Implementation SHA: recorded by the following documentation-only commit.
+Implementation SHA: `926e19155a3475438b0a6f72d238bee3129cf5b0` (559/559 tested). The following commit only records this SHA.
 
 C3.3.5 remains ACCEPTED / CLOSED in the base. This feature validates contracts;
 it does not deploy them or establish historical forecast quality.
