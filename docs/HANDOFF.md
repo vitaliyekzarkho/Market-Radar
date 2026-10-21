@@ -1,4 +1,35 @@
-# MarketRadar handoff — D2
+# MarketRadar handoff — D3
+
+## Current work — D3
+
+Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Branch: `feature/d3-offline-notification-audit`.
+Accepted D2 main: `54f92effad0515757ca8bfd9ae5263f41e5aa14d`.
+Part A was already completed in that separate documentation-only acceptance commit.
+Verified ancestry from D1 `2465cb7532c0be3dff259d48eb22ea78a56638e5`;
+only HANDOFF/D2 contract changed after approved implementation
+`822c6cadcbb48e3bbbf9b41c56f4fa1c79b0efd9`. No repeated acceptance commit was needed.
+Prior 14/14 lifecycle, 67/67 D2 and 670/670 full results are implementer results on
+Windows/CPython 3.12.10, not independent reviewer execution.
+
+D3 adds `offline_notification_audit.py`, `test_offline_notification_audit.py`,
+`tests/fixtures/d3/policy.json` and `docs/D3_OFFLINE_NOTIFICATION_AUDIT_CONTRACT.md`.
+Only this HANDOFF changes among existing tracked files on the D3 branch.
+See [D3 technical contract](D3_OFFLINE_NOTIFICATION_AUDIT_CONTRACT.md).
+Exact tested implementation SHA/results will be recorded after committing and testing.
+
+Eligibility, generation, preparation, start, provider acknowledgment/failure/unknown
+and reconciliation are separate immutable events. Provider acceptance never proves
+recipient receipt/read. UNKNOWN blocks retry until explicit reconciliation, policy
+approval and duplicate-risk acknowledgment. There is no transport implementation.
+
+Synthetic authorities/clocks, unverified authenticity, external payload retention,
+no production freshness/recipient/retry policy and no historical forecasting evidence
+remain limitations. Accepted D1/D2 source/tests and PA/HTF permissions are unchanged.
+Working Radar untouched; no MT5, Telegram, trades or D4-D6 implementation.
+Do not merge D3. Stop after publication for independent review.
+
+## Earlier accepted stages
 
 ## D2 acceptance — 2026-10-21
 

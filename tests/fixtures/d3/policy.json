@@ -1,0 +1,16 @@
+{
+  "classification": "synthetic",
+  "policy_id": "synthetic:notifications-v1",
+  "allowed_roles": ["primary", "nested", "alternative"],
+  "allowed_events": ["NEW", "MATERIAL_UPDATE", "RESOLVED", "EXPIRED"],
+  "allowed_states": ["active", "candidate", "conditional"],
+  "require_entry_permission": false,
+  "episode_max_age_seconds": 60,
+  "retry": {
+    "classification": "synthetic",
+    "policy_id": "synthetic:retry-v1",
+    "max_attempts": 3,
+    "allow_failed_retry": true,
+    "allow_reconciled_unknown_retry": true
+  }
+}
