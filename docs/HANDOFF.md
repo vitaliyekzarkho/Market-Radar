@@ -78,7 +78,9 @@ The acceptance commit fast-forwards main from the base through the approved HEAD
 Final accepted main SHA: `5bf112b1648ac6186399e93edcd9a53dc8ca642e`.
 
 Block D architecture: **APPROVED / ACCEPTED** (2026-10-21).
-D1: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+D1: **ACCEPTED / CLOSED** for offline use, 2026-10-21.
+Independent code review APPROVED for `82577797a8d9cbc623edc7a5f7ad6e9d3e7acc54`.
+Acceptance changes documentation only; D1 implementation and tests are unchanged.
 Accepted Block D main: `a812c9b32371fa8b8da0df92d977f7a0ed3e8a89`.
 D1 branch: `feature/d1-offline-evidence-ledger`.
 See [D1 contract](D1_OFFLINE_EVIDENCE_LEDGER_CONTRACT.md).
@@ -91,8 +93,8 @@ Tested implementation SHA: `1c78c9f9bb10b4b995e042b78903f2ac7099339d`.
 covered, including real process termination before/after READY commit and
 concurrent duplicate publication. No independent reviewer run is claimed.
 The following documentation-only commit records these results without changing code.
-No D1 acceptance or live authorization is claimed. Stop for independent review;
-do not merge D1 into main.
+D1 closure is authorized; the 603/603 result remains attributed to the implementer.
+No independent test execution or live authorization is claimed.
 
 Exact regression command from the isolated D1 checkout:
 
@@ -120,7 +122,9 @@ D1 offline evidence ledger; D2 immutable scenario/decision ledger; D3 offline
 notification audit bridge; D4 read-only shadow boundary; D5 controlled shadow
 assessment; D6 optional controlled transport. D4-D6 require separate authorization.
 Approved planning branch fast-forwarded into main; this separate acceptance changes HANDOFF only.
-D1 must use a new isolated branch based on this acceptance commit. D1-D6 are not accepted implementations.
+D1 is accepted. D2 is authorized in an isolated branch from the new acceptance main.
+D2-D6 are not accepted implementations. The exact D1 acceptance SHA will be recorded
+in the D2 handoff after the acceptance commit exists.
 Freshness, clock uncertainty, source trust, movement definitions, private retention
 and subscription/retry policies remain explicit decisions before runtime.
 No live deployment is authorized. Historical/XAUUSD remains

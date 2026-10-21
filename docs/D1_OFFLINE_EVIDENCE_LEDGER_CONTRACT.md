@@ -1,6 +1,6 @@
 # D1 — Offline Evidence & Availability Ledger
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**
+Status: **D1 — ACCEPTED / CLOSED** (offline use, 2026-10-21)
 Contract: `d1_v1`; date: 2026-10-21.
 Accepted Block D main: `a812c9b32371fa8b8da0df92d977f7a0ed3e8a89`.
 Branch: `feature/d1-offline-evidence-ledger`.
@@ -168,10 +168,11 @@ assert result.wasSuccessful()
 Use Python `-B`. Focused run substitutes
 `unittest.defaultTestLoader.loadTestsFromName('test_offline_evidence_ledger')`.
 
-## Pending review and exclusions
+## Acceptance and exclusions
 
-D1 is not ACCEPTED/CLOSED. Review version identity, linear lineage constraints,
-timestamp trust boundary and external retention requirements before acceptance.
+Independent code review APPROVED for HEAD `82577797a8d9cbc623edc7a5f7ad6e9d3e7acc54`.
+Implementation and tests are accepted unchanged. The 603/603 result is the
+implementer's Windows/Python 3.12.10 run, not independent test execution.
 No production clock/source/freshness policy or runtime approval is inferred.
 Scenario versioning, eligibility, notification generation/delivery and live adapters
 remain D2-D6. C3.3.6 historical/XAUUSD remains INSUFFICIENT_EVIDENCE; no historical
