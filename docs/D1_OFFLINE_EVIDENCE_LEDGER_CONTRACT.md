@@ -145,8 +145,10 @@ Synthetic suite: `test_offline_evidence_ledger.py`, with
 `tests/fixtures/d1/evidence.json`. Tests cover all 18 requested case categories,
 complete semantic replay equality, concurrent publication, two separate-process
 crashes around READY commit, rollback/isolation, lineage forks, external payload
-loss/corruption and journal tampering. Full regression results and exact tested
-implementation SHA are recorded in HANDOFF after the run.
+loss/corruption and journal tampering. Full regression on 2026-10-21:
+**603/603 passed**, 0 failures/errors/skipped (559 existing + 44 D1).
+Exact tested implementation SHA: `1c78c9f9bb10b4b995e042b78903f2ac7099339d`.
+The following commit updates documentation only. HANDOFF records the exact command.
 
 Environment: Windows, Python 3.12.10, existing installed dependencies. New module
 requires only Python standard library. Tests use an explicit writable temporary

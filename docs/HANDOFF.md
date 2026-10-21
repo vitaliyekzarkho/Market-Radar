@@ -84,8 +84,35 @@ D1 branch: `feature/d1-offline-evidence-ledger`.
 See [D1 contract](D1_OFFLINE_EVIDENCE_LEDGER_CONTRACT.md).
 D1 adds only the offline ledger module, its tests, one synthetic JSON fixture and
 the technical contract; this HANDOFF is the only existing file changed.
-Full regression and exact tested SHA will be appended after the implementation
-commit is tested. No D1 acceptance or live authorization is claimed.
+Tested implementation SHA: `1c78c9f9bb10b4b995e042b78903f2ac7099339d`.
+2026-10-21 full offline regression: **603/603 passed**, 0 failures, 0 errors,
+0 skipped (559 accepted + 44 D1). Windows-11-10.0.26200-SP0, CPython 3.12.10
+64-bit, existing dependencies. All 18 requested D1 synthetic categories are
+covered, including real process termination before/after READY commit and
+concurrent duplicate publication. No independent reviewer run is claimed.
+The following documentation-only commit records these results without changing code.
+No D1 acceptance or live authorization is claimed. Stop for independent review;
+do not merge D1 into main.
+
+Exact regression command from the isolated D1 checkout:
+
+```powershell
+python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D1_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.discover('.', pattern='test_*.py')); print('RESULT',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
+```
+
+Initial test launches were blocked by sandbox-default temp access and the
+repository-path exclusion; the successful run used the explicit external temp
+directory above. No production paths were used. D1 synthetic JSON fixture SHA-256
+(tested working-file bytes):
+`5ae61008df422e8587ec93746989648434ae8d274488794340c1da8a9439971d`.
+Fixture is parsed JSON, not an exact-byte fixture manifest; checkout line-ending
+conversion does not change its parsed semantics.
+
+Limitations: synthetic clock policy only; attested source independence remains
+unverified; external payload retention is caller-owned and missing/corrupted bytes
+fail closed. Hash chain/SQLite triggers do not establish tamper-proof history.
+No production clock/freshness/source-trust policy, notification or runtime adapter
+is implemented. Accepted interfaces and PA/HTF modules remain unchanged.
 Approved planning HEAD: `eba6a53083161757b94f8bc2c4fcd152fdf5bf3f`.
 Planning branch: `feature/block-d-controlled-integration-plan`.
 See [technical plan](BLOCK_D_CONTROLLED_INTEGRATION_PLAN.md).
