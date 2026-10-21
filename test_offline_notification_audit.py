@@ -218,7 +218,7 @@ class AuditTests(unittest.TestCase):
 
     def test_reconcile_then_retry(self):
         a = self.unknown()
-        self.delivery(a, "DELIVERY_RECONCILED", evidence=dict(classification="synthetic", reason="manual review", resolution="still_unknown",
+        self.delivery(a, "DELIVERY_RECONCILED", evidence=dict(classification="synthetic", reason="manual review", resolution="confirmed_not_accepted",
                       evidence_ref="synthetic:review", authorize_retry=True, duplicate_risk_acknowledged=True))
         retry = self.prepare(self.d3.projection()["notifications"][a["notification_id"]], key="retry")
         self.assertEqual(retry["ordinal"], 2)
@@ -233,7 +233,38 @@ class AuditTests(unittest.TestCase):
     def test_risk_acknowledgement_required(self):
         a = self.unknown()
         with self.assertRaisesRegex(LedgerError, "risk"):
-            self.delivery(a, "DELIVERY_RECONCILED", evidence=dict(classification="synthetic", reason="review", resolution="still_unknown", evidence_ref="synthetic:r", authorize_retry=True))
+            self.delivery(a, "DELIVERY_RECONCILED", evidence=dict(classification="synthetic", reason="review", resolution="confirmed_not_accepted", evidence_ref="synthetic:r", authorize_retry=True))
+
+    def test_still_unknown_retry_authorization_rejected_atomically(self):
+        a = self.unknown()
+        before = self.d3.events(), self.d3.projection()
+        with self.assertRaisesRegex(LedgerError, "confirmed_not_accepted"):
+            self.delivery(a, "DELIVERY_RECONCILED", evidence=dict(classification="synthetic", reason="inconclusive review",
+                          resolution="still_unknown", evidence_ref="synthetic:review", authorize_retry=True,
+                          duplicate_risk_acknowledged=True))
+        self.assertEqual((self.d3.events(), self.d3.projection()), before)
+
+    def test_still_unknown_blocks_retry_after_restart(self):
+        a = self.unknown()
+        self.delivery(a, "DELIVERY_RECONCILED", evidence=dict(classification="synthetic", reason="inconclusive review",
+                      resolution="still_unknown", evidence_ref="synthetic:review", authorize_retry=False))
+        before = self.d3.events(), self.d3.projection()
+        self.d3.close()
+        self.d3 = self.open()
+        self.assertEqual((self.d3.events(), self.d3.projection()), before)
+        n = self.d3.projection()["notifications"][a["notification_id"]]
+        with self.assertRaisesRegex(LedgerError, "retry forbidden"):
+            self.prepare(n, key="forbidden-retry")
+        self.assertEqual((self.d3.events(), self.d3.projection()), before)
+
+    def test_provider_accepted_retry_authorization_rejected_atomically(self):
+        a = self.unknown()
+        before = self.d3.events(), self.d3.projection()
+        with self.assertRaisesRegex(LedgerError, "confirmed_not_accepted"):
+            self.delivery(a, "DELIVERY_RECONCILED", evidence=dict(classification="synthetic", reason="receipt found",
+                          resolution="provider_accepted", evidence_ref="synthetic:receipt", authorize_retry=True,
+                          duplicate_risk_acknowledged=True))
+        self.assertEqual((self.d3.events(), self.d3.projection()), before)
 
     def test_duplicate_attempt_idempotent_after_restart(self):
         n = self.generate()

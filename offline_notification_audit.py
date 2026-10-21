@@ -377,7 +377,9 @@ class NotificationAudit:
                 last = attempts[-1]
                 allowed = last["state"] == "FAILED" and retry["allow_failed_retry"]
                 if last["state"] == "RECONCILED":
-                    allowed = last["last_event"]["retry_authorized"] and retry["allow_reconciled_unknown_retry"]
+                    allowed = (last["last_event"]["retry_authorized"]
+                               and last["last_event"]["evidence"].get("resolution") == "confirmed_not_accepted"
+                               and retry["allow_reconciled_unknown_retry"])
                 if not allowed:
                     raise LedgerError("retry forbidden without eligible failure/reconciliation")
             clock = self._now(n["recorded_at_utc"], *( [attempts[-1]["last_event"]["recorded_at_utc"]] if attempts and "last_event" in attempts[-1] else []))
@@ -419,8 +421,10 @@ class NotificationAudit:
                     if type(evidence.get("authorize_retry")) is not bool:
                         raise LedgerError("explicit retry decision required")
                     retry_authorized = evidence["authorize_retry"]
-                    if retry_authorized and (evidence["resolution"] == "provider_accepted" or evidence.get("duplicate_risk_acknowledged") is not True):
-                        raise LedgerError("retry requires non-accepted resolution and duplicate-risk acknowledgement")
+                    if retry_authorized and evidence["resolution"] != "confirmed_not_accepted":
+                        raise LedgerError("retry requires confirmed_not_accepted resolution")
+                    if retry_authorized and evidence.get("duplicate_risk_acknowledged") is not True:
+                        raise LedgerError("retry requires duplicate-risk acknowledgement")
             clock = self._now(a.get("last_event", a)["recorded_at_utc"])
             payload = dict(request, notification_id=a["notification_id"], state=transitions[event_type][1],
                            recipient_read_proven=False, recipient_delivery_proven=False,
