@@ -1,0 +1,29 @@
+{
+  "item_id": "item1",
+  "source_id": "synthetic:publisher",
+  "schema_version": "synthetic_evidence_v1",
+  "source_revision": "1",
+  "instrument": "SYNTHETIC",
+  "timeframe": null,
+  "units": "text",
+  "published": {
+    "at_utc": "2026-10-21T09:59:00Z",
+    "authority": "synthetic_publisher_claim",
+    "precision": "second",
+    "claimed_timezone": "UTC",
+    "uncertainty_seconds": 0
+  },
+  "observed": {
+    "at_utc": "2026-10-21T10:00:00Z",
+    "authority": "synthetic_acquisition_completion"
+  },
+  "quality": "synthetic",
+  "validation_status": "valid",
+  "attestation": {
+    "verification_method": "unverified_upstream_claim",
+    "claimed_source_identity": "synthetic:publisher",
+    "lineage": ["synthetic:original", "synthetic:redistributor"],
+    "uncertainty": "source authenticity not established",
+    "independent": true
+  }
+}

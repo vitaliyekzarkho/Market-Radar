@@ -78,7 +78,14 @@ The acceptance commit fast-forwards main from the base through the approved HEAD
 Final accepted main SHA: `5bf112b1648ac6186399e93edcd9a53dc8ca642e`.
 
 Block D architecture: **APPROVED / ACCEPTED** (2026-10-21).
-D1: **AUTHORIZED FOR IMPLEMENTATION**.
+D1: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Accepted Block D main: `a812c9b32371fa8b8da0df92d977f7a0ed3e8a89`.
+D1 branch: `feature/d1-offline-evidence-ledger`.
+See [D1 contract](D1_OFFLINE_EVIDENCE_LEDGER_CONTRACT.md).
+D1 adds only the offline ledger module, its tests, one synthetic JSON fixture and
+the technical contract; this HANDOFF is the only existing file changed.
+Full regression and exact tested SHA will be appended after the implementation
+commit is tested. No D1 acceptance or live authorization is claimed.
 Approved planning HEAD: `eba6a53083161757b94f8bc2c4fcd152fdf5bf3f`.
 Planning branch: `feature/block-d-controlled-integration-plan`.
 See [technical plan](BLOCK_D_CONTROLLED_INTEGRATION_PLAN.md).
