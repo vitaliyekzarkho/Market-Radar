@@ -187,8 +187,12 @@ Projection rebuild uses the original event bytes and does not recalculate decisi
 ## Verification and limitations
 
 Synthetic fixtures: `tests/fixtures/d2/scenario.json` and inline synthetic D1 inputs.
-Tests: `test_offline_scenario_ledger.py`; exact tested SHA/results are recorded in
-HANDOFF after the committed implementation is tested.
+Tests: `test_offline_scenario_ledger.py` (53 tests).
+Tested implementation: `7c1091c6e002099612369e654fae781c1d786a45`.
+Full offline regression on 2026-10-21: **656/656 passed**, 0 failures/errors/skipped
+(603 accepted + 53 D2), CPython 3.12.10 64-bit, Windows-11-10.0.26200-SP0,
+existing dependencies. Implementer run, not independent execution. HANDOFF records
+the exact command. The following commit changes only verification documentation.
 
 Coverage includes formation/revision/invalidation/legacy observation; independent
 nested formation; full original/unknown-field preservation; competing direction;

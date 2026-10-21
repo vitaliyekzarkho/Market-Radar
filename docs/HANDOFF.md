@@ -15,8 +15,28 @@ D2 adds `offline_scenario_ledger.py`, `test_offline_scenario_ledger.py`,
 `tests/fixtures/d2/scenario.json` and `docs/D2_SCENARIO_DECISION_LEDGER_CONTRACT.md`.
 Only this HANDOFF changes among existing files on the D2 branch.
 See [D2 contract](D2_SCENARIO_DECISION_LEDGER_CONTRACT.md) for API, schema,
-transaction, provenance and temporal boundaries. Exact tested SHA and results will
-be recorded after the implementation commit is tested.
+transaction, provenance and temporal boundaries.
+
+Tested implementation SHA: `7c1091c6e002099612369e654fae781c1d786a45`.
+2026-10-21 full offline regression: **656/656 passed**, 0 failures, 0 errors,
+0 skipped (603 accepted + 53 D2). CPython 3.12.10, 64-bit,
+Windows-11-10.0.26200-SP0, existing installed dependencies; no fresh installation
+or Linux/CI result claimed. This is implementer validation, not independent review.
+The following documentation-only commit records results without changing code.
+
+Exact command from the isolated D2 checkout:
+
+```powershell
+python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D2_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.discover('.', pattern='test_*.py')); print('RESULT',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
+```
+
+Synthetic validation includes all requested D2 categories, six independently
+executed historical prefixes, full semantic equality, concurrent evaluation and
+separate-process crashes before/after commit. D1 is read without journal changes.
+Limitations: synthetic technical/clock authority, declared source attestations,
+caller-owned external retention, and no approved production freshness policy.
+Each evaluation is tied to its scenario version's original cutoff; newer inputs
+require a new explicit scenario version. No historical forecast quality is claimed.
 
 No D2 merge/acceptance, D3-D6 implementation or live authorization. Work is isolated
 from the working Radar; no MT5, Telegram or trading operations are involved.
