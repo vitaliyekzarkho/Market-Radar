@@ -2,6 +2,38 @@
 
 ## Current work — D2
 
+### Lifecycle review correction — 2026-10-21
+
+Status remains **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Independent review requested a fix for new hypothesis IDs entering through revision
+or invalidation targeting an old ID. Corrected implementation SHA:
+`822c6cadcbb48e3bbbf9b41c56f4fa1c79b0efd9`.
+Every subsequent snapshot compares all IDs: exactly one new ID requires its own
+correctly targeted HYPOTHESIS_FORMED; multiple new IDs are rejected. Existing IDs
+remain preserved. Legacy initial observations retain unknown formation times.
+
+Fresh validation on that SHA: **14/14 focused lifecycle**, **67/67 D2 module**,
+**670/670 full offline regression**, each with 0 failures, 0 errors, 0 skips.
+CPython 3.12.10 64-bit (MSC v.1943 AMD64), Windows-11-10.0.26200-SP0;
+existing dependencies. Implementer execution, not independent reviewer execution.
+The earlier 656/656 below applies only to the earlier implementation.
+The following documentation commit records the new results without code changes.
+
+Commands from the isolated D2 checkout (all invoked with Python -B):
+
+```powershell
+python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D2_OfflineTests'; print(sys.version); print(platform.platform()); loader=unittest.defaultTestLoader; loader.testNamePatterns=['*test_lifecycle_*']; r=unittest.TextTestRunner().run(loader.loadTestsFromName('test_offline_scenario_ledger')); print('FOCUSED',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
+python -B -c "import tempfile,unittest; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D2_OfflineTests'; r=unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromName('test_offline_scenario_ledger')); print('D2',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
+python -B -c "import tempfile,unittest; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D2_OfflineTests'; r=unittest.TextTestRunner().run(unittest.defaultTestLoader.discover('.', pattern='test_*.py')); print('FULL',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
+```
+
+Correction changes only offline_scenario_ledger.py, test_offline_scenario_ledger.py,
+the D2 contract and this HANDOFF. Accepted D1 source/tests, news interpretation,
+cutoff/provenance rules, PA/HTF, permissions and notification engines are unchanged.
+No schema change, D3-D6 work, main merge or runtime operation. Await independent review.
+
+### Earlier D2 implementation record
+
 Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
 Branch: `feature/d2-scenario-decision-ledger`.
 Accepted D1 main: `2465cb7532c0be3dff259d48eb22ea78a56638e5`.
@@ -17,7 +49,7 @@ Only this HANDOFF changes among existing files on the D2 branch.
 See [D2 contract](D2_SCENARIO_DECISION_LEDGER_CONTRACT.md) for API, schema,
 transaction, provenance and temporal boundaries.
 
-Tested implementation SHA: `7c1091c6e002099612369e654fae781c1d786a45`.
+Earlier implementation SHA: `7c1091c6e002099612369e654fae781c1d786a45`.
 2026-10-21 full offline regression: **656/656 passed**, 0 failures, 0 errors,
 0 skipped (603 accepted + 53 D2). CPython 3.12.10, 64-bit,
 Windows-11-10.0.26200-SP0, existing installed dependencies; no fresh installation

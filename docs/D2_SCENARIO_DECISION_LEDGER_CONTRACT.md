@@ -78,6 +78,21 @@ topology_change_authorized=True. These are synthetic declarations, not authentic
 permissions. Existing IDs, including invalidated hypotheses, cannot disappear.
 A bullish nested candidate never automatically replaces a bearish primary.
 
+### Review correction — new-ID lifecycle integrity
+
+Independent review of HEAD `43585e68d90ee75e91970ef748889f97bc21f70b`
+found that a revision/invalidation targeting an existing hypothesis could silently
+introduce other new IDs. The correction compares the complete incoming and previous
+ID sets for every subsequent scenario version: `new_ids = incoming_ids - previous_ids`.
+No new IDs permits normal revision/invalidation. Exactly one new ID requires
+HYPOTHESIS_FORMED targeting that exact ID. More than one new ID is rejected; each
+requires its own formation event. FORMATION cannot target an existing ID, and
+existing IDs (including invalidated ones) cannot be removed. Failure appends no
+event and leaves the complete projection unchanged. No formation event or timestamp
+is generated automatically. Initial OBSERVED_EXISTING still permits multiple legacy
+hypotheses with UNKNOWN formation times; later versions enforce the invariant.
+Initial genuinely declared formation remains distinct from legacy observation.
+
 Lifecycle events:
 
 - HYPOTHESIS_FORMED: first declared formation, or a newly identified hypothesis in
@@ -186,8 +201,17 @@ Projection rebuild uses the original event bytes and does not recalculate decisi
 
 ## Verification and limitations
 
+Lifecycle correction tested SHA: `822c6cadcbb48e3bbbf9b41c56f4fa1c79b0efd9`.
+2026-10-21: focused lifecycle **14/14**, complete D2 **67/67**, full offline
+regression **670/670**, all with 0 failures/errors/skips. CPython 3.12.10 64-bit,
+Windows-11-10.0.26200-SP0, existing dependencies. Exact commands are in HANDOFF.
+All new rejection tests compare the entire journal and projection before/after;
+valid formation remains idempotent after restart. Accepted D1 is unchanged.
+These fresh results supersede the earlier implementation results below for review
+of the correction. Status remains IMPLEMENTED / AWAITING INDEPENDENT REVIEW.
+
 Synthetic fixtures: `tests/fixtures/d2/scenario.json` and inline synthetic D1 inputs.
-Tests: `test_offline_scenario_ledger.py` (53 tests).
+Earlier implementation tests: `test_offline_scenario_ledger.py` (53 tests).
 Tested implementation: `7c1091c6e002099612369e654fae781c1d786a45`.
 Full offline regression on 2026-10-21: **656/656 passed**, 0 failures/errors/skipped
 (603 accepted + 53 D2), CPython 3.12.10 64-bit, Windows-11-10.0.26200-SP0,
