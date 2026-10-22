@@ -2,7 +2,17 @@
 
 ## D4 read-only shadow boundary — 2026-10-22
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Status: **ACCEPTED / CLOSED** as an offline component.
+Independent code review found no blocking issues; user authorized documentation
+acceptance and fast-forward into main on 2026-10-22.
+Approved implementation: `5e3d227772df73b6ec60c910787716b86268ef55`.
+Approved published HEAD: `74b274089e3b65a43c0cba693f546bcefb5525eb`.
+Pre-acceptance main: `5a89d9a08a0339e2db7fcdcb6fc8c47e18ba1043`.
+Only the D4 contract and HANDOFF changed after the tested implementation.
+This acceptance also changes only those documents. Implementation, tests and
+dependencies are unchanged; no repeat regression is needed or claimed.
+The resulting main SHA is reported in the final handoff; a commit cannot embed
+its own SHA. Fast-forward only, without force-push.
 Branch: `feature/d4-read-only-shadow-boundary`.
 Accepted D3 main: `5a89d9a08a0339e2db7fcdcb6fc8c47e18ba1043`.
 Preflight verified approved D3 `489e1a4093ffc5d4166e0044f759a772494516f6`
@@ -40,8 +50,11 @@ File roots require protection against hostile concurrent replacement; this is no
 an OS sandbox. SHADOW_READY means only the explicit offline profile passed.
 
 The working Radar folder was not accessed, changed or synchronized; no Radar,
-MT5, Telegram, live source or trading activity. No D5 implementation. Next action:
-independent review of D4; do not merge without acceptance. Historical C3.3.6/XAUUSD
+MT5, Telegram, live source or trading activity. **D5 is not authorized.**
+The file boundary is not complete protection against hostile concurrent replacement.
+This limitation is accepted only for controlled synthetic D4 fixtures; real-source
+D5 would require separately reviewed isolation guarantees and explicit authorization.
+Historical C3.3.6/XAUUSD
 evidence remains INSUFFICIENT_EVIDENCE; no trading-performance claim is added.
 
 ---

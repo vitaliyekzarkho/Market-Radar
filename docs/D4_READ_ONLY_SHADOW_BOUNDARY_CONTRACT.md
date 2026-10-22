@@ -1,6 +1,14 @@
 # D4 read-only shadow boundary — d4_boundary_v1
 
-Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**. Offline synthetic assessment only.
+Status: **ACCEPTED / CLOSED**. Offline synthetic assessment only.
+Accepted on 2026-10-22 after independent code review found no blocking issues.
+Reviewed implementation: `5e3d227772df73b6ec60c910787716b86268ef55`;
+reviewed published HEAD: `74b274089e3b65a43c0cba693f546bcefb5525eb`.
+Acceptance changes documentation only; existing 79/79 and 809/809 implementer
+results stand, with no new regression or independent Python execution claimed.
+Concurrent hostile file replacement remains outside the protection guarantee;
+accepted use is limited to controlled synthetic fixtures. Real-source D5 requires
+separate isolation guarantees and explicit authorization. **D5 is not authorized.**
 Accepted D3 main: `5a89d9a08a0339e2db7fcdcb6fc8c47e18ba1043`.
 Approved D3 implementation `489e1a4093ffc5d4166e0044f759a772494516f6` is an ancestor;
 only D3 contract/HANDOFF changed between those commits. Accepted D1/D2/D3 source
