@@ -243,7 +243,13 @@ python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users
 python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D5_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.discover('.', pattern='test_*.py')); print('FULL',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
 ```
 
-Exact tested SHA/results will be recorded after implementation commit and regression.
+2026-10-22 tested implementation: `445660b4d9a0dcc5b827c77f0ff5fcb378f32b52`.
+**28/28 focused XAU**, **90/90 total D5**, **899/899 full offline regression**;
+0 failures, 0 errors, 0 skipped in each run. CPython 3.12.10 (MSC v.1943 64-bit
+AMD64), Windows-11-10.0.26200-SP0, existing dependencies. Full suite: 34.211 seconds.
+These are implementer results, not independent validation or Linux execution.
+The following result commit changes documentation only. Full regression repeats
+the D5 deterministic comparisons and all accepted D1–D4 lifecycle/availability tests.
 Tests assert complete report equality, separate-process equality, full/prefix equality,
 duplicate submission, immutable earlier records, corruption rejection and accepted
 D3 journal restart/idempotency. Candidate replay has no persistence claim.
