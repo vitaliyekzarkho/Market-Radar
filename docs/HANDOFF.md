@@ -22,8 +22,15 @@ Only this HANDOFF changes among existing files.
 See [D4 contract](D4_READ_ONLY_SHADOW_BOUNDARY_CONTRACT.md) for exact schemas,
 trust boundaries, API, decision precedence, test commands and security limits.
 
-Final tested implementation SHA and results: pending the committed regression.
-The following documentation-only result commit will record the exact tested SHA.
+Exact tested implementation SHA: `5e3d227772df73b6ec60c910787716b86268ef55`.
+2026-10-22 implementer execution: **79/79 D4**, **809/809 full offline regression**
+(730 accepted baseline + 79 D4), **0 failures, 0 errors, 0 skipped**.
+CPython 3.12.10, MSC v.1943 64-bit AMD64; Windows-11-10.0.26200-SP0;
+existing dependencies, no installation changes. Exact commands are in the D4
+contract's Verification section. Actual full regression duration: 34.240 seconds.
+This documentation-only result commit leaves the tested implementation unchanged.
+These are implementer results, not independent reviewer execution or Linux validation.
+Remote main was rechecked and remained at the accepted D3 SHA above.
 
 Important limits: normalized synthetic candidate checks are not authentic ledger
 membership/prefix proofs, independent provenance or historical timeliness evidence.
