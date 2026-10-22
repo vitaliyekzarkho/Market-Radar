@@ -1,4 +1,43 @@
-# MarketRadar handoff — D3
+# MarketRadar handoff — D4
+
+## D4 read-only shadow boundary — 2026-10-22
+
+Status: **IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+Branch: `feature/d4-read-only-shadow-boundary`.
+Accepted D3 main: `5a89d9a08a0339e2db7fcdcb6fc8c47e18ba1043`.
+Preflight verified approved D3 `489e1a4093ffc5d4166e0044f759a772494516f6`
+is an ancestor; only HANDOFF/D3 contract changed afterwards. D1/D2/D3 remain
+accepted, with source and tests unchanged. D4 is developed in an isolated checkout.
+
+New `offline_shadow_boundary.py` exposes pure assess_bytes and read-only
+assess_files. The versioned synthetic envelope/candidate profile distinguishes
+schema, semantic compatibility, provenance, availability and final readiness.
+No accepted ledger import/write, generation, delivery, service or runtime adapter.
+Exact raw input is retained privately; the public report contains fixed reasons
+and fingerprints, never arbitrary input identifiers or private strings.
+
+Added files: offline_shadow_boundary.py, test_offline_shadow_boundary.py,
+tests/fixtures/d4/bundle.json, docs/D4_READ_ONLY_SHADOW_BOUNDARY_CONTRACT.md.
+Only this HANDOFF changes among existing files.
+See [D4 contract](D4_READ_ONLY_SHADOW_BOUNDARY_CONTRACT.md) for exact schemas,
+trust boundaries, API, decision precedence, test commands and security limits.
+
+Final tested implementation SHA and results: pending the committed regression.
+The following documentation-only result commit will record the exact tested SHA.
+
+Important limits: normalized synthetic candidate checks are not authentic ledger
+membership/prefix proofs, independent provenance or historical timeliness evidence.
+Source hashes are integrity checks, not authentication. D3 non-NEW lifecycle events
+remain insufficient without validated history; D4 never authorizes notification.
+File roots require protection against hostile concurrent replacement; this is not
+an OS sandbox. SHADOW_READY means only the explicit offline profile passed.
+
+The working Radar folder was not accessed, changed or synchronized; no Radar,
+MT5, Telegram, live source or trading activity. No D5 implementation. Next action:
+independent review of D4; do not merge without acceptance. Historical C3.3.6/XAUUSD
+evidence remains INSUFFICIENT_EVIDENCE; no trading-performance claim is added.
+
+---
 
 ## D3 acceptance — 2026-10-21
 

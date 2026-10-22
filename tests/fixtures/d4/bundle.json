@@ -1,0 +1,250 @@
+{
+  "envelope": {
+    "schema_version": "d4_snapshot_v1",
+    "classification": "synthetic",
+    "snapshot_id": "synthetic:snapshot",
+    "source": {
+      "component": "synthetic:export",
+      "producer_version": "synthetic:producer-v1",
+      "artifact_type": "candidate_bundle",
+      "instrument": "SYNTHETIC_XAU",
+      "timeframe": "H1",
+      "provenance": {
+        "method": "synthetic_fixture_attestation",
+        "attestation_id": "synthetic:attestation"
+      }
+    },
+    "content_hash": "fb24345418c21b253d758b42e6c396ebe4ecb981cf669785d00b1b7b9ed4e79c",
+    "raw_payload_ref": "sha256:fb24345418c21b253d758b42e6c396ebe4ecb981cf669785d00b1b7b9ed4e79c",
+    "observation_start_utc": "2026-10-21T10:00:04Z",
+    "observation_end_utc": "2026-10-21T10:00:05Z",
+    "published_at_utc": "2026-10-21T10:00:04Z",
+    "claimed_available_at_utc": "2026-10-21T10:00:06Z",
+    "availability_attestation": {
+      "method": "synthetic_ready_attestation",
+      "authority": "synthetic:ledger",
+      "ready_sequence": 9
+    },
+    "declared_completeness": "complete",
+    "known_limitations": [
+      "synthetic only"
+    ]
+  },
+  "payload": {
+    "schema_version": "d4_candidate_bundle_v1",
+    "d1": {
+      "source_id": "synthetic:source",
+      "item_id": "synthetic:item",
+      "version_id": "synthetic:evidence-v1",
+      "selected_version_id": "synthetic:evidence-v1",
+      "schema_version": "synthetic_evidence_v1",
+      "source_revision": "1",
+      "evidence_payload": {
+        "synthetic": "observation"
+      },
+      "published": {
+        "at_utc": "2026-10-21T09:59:00Z",
+        "authority": "synthetic:publisher"
+      },
+      "observed": {
+        "at_utc": "2026-10-21T10:00:00Z",
+        "authority": "synthetic:receipt"
+      },
+      "available_at_utc": "2026-10-21T10:00:01Z",
+      "ready_sequence": 3,
+      "availability_authority": "synthetic_ready_attestation",
+      "attestation": {
+        "verification_method": "synthetic_fixture_attestation",
+        "claimed_source_identity": "synthetic:source",
+        "lineage": [
+          "synthetic:original"
+        ],
+        "uncertainty": "synthetic only",
+        "independent": true
+      },
+      "quality": "synthetic",
+      "validation_status": "valid",
+      "predecessor": null,
+      "content_hash": "be1150dbee95fb3e4641ddda9a3e0e0a500d8e0c5691797dc2f84be516106e17"
+    },
+    "d2": {
+      "scenario_id": "synthetic:scenario",
+      "scenario_version_id": "synthetic:scenario-v1",
+      "scenario": {
+        "classification": "synthetic",
+        "instrument": "SYNTHETIC_XAU",
+        "timeframe": "H1",
+        "point_a": {
+          "price": 110,
+          "time": "2026-10-21T08:00:00Z",
+          "definition": "synthetic swing high"
+        },
+        "point_b": {
+          "price": 100,
+          "time": "2026-10-21T09:00:00Z",
+          "definition": "synthetic current reference"
+        },
+        "direction": "bearish",
+        "primary": {
+          "id": "primary",
+          "direction": "bearish",
+          "state": "active",
+          "parent_id": null
+        },
+        "nested": [
+          {
+            "id": "nested",
+            "direction": "bullish",
+            "state": "candidate",
+            "parent_id": "primary"
+          }
+        ],
+        "alternatives": [
+          {
+            "id": "alternative",
+            "direction": "bullish",
+            "state": "conditional",
+            "parent_id": "primary"
+          }
+        ],
+        "htf": {
+          "D1": "bearish",
+          "H4": "range"
+        },
+        "market_structure": {
+          "leg": "synthetic-leg",
+          "state": "delivery"
+        },
+        "FTA": 95,
+        "TA": 90,
+        "liquidity_objectives": [
+          "synthetic PWL"
+        ],
+        "invalidation": {
+          "condition": "close above point A",
+          "price": 110
+        },
+        "permissions": {
+          "entry": false,
+          "manual_review": true
+        },
+        "score": 70,
+        "confidence": "synthetic medium",
+        "unknown_extension": {
+          "nested_values": [
+            1,
+            false,
+            null,
+            {
+              "future_field": "retained"
+            }
+          ]
+        }
+      },
+      "cutoff": {
+        "as_of_utc": "2026-10-21T10:00:01Z",
+        "maximum_visible_ledger_sequence": 3
+      },
+      "evidence_ref": {
+        "version_id": "synthetic:evidence-v1",
+        "content_hash": "be1150dbee95fb3e4641ddda9a3e0e0a500d8e0c5691797dc2f84be516106e17",
+        "cutoff": {
+          "as_of_utc": "2026-10-21T10:00:01Z",
+          "maximum_visible_ledger_sequence": 3
+        }
+      },
+      "authority": {
+        "kind": "synthetic_technical_authority",
+        "engine_version": "synthetic:pa-v1"
+      },
+      "event_type": "HYPOTHESIS_FORMED",
+      "hypothesis_id": "primary",
+      "predecessor": null,
+      "created_at_utc": "2026-10-21T10:00:02Z",
+      "formation_at_utc": "2026-10-21T10:00:02Z"
+    },
+    "d3": {
+      "evaluation": {
+        "evaluation_id": "synthetic:evaluation",
+        "scenario_version_id": "synthetic:scenario-v1",
+        "cutoff": {
+          "as_of_utc": "2026-10-21T10:00:01Z",
+          "maximum_visible_ledger_sequence": 3
+        },
+        "manifest_fingerprint": "3d85e7a727f39a281ef1d95a69dc544d1c1cd9d86b8d0cea096005e72066023e",
+        "technical_context_hash": "cdef4d73e2d8bb5b1c65ce5352a00c65c5a08f09fc38d370f886e004faf111cd",
+        "evaluated_at_utc": "2026-10-21T10:00:03Z",
+        "knowledge": "KNOWN",
+        "action": "RECORDED",
+        "news_status": "not_evaluated"
+      },
+      "hypothesis_id": "primary",
+      "episode_id": "synthetic:episode",
+      "policy": {
+        "classification": "synthetic",
+        "policy_id": "synthetic:notifications-v1",
+        "allowed_roles": [
+          "primary",
+          "nested",
+          "alternative"
+        ],
+        "allowed_events": [
+          "NEW",
+          "MATERIAL_UPDATE",
+          "RESOLVED",
+          "EXPIRED"
+        ],
+        "allowed_states": [
+          "active",
+          "candidate",
+          "conditional"
+        ],
+        "require_entry_permission": false,
+        "episode_max_age_seconds": 60,
+        "retry": {
+          "classification": "synthetic",
+          "policy_id": "synthetic:retry-v1",
+          "max_attempts": 3,
+          "allow_failed_retry": true,
+          "allow_reconciled_unknown_retry": true
+        }
+      },
+      "recipients": {
+        "set_id": "synthetic:audience",
+        "fingerprint": "f2461d1ee36a829c87bc2700bfdc9dd98f22b12c4769e633c2dc31c47afed00e"
+      },
+      "frozen_recipients": {
+        "set_id": "synthetic:audience",
+        "fingerprint": "f2461d1ee36a829c87bc2700bfdc9dd98f22b12c4769e633c2dc31c47afed00e"
+      },
+      "eligibility": null,
+      "delivery": null,
+      "event_type": "NEW",
+      "reason": "synthetic boundary candidate"
+    }
+  },
+  "cutoff": {
+    "as_of_utc": "2026-10-21T10:00:10Z",
+    "maximum_visible_ledger_sequence": 10
+  },
+  "clock": {
+    "at_utc": "2026-10-21T10:00:11Z",
+    "session_id": "synthetic:boot",
+    "health_id": "synthetic:healthy",
+    "monotonic": 100,
+    "uncertainty_seconds": 0
+  },
+  "policy": {
+    "classification": "synthetic",
+    "contract_version": "d4_boundary_v1",
+    "policy_id": "synthetic:d4-v1",
+    "max_file_bytes": 131072,
+    "max_envelope_bytes": 32768,
+    "max_payload_bytes": 131072,
+    "max_depth": 24,
+    "max_nodes": 10000,
+    "max_clock_uncertainty_seconds": 0,
+    "provenance_method": "synthetic_fixture_attestation",
+    "availability_method": "synthetic_ready_attestation"
+  }
+}
