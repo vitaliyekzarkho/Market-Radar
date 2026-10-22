@@ -168,7 +168,9 @@ requires explicit closed_confirmation. These are synthetic claims, not authentic
 market facts. Reaching a target alone cannot authorize a new structural target.
 
 Classification: SCENARIO_REVISION, DYNAMIC_FTA_UPDATE, NEARER_OBSTACLE,
-ROUTE_ONLY_UPDATE, TARGET_STATUS_UPDATE, UNCHANGED or UNEXPLAINED_TRANSITION.
+ROUTE_ONLY_UPDATE, TARGET_STATUS_UPDATE, TARGET_PROGRESSION, UNCHANGED or
+UNEXPLAINED_TRANSITION. TARGET_PROGRESSION_AVAILABILITY_UNKNOWN and
+TARGET_PROGRESSION_UNVERIFIED are derived diagnostic outputs, not input event types.
 Dynamic FTA/nearer-obstacle changes preserve Point B; route-only classification
 cannot hide a material technical change. Unsupported explanation remains unexplained.
 
@@ -177,6 +179,59 @@ independent FTA 4019.92 → 4058.97 transitions, testing valid and incomplete va
 Same-minute notification candidates use event/causation/sequence identity, never
 titles or displayed timestamps as proof. Actual D3 tests cover semantic suppression,
 material FTA updates, resolution proof, expiry, unknown and deferred outcomes.
+
+### XAUUSD clarification — D1 fractal IDM 4019.92
+
+The user identifies 4019.92 as a D1 fractal IDM (inducement) liquidity objective.
+It is a structurally justified **candidate**, not an arbitrary price. PWL 4073.545
+is the preceding intermediate liquidity objective in continuing bearish delivery;
+4058.97 and 4044.76 remain intermediate FTA/TA. Earlier fixture values 4073.55
+are rounded examples, not a different historical objective. The new
+`tests/fixtures/d5/idm_progression.json` uses the exact clarification values.
+
+No relevant intervening HTF FVG is identified by the user. The fixture retains
+`USER_REPORTED_NONE_IDENTIFIED` as a source claim; D5 does not calculate FVGs or
+claim to independently establish that the path is obstacle-free.
+
+TARGET_PROGRESSION describes activation of a pre-established liquidity objective
+within the same scenario and primary hypothesis, with unchanged direction and
+HYPOTHESIS_REVISED under an explicit accepted synthetic technical authority.
+It requires the normal new scenario version, predecessor, target history and
+timestamped causal event. It does **not** require a new hypothesis ID or a new
+formation event solely because the next target becomes active. In this specific
+progression path, the accepted D2 revision authority replaces D5's extra
+target_change_authorized flag; merely reaching a target still creates no authority.
+
+The transition references exactly one matching D1 evidence candidate with
+payload `{objective_type: D1_FRACTAL_IDM, price, established_at_utc}`. Its price
+matches Point B; timeframe is D1. Establishment must precede availability, and
+availability/sequence must be eligible at the causal event and frozen decision
+cutoff. Other causal evidence must also be eligible. Synthetic support is a declared
+fixture proof only, never independent authentication of the historical IDM.
+
+The comparison separately reports structural_candidate, historical_availability,
+declared_change_event and declared_causal_reason:
+
+| Evidence situation | Availability / result |
+|---|---|
+| Established and eligible by cutoff | SUPPORTED_SYNTHETIC / TARGET_PROGRESSION |
+| Establishment or availability chronology missing | UNKNOWN / TARGET_PROGRESSION_AVAILABILITY_UNKNOWN; EVIDENCE_GAP |
+| Explicit availability or sequence after cutoff | NOT_AVAILABLE_AT_CUTOFF / TARGET_PROGRESSION_UNVERIFIED; TEMPORAL_VIOLATION |
+
+Missing chronology retains DECLARED_D1_FRACTAL_IDM and does not classify the
+target itself as structurally incorrect or an unexplained reversal. Explicitly
+late data cannot be used retrospectively. Unknown/unverified progression cannot
+invoke authoritative D3 eligibility through the replay coordinator. Corruption,
+staleness, missing predecessor/version, an actual reversal, or missing unrelated
+causal evidence retain their original rejection; the clarification does not
+downgrade those errors to simple availability uncertainty.
+
+Original and current targets, preceding PWL, intermediate FTA/TA, primary source,
+formation time and earlier record hashes remain separate. A synthetic D2 test
+verifies revision under the same hypothesis ID and unchanged formation history.
+Historical availability of the actual IDM remains **UNKNOWN** until timestamped
+evidence is supplied; user confirmation establishes intended target semantics,
+not its historical availability to the engine.
 
 ## Price, narrative and macro diagnostics
 
@@ -230,20 +285,24 @@ FTA discovery, notification formation and source availability chronology are unp
 
 ## Verification and reproduction
 
-Library: **60 named scenario cases** (32 general + 28 focused XAU), generated from
-the committed base fixture by explicit test constructors; catalog provides exact
-test names. Additional boundary and actual accepted-ledger integration tests extend
+Library: **74 named scenario cases** (32 general + 28 original focused XAU +
+14 IDM clarification cases), generated from the committed fixtures by explicit
+test constructors; catalog provides exact test names. Additional boundary and actual accepted-ledger integration tests extend
 coverage. No old test or fixture changed.
 
 From the isolated checkout, with the existing isolated temporary test root:
 
 ```powershell
 python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D5_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromName('test_offline_shadow_assessment.XauFocusedTests')); print('XAU',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
+python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D5_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromName('test_offline_shadow_assessment.IdmProgressionTests')); print('IDM',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
 python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D5_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.loadTestsFromName('test_offline_shadow_assessment')); print('D5',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
 python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D5_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.discover('.', pattern='test_*.py')); print('FULL',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
 ```
 
-2026-10-22 tested implementation: `445660b4d9a0dcc5b827c77f0ff5fcb378f32b52`.
+IDM clarification: exact tested implementation and fresh regression results will
+be recorded after the correction commit. Status remains awaiting independent review.
+
+Earlier, pre-clarification 2026-10-22 tested implementation: `445660b4d9a0dcc5b827c77f0ff5fcb378f32b52`.
 **28/28 focused XAU**, **90/90 total D5**, **899/899 full offline regression**;
 0 failures, 0 errors, 0 skipped in each run. CPython 3.12.10 (MSC v.1943 64-bit
 AMD64), Windows-11-10.0.26200-SP0, existing dependencies. Full suite: 34.211 seconds.

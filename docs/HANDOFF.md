@@ -3,6 +3,30 @@
 ## D5 controlled shadow assessment — 2026-10-22
 
 **D5 — IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+
+### D1 IDM target-progression clarification — 2026-10-22
+
+User clarification: 4019.92 is a D1 fractal IDM liquidity objective; PWL 4073.545
+is the preceding intermediate objective, with FTA 4058.97 and TA 4044.76 retained.
+No intervening relevant HTF FVG is identified by the user; that absence is a
+declaration, not independently calculated evidence. Missing IDM chronology does
+not make the structural target wrong. It remains UNKNOWN historical availability.
+
+D5 now recognizes TARGET_PROGRESSION under accepted D2 revision authority:
+same scenario/hypothesis/direction, new immutable scenario version and preserved
+predecessor, original formation, target history and causal event. No new hypothesis
+ID is required just to activate the next established objective. Explicitly late
+availability is a temporal discrepancy; corruption or lifecycle defects still fail.
+Unverified progression cannot proceed to authoritative notification assessment.
+
+Added tests/fixtures/d5/idm_progression.json and 14 focused IDM tests, plus one
+actual accepted D2 lifecycle test. Catalog now has 74 scenarios (32 general,
+28 original XAU, 14 IDM). No accepted D1–D4 source, tests or fixtures changed.
+Updated implementation SHA and full verification: pending committed regression.
+The previous results below apply only to the pre-clarification implementation.
+
+### Earlier D5 implementation record
+
 Branch: `feature/d5-controlled-shadow-assessment`.
 Accepted D4 base: `bd0070056aa9c10ef8e74799af4bbf421cc1ba89`.
 Remote main matched exactly at preflight; approved D4 implementation

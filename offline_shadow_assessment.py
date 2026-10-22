@@ -362,6 +362,7 @@ def _replay(case, *, ledger_context, stop_after):
                           evidence_cutoff=fingerprint(d2["cutoff"]))
         transition = step["transition"]
         current_targets = step["targets"]
+        progression_unverified = False
         if previous:
             old = previous["snapshot"]["payload"]["d2"]
             old_s = old["scenario"]
@@ -369,6 +370,9 @@ def _replay(case, *, ledger_context, stop_after):
                       "liquidity_objectives", "invalidation", "permissions", "htf", "market_structure")
             changes = [f for f in fields if old_s.get(f) != scenario.get(f)]
             target_changed = previous["targets"] != current_targets
+            availability_only_gap = False
+            progression_structure = False
+            idm_late = False
             valid_transition = isinstance(transition, dict)
             if valid_transition:
                 required = ("event_id", "predecessor_event_id", "at_utc", "sequence", "evidence_ids", "causal_reason", "classification")
@@ -379,14 +383,50 @@ def _replay(case, *, ledger_context, stop_after):
                     and utc(transition["at_utc"]) <= utc(d2["created_at_utc"])
                     and utc(transition["at_utc"]) <= now
                     and utc(transition["at_utc"]) >= utc(previous["cutoff"]["as_of_utc"])
-                    and _identity(transition["causal_reason"]) and bool(transition["evidence_ids"])
-                    and all(eid in visible_ids for eid in transition["evidence_ids"]))
+                    and _identity(transition["causal_reason"]) and bool(transition["evidence_ids"]))
                 if valid_transition:
                     ev = {e["id"]: e for e in evidence}
-                    valid_transition = all(utc(ev[i]["available_at_utc"]) <= utc(transition["at_utc"])
-                        and utc(ev[i]["available_at_utc"]) <= utc(d2["cutoff"]["as_of_utc"])
-                        and ev[i]["sequence"] <= d2["cutoff"]["maximum_visible_ledger_sequence"]
-                        for i in transition["evidence_ids"])
+                    progression = transition["classification"] == "TARGET_PROGRESSION"
+                    def eligible_at_change(eid):
+                        return (eid in visible_ids and utc(ev[eid]["available_at_utc"]) <= utc(transition["at_utc"])
+                            and utc(ev[eid]["available_at_utc"]) <= utc(d2["cutoff"]["as_of_utc"])
+                            and ev[eid]["sequence"] <= d2["cutoff"]["maximum_visible_ledger_sequence"])
+                    valid_transition = all(eligible_at_change(i) for i in transition["evidence_ids"])
+                    if progression:
+                        candidates = [ev[i] for i in transition["evidence_ids"] if i in ev and
+                            ev[i]["payload"].get("objective_type") == "D1_FRACTAL_IDM" and
+                            ev[i]["payload"].get("price") == scenario["point_b"].get("price") and ev[i].get("timeframe") == "D1"]
+                        candidate = candidates[0] if len(candidates) == 1 else None
+                        progression_structure = (candidate is not None and d2["scenario_id"] == old["scenario_id"]
+                            and scenario["primary"]["id"] == old_s["primary"]["id"]
+                            and scenario["direction"] == old_s["direction"]
+                            and d2["event_type"] == "HYPOTHESIS_REVISED"
+                            and d2["authority"].get("kind") == "synthetic_technical_authority"
+                            and _identity(d2["authority"].get("engine_version")))
+                        comparison["structural_candidate"] = "DECLARED_D1_FRACTAL_IDM" if candidate else "UNKNOWN"
+                        comparison["declared_change_event"] = fingerprint(transition["event_id"])
+                        comparison["declared_causal_reason"] = fingerprint(transition["causal_reason"])
+                        established = candidate["payload"].get("established_at_utc") if candidate else None
+                        established_ok = (established is not None and candidate.get("available_at_utc") is not None
+                            and utc(established) <= utc(candidate["available_at_utc"]))
+                        if candidate and established is not None and candidate.get("available_at_utc") is not None and not established_ok:
+                            gap("TEMPORAL_VIOLATION", "IDM_ESTABLISHED_AFTER_CLAIMED_AVAILABILITY", [candidate["id"]])
+                        valid_transition = valid_transition and progression_structure and established_ok
+                        # Unknown chronology must not disguise corruption, stale evidence or a missing cause.
+                        candidate_reason = next((s["reason"] for s in statuses if candidate and s["evidence_ref"] == fingerprint(candidate["id"])), None)
+                        availability_only_gap = (progression_structure and not valid_transition
+                            and candidate_reason in {"AVAILABILITY_UNKNOWN", "NOT_YET_AVAILABLE", "DECLARED_SYNTHETIC_ONLY"}
+                            and fingerprint(candidate["payload"]) == candidate["content_hash"]
+                            and (established is None or candidate.get("available_at_utc") is None or established_ok)
+                            and all(eligible_at_change(i) for i in transition["evidence_ids"] if i != candidate["id"]))
+                        if availability_only_gap:
+                            idm_late = (candidate.get("available_at_utc") is not None and
+                                (utc(candidate["available_at_utc"]) > utc(d2["cutoff"]["as_of_utc"])
+                                 or utc(candidate["available_at_utc"]) > utc(transition["at_utc"]))) or (
+                                type(candidate.get("sequence")) is int and candidate["sequence"] > d2["cutoff"]["maximum_visible_ledger_sequence"])
+                        progression_unverified = not valid_transition
+                        comparison["historical_availability"] = ("SUPPORTED_SYNTHETIC" if valid_transition else
+                            "NOT_AVAILABLE_AT_CUTOFF" if idm_late else "UNKNOWN")
             new_version = d2["scenario_version_id"] != old["scenario_version_id"]
             prior = d2.get("predecessor")
             proper_predecessor = (isinstance(prior, dict) and prior.get("version_id") == old["scenario_version_id"]
@@ -394,7 +434,11 @@ def _replay(case, *, ledger_context, stop_after):
             if changes and (not new_version or not proper_predecessor):
                 gap("LIFECYCLE_VIOLATION", "MATERIAL_CHANGE_WITHOUT_NEW_VERSION_AND_PREDECESSOR")
             if (changes or target_changed) and not valid_transition:
-                gap("UNEXPLAINED_TRANSITION", "CHANGE_WITHOUT_CAUSAL_AVAILABLE_EVIDENCE")
+                if availability_only_gap:
+                    gap("TEMPORAL_VIOLATION" if idm_late else "EVIDENCE_GAP",
+                        "IDM_NOT_AVAILABLE_AT_CUTOFF" if idm_late else "IDM_HISTORICAL_AVAILABILITY_UNKNOWN")
+                else:
+                    gap("UNEXPLAINED_TRANSITION", "CHANGE_WITHOUT_CAUSAL_AVAILABLE_EVIDENCE")
             if "permissions" in changes and d2["authority"].get("permission_change_authorized") is not True:
                 gap("POLICY_MISMATCH", "TECHNICAL_PERMISSION_CHANGED_WITHOUT_AUTHORITY")
             if "direction" in changes and d2["authority"].get("direction_change_authorized") is not True:
@@ -425,12 +469,16 @@ def _replay(case, *, ledger_context, stop_after):
                 history = current_targets["history"]
                 if not any(t.get("target") == old_s["point_b"] and t.get("state") in {"reached", "breached", "superseded", "invalidated"} for t in history):
                     gap("UNEXPLAINED_TRANSITION", "PRIOR_TARGET_HISTORY_MISSING")
-                if not d2["authority"].get("target_change_authorized") is True:
+                if not d2["authority"].get("target_change_authorized") is True and not progression_structure:
                     gap("POLICY_MISMATCH", "TARGET_REACHED_IS_NOT_NEW_TARGET_AUTHORITY")
             classification = "UNCHANGED"
             if changes or target_changed:
-                classification = transition.get("classification") if valid_transition else "UNEXPLAINED_TRANSITION"
-                allowed = {"SCENARIO_REVISION", "DYNAMIC_FTA_UPDATE", "NEARER_OBSTACLE", "ROUTE_ONLY_UPDATE", "TARGET_STATUS_UPDATE"}
+                classification = (transition.get("classification") if valid_transition else
+                    ("TARGET_PROGRESSION_UNVERIFIED" if idm_late else "TARGET_PROGRESSION_AVAILABILITY_UNKNOWN")
+                    if availability_only_gap else "UNEXPLAINED_TRANSITION")
+                allowed = {"SCENARIO_REVISION", "DYNAMIC_FTA_UPDATE", "NEARER_OBSTACLE", "ROUTE_ONLY_UPDATE", "TARGET_STATUS_UPDATE", "TARGET_PROGRESSION"}
+                if availability_only_gap:
+                    allowed.update({"TARGET_PROGRESSION_AVAILABILITY_UNKNOWN", "TARGET_PROGRESSION_UNVERIFIED"})
                 if classification not in allowed:
                     classification = "UNEXPLAINED_TRANSITION"
                     gap("UNEXPLAINED_TRANSITION", "TRANSITION_CLASSIFICATION_UNSUPPORTED")
@@ -489,7 +537,7 @@ def _replay(case, *, ledger_context, stop_after):
             boundary_ok = boundary["final_decision"] == "SHADOW_READY" or (
                 boundary["final_decision"] == "INSUFFICIENT_EVIDENCE" and
                 {r["code"] for r in boundary["reasons"]} == {"LIFECYCLE_HISTORY_NOT_VALIDATED"})
-            if ctx and not blockers and boundary_ok:
+            if ctx and not blockers and boundary_ok and not progression_unverified:
                 request = ctx["request"]
                 if (request["hypothesis_id"] != d3["hypothesis_id"] or request["episode_id"] != d3["episode_id"]
                         or request["evaluation_id"] != d3["evaluation"]["evaluation_id"]

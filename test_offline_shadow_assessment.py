@@ -383,6 +383,121 @@ class XauFocusedTests(CaseAssertions, unittest.TestCase):
         self.assertEqual(d5.replay(raw).report["timeline"][:1], d5.replay(raw, stop_after=1).report["timeline"])
 
 
+class IdmProgressionTests(CaseAssertions, unittest.TestCase):
+    """XAU clarification: target provenance is separate from historical availability."""
+    def setUp(self):
+        self.case = json.loads((FIXTURE.parent / "idm_progression.json").read_text(encoding="utf-8"))
+
+    def idms(self):
+        return [e for st in self.case["steps"] for e in st["evidence"] if e["id"] == "synthetic:d1-idm"]
+
+    def last(self):
+        return self.run_case()["timeline"][-1]
+
+    def test_known_idm_same_hypothesis_valid_progression(self):
+        r = self.clean_transition()["timeline"]
+        self.assertEqual(r[-1]["transition"]["classification"], "TARGET_PROGRESSION")
+        self.assertEqual(r[-1]["transition"]["historical_availability"], "SUPPORTED_SYNTHETIC")
+        self.assertEqual(r[0]["primary_ref"], r[1]["primary_ref"])
+        self.assertEqual(r[0]["direction"], r[1]["direction"])
+        self.assertNotEqual(r[0]["scenario_ref"], r[1]["scenario_ref"])
+        self.assertNotIn("TARGET_REACHED_IS_NOT_NEW_TARGET_AUTHORITY", self.codes())
+
+    def test_missing_availability_is_unknown_not_invalid_target(self):
+        for e in self.idms():
+            e["available_at_utc"] = None
+        r = self.last()
+        self.assertEqual(r["transition"]["structural_candidate"], "DECLARED_D1_FRACTAL_IDM")
+        self.assertEqual(r["transition"]["historical_availability"], "UNKNOWN")
+        self.assertEqual(r["transition"]["classification"], "TARGET_PROGRESSION_AVAILABILITY_UNKNOWN")
+        self.assertEqual(r["final_status"], "INSUFFICIENT_EVIDENCE")
+        self.assertNotIn("CHANGE_WITHOUT_CAUSAL_AVAILABLE_EVIDENCE", self.codes())
+        self.assertEqual(r["notification"]["status"], "UNKNOWN")
+        self.case["scope"] = "synthetic_ledgers"
+        contexts = {self.case["steps"][1]["event_id"]: dict(audit=object(), request={})}
+        with patch.object(d5, "assess_ledger_notification", side_effect=AssertionError("unverified progression reached D3")):
+            checked = self.run_case(ledger_context=contexts)
+        self.assertEqual(checked["timeline"][-1]["notification"]["status"], "UNKNOWN")
+
+    def test_later_available_idm_is_temporal_not_structural_failure(self):
+        for e in self.idms():
+            e["available_at_utc"] = "2026-10-21T10:00:18Z"
+        r = self.last()
+        self.assertEqual(r["transition"]["structural_candidate"], "DECLARED_D1_FRACTAL_IDM")
+        self.assertEqual(r["transition"]["historical_availability"], "NOT_AVAILABLE_AT_CUTOFF")
+        self.assertIn("IDM_NOT_AVAILABLE_AT_CUTOFF", self.codes())
+        self.assertNotIn("UNAUTHORIZED_DIRECTION_REVERSAL", self.codes())
+
+    def test_equal_time_wrong_sequence_not_available(self):
+        for e in self.idms():
+            e["sequence"] = 4
+        self.has("IDM_NOT_AVAILABLE_AT_CUTOFF")
+
+    def test_missing_establishment_chronology_unknown(self):
+        for e in self.idms():
+            del e["payload"]["established_at_utc"]
+            e["content_hash"] = fingerprint(e["payload"])
+        self.has("IDM_HISTORICAL_AVAILABILITY_UNKNOWN")
+        self.assertEqual(self.last()["transition"]["historical_availability"], "UNKNOWN")
+
+    def test_established_after_availability_rejected(self):
+        for e in self.idms():
+            e["payload"]["established_at_utc"] = "2026-10-21T10:00:02Z"
+            e["content_hash"] = fingerprint(e["payload"])
+        self.has("IDM_ESTABLISHED_AFTER_CLAIMED_AVAILABILITY")
+
+    def test_corruption_is_not_downgraded_to_unknown_availability(self):
+        for e in self.idms():
+            e["content_hash"] = "0" * 64
+        self.has("EVIDENCE_HASH_MISMATCH")
+        self.assertNotIn("IDM_HISTORICAL_AVAILABILITY_UNKNOWN", self.codes())
+        self.assertEqual(self.last()["final_status"], "CONTRACT_VIOLATION")
+
+    def test_missing_predecessor_still_rejected(self):
+        self.case["steps"][1]["snapshot"]["payload"]["d2"]["predecessor"] = None
+        self.has("MATERIAL_CHANGE_WITHOUT_NEW_VERSION_AND_PREDECESSOR")
+
+    def test_new_version_still_required(self):
+        self.case["steps"][1]["snapshot"]["payload"]["d2"]["scenario_version_id"] = self.case["steps"][0]["snapshot"]["payload"]["d2"]["scenario_version_id"]
+        self.has("MATERIAL_CHANGE_WITHOUT_NEW_VERSION_AND_PREDECESSOR")
+
+    def test_progression_cannot_hide_reversal(self):
+        s = self.case["steps"][1]["snapshot"]["payload"]["d2"]["scenario"]
+        s["direction"] = s["primary"]["direction"] = "bullish"
+        self.has("UNAUTHORIZED_DIRECTION_REVERSAL")
+        self.assertNotEqual(self.last()["transition"]["classification"], "TARGET_PROGRESSION")
+
+    def test_pwl_fta_ta_and_source_preserved(self):
+        before, after = self.case["steps"]
+        s = after["snapshot"]["payload"]["d2"]["scenario"]
+        self.assertEqual(after["targets"]["preceding_liquidity_objective"]["price"], 4073.545)
+        self.assertEqual((s["FTA"], s["TA"], s["point_b"]["price"]), (4058.97, 4044.76, 4019.92))
+        self.assertEqual(before["targets"]["primary_source"], after["targets"]["primary_source"])
+        self.assertEqual(after["targets"]["history"][0]["target"]["price"], 4073.545)
+        self.assertEqual(self.last()["transition"]["fta_after"], fingerprint(4058.97))
+
+    def test_no_htf_obstacle_is_declared_not_recalculated(self):
+        self.assertEqual(self.idms()[0]["payload"]["htf_obstacle_claim"], "USER_REPORTED_NONE_IDENTIFIED")
+        r = self.last()
+        self.assertTrue(r["actionable_conclusion_prohibited"])
+        self.assertEqual(r["notification"]["status"], "UNKNOWN")
+
+    def test_later_proof_does_not_backfill_earlier_record(self):
+        self.idms()[0]["available_at_utc"] = None
+        raw = seal(self.case)
+        full = d5.replay(raw).report["timeline"]
+        prefix = deepcopy(self.case); prefix["steps"] = prefix["steps"][:1]
+        self.assertEqual(full[:1], d5.replay(seal(prefix)).report["timeline"])
+        self.assertEqual(full[-1]["transition"]["historical_availability"], "SUPPORTED_SYNTHETIC")
+        self.assertIn(fingerprint("synthetic:d1-idm"), full[0]["missing"])
+
+    def test_stale_idm_not_misreported_as_missing_availability(self):
+        for e in self.idms():
+            e["status"] = "stale"
+        self.assertNotIn("IDM_HISTORICAL_AVAILABILITY_UNKNOWN", self.codes())
+        self.assertNotEqual(self.last()["transition"]["classification"], "TARGET_PROGRESSION")
+
+
 class InputBoundaryTests(CaseAssertions, unittest.TestCase):
     def test_malformed_and_executable(self):
         for raw in (b"import os", b"\x80pickle", b'{"a":', b'{"x":NaN}', b'{"x":1,"x":2}'):
@@ -457,9 +572,9 @@ class InputBoundaryTests(CaseAssertions, unittest.TestCase):
     def test_catalog_matches_cases(self):
         catalog = json.loads((FIXTURE.parent / "case_catalog.json").read_text())
         expected = {"test_offline_shadow_assessment." + cls.__name__ + "." + name
-                    for cls in (GeneralReplayTests, XauFocusedTests) for name in dir(cls) if name.startswith("test_")}
+                    for cls in (GeneralReplayTests, XauFocusedTests, IdmProgressionTests) for name in dir(cls) if name.startswith("test_")}
         self.assertEqual(expected, {x["test"] for x in catalog["scenarios"]})
-        self.assertEqual(len(expected), 60)
+        self.assertEqual(len(expected), 74)
 
 
 class AcceptedLedgerTests(unittest.TestCase):
@@ -613,6 +728,17 @@ class AcceptedLedgerTests(unittest.TestCase):
         vid = self.add_news(value)
         self.revise(news=dict(evidence_version_id=vid, interpretation=value))
         self.assertEqual(self.assess()["status"], "DEFERRED")
+
+    def test_d2_idm_progression_preserves_existing_hypothesis(self):
+        old = deepcopy(self.v)
+        self.scenario["point_b"].update(price=4019.92, definition="synthetic D1 fractal IDM")
+        self.scenario["FTA"], self.scenario["TA"] = 4058.97, 4044.76
+        self.revise()
+        self.assertEqual(old["scenario"]["primary"]["id"], self.v["scenario"]["primary"]["id"])
+        self.assertEqual(old["formation_at_utc"], self.v["formation_at_utc"])
+        self.assertEqual(old["hypothesis_history"], self.v["hypothesis_history"])
+        self.assertEqual(self.v["predecessor_version_id"], old["version_id"])
+        self.assertEqual(self.d2.projection()["versions"][old["version_id"]], old)
 
 
 if __name__ == "__main__":

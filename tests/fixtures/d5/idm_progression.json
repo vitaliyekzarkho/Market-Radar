@@ -1,0 +1,818 @@
+{
+  "schema_version": "d5_shadow_v1",
+  "classification": "synthetic",
+  "baseline": "bd0070056aa9c10ef8e74799af4bbf421cc1ba89",
+  "case_id": "synthetic:xau-idm-target-progression",
+  "instrument": "SYNTHETIC_XAUUSD",
+  "scope": "candidate_only",
+  "known_uncertainties": [
+    "synthetic source declarations only",
+    "User identifies no relevant intervening HTF FVG; this is not independently verified absence."
+  ],
+  "expected_invariants": [
+    "prefix_equality",
+    "no_permissions_changed"
+  ],
+  "policy": {
+    "version": "d5_policy_v1",
+    "classification": "synthetic"
+  },
+  "steps": [
+    {
+      "event_id": "synthetic:event-1",
+      "sequence": 1,
+      "cutoff": {
+        "as_of_utc": "2026-10-21T10:00:10Z",
+        "maximum_visible_ledger_sequence": 10
+      },
+      "snapshot": {
+        "envelope": {
+          "schema_version": "d4_snapshot_v1",
+          "classification": "synthetic",
+          "snapshot_id": "synthetic:snapshot",
+          "source": {
+            "component": "synthetic:export",
+            "producer_version": "synthetic:producer-v1",
+            "artifact_type": "candidate_bundle",
+            "instrument": "SYNTHETIC_XAUUSD",
+            "timeframe": "H1",
+            "provenance": {
+              "method": "synthetic_fixture_attestation",
+              "attestation_id": "synthetic:attestation"
+            }
+          },
+          "content_hash": "2ea63491fea9dbc97593686ebbcb577675e63ccf4fe761e6ee679ed1d946164c",
+          "raw_payload_ref": "sha256:2ea63491fea9dbc97593686ebbcb577675e63ccf4fe761e6ee679ed1d946164c",
+          "observation_start_utc": "2026-10-21T10:00:04Z",
+          "observation_end_utc": "2026-10-21T10:00:05Z",
+          "published_at_utc": "2026-10-21T10:00:04Z",
+          "claimed_available_at_utc": "2026-10-21T10:00:06Z",
+          "availability_attestation": {
+            "method": "synthetic_ready_attestation",
+            "authority": "synthetic:ledger",
+            "ready_sequence": 9
+          },
+          "declared_completeness": "complete",
+          "known_limitations": [
+            "synthetic only"
+          ]
+        },
+        "payload": {
+          "schema_version": "d4_candidate_bundle_v1",
+          "d1": {
+            "source_id": "synthetic:source",
+            "item_id": "synthetic:item",
+            "version_id": "synthetic:evidence-v1",
+            "selected_version_id": "synthetic:evidence-v1",
+            "schema_version": "synthetic_evidence_v1",
+            "source_revision": "1",
+            "evidence_payload": {
+              "synthetic": "observation"
+            },
+            "published": {
+              "at_utc": "2026-10-21T09:59:00Z",
+              "authority": "synthetic:publisher"
+            },
+            "observed": {
+              "at_utc": "2026-10-21T10:00:00Z",
+              "authority": "synthetic:receipt"
+            },
+            "available_at_utc": "2026-10-21T10:00:01Z",
+            "ready_sequence": 3,
+            "availability_authority": "synthetic_ready_attestation",
+            "attestation": {
+              "verification_method": "synthetic_fixture_attestation",
+              "claimed_source_identity": "synthetic:source",
+              "lineage": [
+                "synthetic:original"
+              ],
+              "uncertainty": "synthetic only",
+              "independent": true
+            },
+            "quality": "synthetic",
+            "validation_status": "valid",
+            "predecessor": null,
+            "content_hash": "be1150dbee95fb3e4641ddda9a3e0e0a500d8e0c5691797dc2f84be516106e17"
+          },
+          "d2": {
+            "scenario_id": "synthetic:scenario",
+            "scenario_version_id": "synthetic:scenario-v1",
+            "scenario": {
+              "classification": "synthetic",
+              "instrument": "SYNTHETIC_XAUUSD",
+              "timeframe": "H1",
+              "point_a": {
+                "price": 4190.4,
+                "time": "2026-10-21T08:00:00Z",
+                "definition": "synthetic D1 bearish FVG"
+              },
+              "point_b": {
+                "price": 4073.545,
+                "time": "2026-10-21T09:00:00Z",
+                "definition": "synthetic preceding PWL liquidity objective, not hypothesis invalidation"
+              },
+              "direction": "bearish",
+              "primary": {
+                "id": "primary",
+                "direction": "bearish",
+                "state": "active",
+                "parent_id": null
+              },
+              "nested": [
+                {
+                  "id": "nested",
+                  "direction": "bullish",
+                  "state": "candidate",
+                  "parent_id": "primary"
+                }
+              ],
+              "alternatives": [
+                {
+                  "id": "alternative",
+                  "direction": "bullish",
+                  "state": "conditional",
+                  "parent_id": "primary"
+                }
+              ],
+              "htf": {
+                "D1": "bearish",
+                "H4": "range"
+              },
+              "market_structure": {
+                "leg": "synthetic-leg",
+                "state": "delivery"
+              },
+              "FTA": 4073.545,
+              "TA": 4073.545,
+              "liquidity_objectives": [
+                "synthetic PWL"
+              ],
+              "invalidation": {
+                "price": 4179.07,
+                "condition": "synthetic H1 close above threshold"
+              },
+              "permissions": {
+                "entry": false,
+                "manual_review": true
+              },
+              "score": 70,
+              "confidence": "synthetic medium",
+              "unknown_extension": {
+                "nested_values": [
+                  1,
+                  false,
+                  null,
+                  {
+                    "future_field": "retained"
+                  }
+                ]
+              }
+            },
+            "cutoff": {
+              "as_of_utc": "2026-10-21T10:00:01Z",
+              "maximum_visible_ledger_sequence": 3
+            },
+            "evidence_ref": {
+              "version_id": "synthetic:evidence-v1",
+              "content_hash": "be1150dbee95fb3e4641ddda9a3e0e0a500d8e0c5691797dc2f84be516106e17",
+              "cutoff": {
+                "as_of_utc": "2026-10-21T10:00:01Z",
+                "maximum_visible_ledger_sequence": 3
+              }
+            },
+            "authority": {
+              "kind": "synthetic_technical_authority",
+              "engine_version": "synthetic:pa-v1"
+            },
+            "event_type": "HYPOTHESIS_FORMED",
+            "hypothesis_id": "primary",
+            "predecessor": null,
+            "created_at_utc": "2026-10-21T10:00:02Z",
+            "formation_at_utc": "2026-10-21T10:00:02Z"
+          },
+          "d3": {
+            "evaluation": {
+              "evaluation_id": "synthetic:evaluation",
+              "scenario_version_id": "synthetic:scenario-v1",
+              "cutoff": {
+                "as_of_utc": "2026-10-21T10:00:01Z",
+                "maximum_visible_ledger_sequence": 3
+              },
+              "manifest_fingerprint": "3d85e7a727f39a281ef1d95a69dc544d1c1cd9d86b8d0cea096005e72066023e",
+              "technical_context_hash": "bf0965c080212030619f08fcf86c5665e45dcac80b8f2ff2bdd1ebe4fda6a456",
+              "evaluated_at_utc": "2026-10-21T10:00:03Z",
+              "knowledge": "KNOWN",
+              "action": "RECORDED",
+              "news_status": "not_evaluated"
+            },
+            "hypothesis_id": "primary",
+            "episode_id": "synthetic:episode",
+            "policy": {
+              "classification": "synthetic",
+              "policy_id": "synthetic:notifications-v1",
+              "allowed_roles": [
+                "primary",
+                "nested",
+                "alternative"
+              ],
+              "allowed_events": [
+                "NEW",
+                "MATERIAL_UPDATE",
+                "RESOLVED",
+                "EXPIRED"
+              ],
+              "allowed_states": [
+                "active",
+                "candidate",
+                "conditional"
+              ],
+              "require_entry_permission": false,
+              "episode_max_age_seconds": 60,
+              "retry": {
+                "classification": "synthetic",
+                "policy_id": "synthetic:retry-v1",
+                "max_attempts": 3,
+                "allow_failed_retry": true,
+                "allow_reconciled_unknown_retry": true
+              }
+            },
+            "recipients": {
+              "set_id": "synthetic:audience",
+              "fingerprint": "f2461d1ee36a829c87bc2700bfdc9dd98f22b12c4769e633c2dc31c47afed00e"
+            },
+            "frozen_recipients": {
+              "set_id": "synthetic:audience",
+              "fingerprint": "f2461d1ee36a829c87bc2700bfdc9dd98f22b12c4769e633c2dc31c47afed00e"
+            },
+            "eligibility": null,
+            "delivery": null,
+            "event_type": "NEW",
+            "reason": "synthetic boundary candidate"
+          }
+        },
+        "cutoff": {
+          "as_of_utc": "2026-10-21T10:00:10Z",
+          "maximum_visible_ledger_sequence": 10
+        },
+        "clock": {
+          "at_utc": "2026-10-21T10:00:11Z",
+          "session_id": "synthetic:boot",
+          "health_id": "synthetic:healthy",
+          "monotonic": 100,
+          "uncertainty_seconds": 0
+        },
+        "policy": {
+          "classification": "synthetic",
+          "contract_version": "d4_boundary_v1",
+          "policy_id": "synthetic:d4-v1",
+          "max_file_bytes": 131072,
+          "max_envelope_bytes": 32768,
+          "max_payload_bytes": 131072,
+          "max_depth": 24,
+          "max_nodes": 10000,
+          "max_clock_uncertainty_seconds": 0,
+          "provenance_method": "synthetic_fixture_attestation",
+          "availability_method": "synthetic_ready_attestation"
+        }
+      },
+      "snapshot_hash": "2eb914c85ddbb17c869c28220ea154f6c752e4f92be7a43882d939bfe3d388c9",
+      "evidence": [
+        {
+          "id": "synthetic:technical-proof",
+          "source_id": "synthetic:source",
+          "item_id": "technical",
+          "revision": "1",
+          "predecessor_id": null,
+          "observed_at_utc": "2026-10-21T10:00:00Z",
+          "available_at_utc": "2026-10-21T10:00:01Z",
+          "sequence": 3,
+          "status": "current",
+          "relation": "supports",
+          "max_age_seconds": 3600,
+          "timeframe": "H1",
+          "payload": {
+            "synthetic": "technical"
+          },
+          "used_as_current": false,
+          "content_hash": "8d13a337c208d5e42f7de9eda2c55fc667d3b2c1916f84b9b2c705fd3953a6ed"
+        },
+        {
+          "id": "synthetic:d1-idm",
+          "source_id": "synthetic:d1-structure",
+          "item_id": "idm-4019",
+          "revision": "1",
+          "predecessor_id": null,
+          "observed_at_utc": "2026-10-21T10:00:00Z",
+          "available_at_utc": "2026-10-21T10:00:01Z",
+          "sequence": 3,
+          "status": "current",
+          "relation": "supports",
+          "max_age_seconds": 3600,
+          "timeframe": "D1",
+          "payload": {
+            "objective_type": "D1_FRACTAL_IDM",
+            "price": 4019.92,
+            "established_at_utc": "2026-10-21T09:59:00Z",
+            "htf_obstacle_claim": "USER_REPORTED_NONE_IDENTIFIED"
+          },
+          "used_as_current": false,
+          "content_hash": "f1b9cae180c119f7bf404da2c389685f27e1d3281329096bbce78548cba38c0f"
+        }
+      ],
+      "transition": null,
+      "targets": {
+        "original_point_b": {
+          "price": 4073.545,
+          "time": "2026-10-21T09:00:00Z",
+          "definition": "synthetic preceding PWL liquidity objective, not hypothesis invalidation"
+        },
+        "current_point_b": {
+          "price": 4073.545,
+          "time": "2026-10-21T09:00:00Z",
+          "definition": "synthetic preceding PWL liquidity objective, not hypothesis invalidation"
+        },
+        "primary_source": {
+          "price": 4190.4,
+          "time": "2026-10-21T08:00:00Z",
+          "definition": "synthetic D1 bearish FVG"
+        },
+        "local_anchor": null,
+        "history": []
+      },
+      "formation": {
+        "primary": "2026-10-21T10:00:02Z",
+        "nested": null,
+        "alternative": null
+      },
+      "narratives": [],
+      "entry": {
+        "timing": "late",
+        "trade_permission_claimed": false
+      },
+      "zone": null,
+      "historical_evidence": "synthetic_only"
+    },
+    {
+      "event_id": "synthetic:event-2",
+      "sequence": 2,
+      "cutoff": {
+        "as_of_utc": "2026-10-21T10:00:20Z",
+        "maximum_visible_ledger_sequence": 10
+      },
+      "snapshot": {
+        "envelope": {
+          "schema_version": "d4_snapshot_v1",
+          "classification": "synthetic",
+          "snapshot_id": "synthetic:snapshot-2",
+          "source": {
+            "component": "synthetic:export",
+            "producer_version": "synthetic:producer-v1",
+            "artifact_type": "candidate_bundle",
+            "instrument": "SYNTHETIC_XAUUSD",
+            "timeframe": "H1",
+            "provenance": {
+              "method": "synthetic_fixture_attestation",
+              "attestation_id": "synthetic:attestation"
+            }
+          },
+          "content_hash": "8efec21d54b6e02062b6578c1415cb2f3c0bf87e6cb0bb5e4aa640f45b3651a9",
+          "raw_payload_ref": "sha256:8efec21d54b6e02062b6578c1415cb2f3c0bf87e6cb0bb5e4aa640f45b3651a9",
+          "observation_start_utc": "2026-10-21T10:00:18Z",
+          "observation_end_utc": "2026-10-21T10:00:18Z",
+          "published_at_utc": "2026-10-21T10:00:18Z",
+          "claimed_available_at_utc": "2026-10-21T10:00:19Z",
+          "availability_attestation": {
+            "method": "synthetic_ready_attestation",
+            "authority": "synthetic:ledger",
+            "ready_sequence": 9
+          },
+          "declared_completeness": "complete",
+          "known_limitations": [
+            "synthetic only"
+          ]
+        },
+        "payload": {
+          "schema_version": "d4_candidate_bundle_v1",
+          "d1": {
+            "source_id": "synthetic:source",
+            "item_id": "synthetic:item",
+            "version_id": "synthetic:evidence-v1",
+            "selected_version_id": "synthetic:evidence-v1",
+            "schema_version": "synthetic_evidence_v1",
+            "source_revision": "1",
+            "evidence_payload": {
+              "synthetic": "observation"
+            },
+            "published": {
+              "at_utc": "2026-10-21T09:59:00Z",
+              "authority": "synthetic:publisher"
+            },
+            "observed": {
+              "at_utc": "2026-10-21T10:00:00Z",
+              "authority": "synthetic:receipt"
+            },
+            "available_at_utc": "2026-10-21T10:00:01Z",
+            "ready_sequence": 3,
+            "availability_authority": "synthetic_ready_attestation",
+            "attestation": {
+              "verification_method": "synthetic_fixture_attestation",
+              "claimed_source_identity": "synthetic:source",
+              "lineage": [
+                "synthetic:original"
+              ],
+              "uncertainty": "synthetic only",
+              "independent": true
+            },
+            "quality": "synthetic",
+            "validation_status": "valid",
+            "predecessor": null,
+            "content_hash": "be1150dbee95fb3e4641ddda9a3e0e0a500d8e0c5691797dc2f84be516106e17"
+          },
+          "d2": {
+            "scenario_id": "synthetic:scenario",
+            "scenario_version_id": "synthetic:scenario-v2",
+            "scenario": {
+              "classification": "synthetic",
+              "instrument": "SYNTHETIC_XAUUSD",
+              "timeframe": "H1",
+              "point_a": {
+                "price": 4190.4,
+                "time": "2026-10-21T08:00:00Z",
+                "definition": "synthetic D1 bearish FVG"
+              },
+              "point_b": {
+                "price": 4019.92,
+                "time": "2026-10-21T10:00:14Z",
+                "definition": "synthetic D1 fractal IDM inducement liquidity objective"
+              },
+              "direction": "bearish",
+              "primary": {
+                "id": "primary",
+                "direction": "bearish",
+                "state": "active",
+                "parent_id": null
+              },
+              "nested": [
+                {
+                  "id": "nested",
+                  "direction": "bullish",
+                  "state": "candidate",
+                  "parent_id": "primary"
+                }
+              ],
+              "alternatives": [
+                {
+                  "id": "alternative",
+                  "direction": "bullish",
+                  "state": "conditional",
+                  "parent_id": "primary"
+                }
+              ],
+              "htf": {
+                "D1": "bearish",
+                "H4": "range"
+              },
+              "market_structure": {
+                "leg": "synthetic-leg",
+                "state": "delivery"
+              },
+              "FTA": 4058.97,
+              "TA": 4044.76,
+              "liquidity_objectives": [
+                "synthetic PWL"
+              ],
+              "invalidation": {
+                "price": 4179.07,
+                "condition": "synthetic H1 close above threshold"
+              },
+              "permissions": {
+                "entry": false,
+                "manual_review": true
+              },
+              "score": 70,
+              "confidence": "synthetic medium",
+              "unknown_extension": {
+                "nested_values": [
+                  1,
+                  false,
+                  null,
+                  {
+                    "future_field": "retained"
+                  }
+                ]
+              }
+            },
+            "cutoff": {
+              "as_of_utc": "2026-10-21T10:00:15Z",
+              "maximum_visible_ledger_sequence": 3
+            },
+            "evidence_ref": {
+              "version_id": "synthetic:evidence-v1",
+              "content_hash": "be1150dbee95fb3e4641ddda9a3e0e0a500d8e0c5691797dc2f84be516106e17",
+              "cutoff": {
+                "as_of_utc": "2026-10-21T10:00:15Z",
+                "maximum_visible_ledger_sequence": 3
+              }
+            },
+            "authority": {
+              "kind": "synthetic_technical_authority",
+              "engine_version": "synthetic:pa-v1"
+            },
+            "event_type": "HYPOTHESIS_REVISED",
+            "hypothesis_id": "primary",
+            "predecessor": {
+              "version_id": "synthetic:scenario-v1",
+              "scenario_id": "synthetic:scenario",
+              "scenario": {
+                "classification": "synthetic",
+                "instrument": "SYNTHETIC_XAUUSD",
+                "timeframe": "H1",
+                "point_a": {
+                  "price": 4190.4,
+                  "time": "2026-10-21T08:00:00Z",
+                  "definition": "synthetic D1 bearish FVG"
+                },
+                "point_b": {
+                  "price": 4073.545,
+                  "time": "2026-10-21T09:00:00Z",
+                  "definition": "synthetic preceding PWL liquidity objective, not hypothesis invalidation"
+                },
+                "direction": "bearish",
+                "primary": {
+                  "id": "primary",
+                  "direction": "bearish",
+                  "state": "active",
+                  "parent_id": null
+                },
+                "nested": [
+                  {
+                    "id": "nested",
+                    "direction": "bullish",
+                    "state": "candidate",
+                    "parent_id": "primary"
+                  }
+                ],
+                "alternatives": [
+                  {
+                    "id": "alternative",
+                    "direction": "bullish",
+                    "state": "conditional",
+                    "parent_id": "primary"
+                  }
+                ],
+                "htf": {
+                  "D1": "bearish",
+                  "H4": "range"
+                },
+                "market_structure": {
+                  "leg": "synthetic-leg",
+                  "state": "delivery"
+                },
+                "FTA": 4073.545,
+                "TA": 4073.545,
+                "liquidity_objectives": [
+                  "synthetic PWL"
+                ],
+                "invalidation": {
+                  "price": 4179.07,
+                  "condition": "synthetic H1 close above threshold"
+                },
+                "permissions": {
+                  "entry": false,
+                  "manual_review": true
+                },
+                "score": 70,
+                "confidence": "synthetic medium",
+                "unknown_extension": {
+                  "nested_values": [
+                    1,
+                    false,
+                    null,
+                    {
+                      "future_field": "retained"
+                    }
+                  ]
+                }
+              },
+              "cutoff": {
+                "as_of_utc": "2026-10-21T10:00:01Z",
+                "maximum_visible_ledger_sequence": 3
+              }
+            },
+            "created_at_utc": "2026-10-21T10:00:16Z",
+            "formation_at_utc": "2026-10-21T10:00:02Z"
+          },
+          "d3": {
+            "evaluation": {
+              "evaluation_id": "synthetic:evaluation-2",
+              "scenario_version_id": "synthetic:scenario-v2",
+              "cutoff": {
+                "as_of_utc": "2026-10-21T10:00:15Z",
+                "maximum_visible_ledger_sequence": 3
+              },
+              "manifest_fingerprint": "0c51bf17dd0e4529efaa6c4e8592f6cdf2478c7945534a6871cb2e21f5639ca9",
+              "technical_context_hash": "5390d9f9242247860f9cda927f6f38b3cacb2ede6ec1731a22b63e8949a408a5",
+              "evaluated_at_utc": "2026-10-21T10:00:17Z",
+              "knowledge": "KNOWN",
+              "action": "RECORDED",
+              "news_status": "not_evaluated"
+            },
+            "hypothesis_id": "primary",
+            "episode_id": "synthetic:episode",
+            "policy": {
+              "classification": "synthetic",
+              "policy_id": "synthetic:notifications-v1",
+              "allowed_roles": [
+                "primary",
+                "nested",
+                "alternative"
+              ],
+              "allowed_events": [
+                "NEW",
+                "MATERIAL_UPDATE",
+                "RESOLVED",
+                "EXPIRED"
+              ],
+              "allowed_states": [
+                "active",
+                "candidate",
+                "conditional"
+              ],
+              "require_entry_permission": false,
+              "episode_max_age_seconds": 60,
+              "retry": {
+                "classification": "synthetic",
+                "policy_id": "synthetic:retry-v1",
+                "max_attempts": 3,
+                "allow_failed_retry": true,
+                "allow_reconciled_unknown_retry": true
+              }
+            },
+            "recipients": {
+              "set_id": "synthetic:audience",
+              "fingerprint": "f2461d1ee36a829c87bc2700bfdc9dd98f22b12c4769e633c2dc31c47afed00e"
+            },
+            "frozen_recipients": {
+              "set_id": "synthetic:audience",
+              "fingerprint": "f2461d1ee36a829c87bc2700bfdc9dd98f22b12c4769e633c2dc31c47afed00e"
+            },
+            "eligibility": null,
+            "delivery": null,
+            "event_type": "NEW",
+            "reason": "synthetic boundary candidate"
+          }
+        },
+        "cutoff": {
+          "as_of_utc": "2026-10-21T10:00:20Z",
+          "maximum_visible_ledger_sequence": 10
+        },
+        "clock": {
+          "at_utc": "2026-10-21T10:00:21Z",
+          "session_id": "synthetic:boot",
+          "health_id": "synthetic:healthy",
+          "monotonic": 110,
+          "uncertainty_seconds": 0
+        },
+        "policy": {
+          "classification": "synthetic",
+          "contract_version": "d4_boundary_v1",
+          "policy_id": "synthetic:d4-v1",
+          "max_file_bytes": 131072,
+          "max_envelope_bytes": 32768,
+          "max_payload_bytes": 131072,
+          "max_depth": 24,
+          "max_nodes": 10000,
+          "max_clock_uncertainty_seconds": 0,
+          "provenance_method": "synthetic_fixture_attestation",
+          "availability_method": "synthetic_ready_attestation"
+        }
+      },
+      "snapshot_hash": "9905f3f927072f85d7eb612baaaf5820e2e12fcbe574dcf6cabfdd3149946612",
+      "evidence": [
+        {
+          "id": "synthetic:technical-proof",
+          "source_id": "synthetic:source",
+          "item_id": "technical",
+          "revision": "1",
+          "predecessor_id": null,
+          "observed_at_utc": "2026-10-21T10:00:00Z",
+          "available_at_utc": "2026-10-21T10:00:01Z",
+          "sequence": 3,
+          "status": "current",
+          "relation": "supports",
+          "max_age_seconds": 3600,
+          "timeframe": "H1",
+          "payload": {
+            "synthetic": "technical"
+          },
+          "used_as_current": false,
+          "content_hash": "8d13a337c208d5e42f7de9eda2c55fc667d3b2c1916f84b9b2c705fd3953a6ed"
+        },
+        {
+          "id": "synthetic:target-proof",
+          "source_id": "synthetic:source",
+          "item_id": "target",
+          "revision": "1",
+          "predecessor_id": null,
+          "observed_at_utc": "2026-10-21T10:00:00Z",
+          "available_at_utc": "2026-10-21T10:00:01Z",
+          "sequence": 3,
+          "status": "current",
+          "relation": "supports",
+          "max_age_seconds": 3600,
+          "timeframe": "H1",
+          "payload": {
+            "target": {
+              "price": 4073.545,
+              "time": "2026-10-21T09:00:00Z",
+              "definition": "synthetic preceding PWL liquidity objective, not hypothesis invalidation"
+            },
+            "target_state": "reached"
+          },
+          "used_as_current": false,
+          "content_hash": "4e10ca0889554d7f94224406a2657388e4a0b004b9ea77cdf705ddc4aaf2972a"
+        },
+        {
+          "id": "synthetic:d1-idm",
+          "source_id": "synthetic:d1-structure",
+          "item_id": "idm-4019",
+          "revision": "1",
+          "predecessor_id": null,
+          "observed_at_utc": "2026-10-21T10:00:00Z",
+          "available_at_utc": "2026-10-21T10:00:01Z",
+          "sequence": 3,
+          "status": "current",
+          "relation": "supports",
+          "max_age_seconds": 3600,
+          "timeframe": "D1",
+          "payload": {
+            "objective_type": "D1_FRACTAL_IDM",
+            "price": 4019.92,
+            "established_at_utc": "2026-10-21T09:59:00Z",
+            "htf_obstacle_claim": "USER_REPORTED_NONE_IDENTIFIED"
+          },
+          "used_as_current": false,
+          "content_hash": "f1b9cae180c119f7bf404da2c389685f27e1d3281329096bbce78548cba38c0f"
+        }
+      ],
+      "transition": {
+        "event_id": "synthetic:event-2",
+        "predecessor_event_id": "synthetic:event-1",
+        "at_utc": "2026-10-21T10:00:15Z",
+        "sequence": 2,
+        "evidence_ids": [
+          "synthetic:d1-idm",
+          "synthetic:target-proof"
+        ],
+        "causal_reason": "synthetic progression beyond reached PWL toward pre-established D1 IDM in the same bearish hypothesis",
+        "classification": "TARGET_PROGRESSION"
+      },
+      "targets": {
+        "original_point_b": {
+          "price": 4073.545,
+          "time": "2026-10-21T09:00:00Z",
+          "definition": "synthetic preceding PWL liquidity objective, not hypothesis invalidation"
+        },
+        "current_point_b": {
+          "price": 4019.92,
+          "time": "2026-10-21T10:00:14Z",
+          "definition": "synthetic D1 fractal IDM inducement liquidity objective"
+        },
+        "primary_source": {
+          "price": 4190.4,
+          "time": "2026-10-21T08:00:00Z",
+          "definition": "synthetic D1 bearish FVG"
+        },
+        "local_anchor": null,
+        "history": [
+          {
+            "target": {
+              "price": 4073.545,
+              "time": "2026-10-21T09:00:00Z",
+              "definition": "synthetic preceding PWL liquidity objective, not hypothesis invalidation"
+            },
+            "state": "reached",
+            "evidence_id": "synthetic:target-proof",
+            "at_utc": "2026-10-21T10:00:14Z"
+          }
+        ],
+        "preceding_liquidity_objective": {
+          "type": "PWL",
+          "price": 4073.545
+        }
+      },
+      "formation": {
+        "primary": "2026-10-21T10:00:02Z",
+        "nested": null,
+        "alternative": null
+      },
+      "narratives": [],
+      "entry": {
+        "timing": "late",
+        "trade_permission_claimed": false
+      },
+      "zone": null,
+      "historical_evidence": "synthetic_only"
+    }
+  ]
+}

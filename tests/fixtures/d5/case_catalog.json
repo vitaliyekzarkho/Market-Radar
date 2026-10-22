@@ -422,6 +422,104 @@
       "test": "test_offline_shadow_assessment.XauFocusedTests.test_28_full_prefix_equal",
       "fixture": "base.json",
       "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_known_idm_same_hypothesis_valid_progression",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_known_idm_same_hypothesis_valid_progression",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_missing_availability_is_unknown_not_invalid_target",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_missing_availability_is_unknown_not_invalid_target",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_later_available_idm_is_temporal_not_structural_failure",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_later_available_idm_is_temporal_not_structural_failure",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_equal_time_wrong_sequence_not_available",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_equal_time_wrong_sequence_not_available",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_missing_establishment_chronology_unknown",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_missing_establishment_chronology_unknown",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_established_after_availability_rejected",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_established_after_availability_rejected",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_corruption_is_not_downgraded_to_unknown_availability",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_corruption_is_not_downgraded_to_unknown_availability",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_missing_predecessor_still_rejected",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_missing_predecessor_still_rejected",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_new_version_still_required",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_new_version_still_required",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_progression_cannot_hide_reversal",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_progression_cannot_hide_reversal",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_pwl_fta_ta_and_source_preserved",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_pwl_fta_ta_and_source_preserved",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_no_htf_obstacle_is_declared_not_recalculated",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_no_htf_obstacle_is_declared_not_recalculated",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_later_proof_does_not_backfill_earlier_record",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_later_proof_does_not_backfill_earlier_record",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_stale_idm_not_misreported_as_missing_availability",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_stale_idm_not_misreported_as_missing_availability",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
     }
   ]
 }
