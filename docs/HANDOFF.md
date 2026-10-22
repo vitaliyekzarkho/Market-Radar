@@ -22,7 +22,13 @@ Unverified progression cannot proceed to authoritative notification assessment.
 Added tests/fixtures/d5/idm_progression.json and 14 focused IDM tests, plus one
 actual accepted D2 lifecycle test. Catalog now has 74 scenarios (32 general,
 28 original XAU, 14 IDM). No accepted D1–D4 source, tests or fixtures changed.
-Updated implementation SHA and full verification: pending committed regression.
+Tested clarification implementation: `581fc3b9726960d431092a14c7a44fcaa990bbcf`.
+2026-10-22 implementer results: **28/28 original XAU + 14/14 IDM = 42/42 focused**,
+**105/105 total D5**, **914/914 full offline regression** (809 accepted + 105 D5),
+all with **0 failures, 0 errors, 0 skips**. CPython 3.12.10 (MSC v.1943 64-bit AMD64),
+Windows-11-10.0.26200-SP0, existing dependencies. Full run: 24.959 seconds.
+Exact commands are in the D5 contract. This following result commit changes
+documentation only. No independent-reviewer or historical forecast validation is claimed.
 The previous results below apply only to the pre-clarification implementation.
 
 ### Earlier D5 implementation record

@@ -299,8 +299,13 @@ python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users
 python -B -c "import tempfile,unittest,platform,sys; tempfile.tempdir=r'C:\Users\User\AppData\Local\Temp\MarketRadar_D5_OfflineTests'; print(sys.version); print(platform.platform()); r=unittest.TextTestRunner().run(unittest.defaultTestLoader.discover('.', pattern='test_*.py')); print('FULL',r.testsRun,'failures',len(r.failures),'errors',len(r.errors),'skipped',len(r.skipped)); raise SystemExit(not r.wasSuccessful())"
 ```
 
-IDM clarification: exact tested implementation and fresh regression results will
-be recorded after the correction commit. Status remains awaiting independent review.
+IDM clarification tested implementation: `581fc3b9726960d431092a14c7a44fcaa990bbcf`.
+2026-10-22: **28/28 original XAU + 14/14 IDM = 42/42 focused**, **105/105 D5**,
+**914/914 full offline regression**, 0 failures/errors/skips in every run.
+CPython 3.12.10 (MSC v.1943 64-bit AMD64), Windows-11-10.0.26200-SP0, existing
+dependencies. Full suite: 24.959 seconds. Implementer results only; no independent
+reviewer run or historical accuracy claim. The following result commit changes
+documentation only. Status remains awaiting independent review.
 
 Earlier, pre-clarification 2026-10-22 tested implementation: `445660b4d9a0dcc5b827c77f0ff5fcb378f32b52`.
 **28/28 focused XAU**, **90/90 total D5**, **899/899 full offline regression**;
