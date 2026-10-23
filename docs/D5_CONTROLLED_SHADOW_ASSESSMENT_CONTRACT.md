@@ -133,6 +133,18 @@ records retain their exact evidence prefix and cannot be reinterpreted using a
 later correction. No older version is selected as a fallback for missing new data.
 The D4/D2 decision cutoff remains separate from the later report cutoff.
 
+Correction acceptance repair (R1): evidence entries are resolved in deterministic
+predecessor order before current support/conflict sets are emitted. Duplicate IDs
+and cyclic in-batch lineage fail closed. An available replacement supersedes its
+predecessor even when the replacement is stale or unconfirmed; no fallback occurs.
+The same evidence set in either presentation order produces the same report.
+Historical transition selection uses the latest validated version available at
+both the change and frozen decision cutoffs, including the decision sequence.
+A replacement arriving only by report time does not retroactively invalidate the
+earlier cause. Age is checked at the historical change/decision instants for that
+cause, separately from report-time current evidence. Missing availability remains
+UNKNOWN and does not invent a publication event. Gold IDM rules remain unchanged.
+
 Transition evidence must be available at both the change instant and the frozen
 D2 decision cutoff, with eligible sequence positions. Transition time is no earlier
 than the prior assessed cutoff and no later than scenario creation/report cutoff.

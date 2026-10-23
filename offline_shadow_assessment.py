@@ -43,6 +43,25 @@ def _hash(v):
     return isinstance(v, str) and len(v) == 64 and all(c in "0123456789abcdef" for c in v)
 
 
+def _ordered_evidence(evidence):
+    """Resolve in-batch predecessors before consumers, independent of list order."""
+    pending = {}
+    for item in evidence:
+        eid = item["id"]
+        if not _identity(eid) or eid in pending:
+            raise ReplayError("DUPLICATE_OR_INVALID_EVIDENCE_ID")
+        pending[eid] = item
+    ordered = []
+    while pending:
+        ready = sorted(eid for eid, item in pending.items()
+                       if item.get("predecessor_id") not in pending)
+        if not ready:
+            raise ReplayError("CYCLIC_EVIDENCE_LINEAGE")
+        for eid in ready:
+            ordered.append(pending.pop(eid))
+    return ordered
+
+
 def _load(raw):
     if not isinstance(raw, bytes) or len(raw) > MAX_BYTES:
         raise ReplayError("INPUT_BYTES_OR_SIZE")
@@ -220,7 +239,7 @@ def _replay(case, *, ledger_context, stop_after):
         raise ReplayError("PREFIX_LIMIT_INVALID")
     steps = steps if stop_after is None else steps[:stop_after]
     records, previous, seen_ids, eligible, version_contents = [], None, set(), {}, {}
-    evidence_identity, latest_evidence = {}, {}
+    evidence_identity, latest_evidence, evidence_versions = {}, {}, {}
     last_position, last_cutoff_sequence = None, None
     # Stable prefix identity excludes later steps and expected outcomes (never assessment authority).
     identity = {k: case[k] for k in ("schema_version", "classification", "case_id", "instrument", "baseline", "scope", "policy")}
@@ -282,8 +301,10 @@ def _replay(case, *, ledger_context, stop_after):
         evidence = step["evidence"]
         if not isinstance(evidence, list) or len(evidence) > 128:
             raise ReplayError("EVIDENCE_COUNT_LIMIT")
+        evidence = _ordered_evidence(evidence)
         support, conflict, missing, statuses = [], [], [], []
         visible_ids = set()
+        assessed = []
         for e in evidence:
             eid = e["id"]
             if not _identity(eid) or not _identity(e["source_id"]) or not _identity(e["item_id"]):
@@ -328,6 +349,7 @@ def _replay(case, *, ledger_context, stop_after):
                                 latest_evidence[source_item] = eid
                             eligible[eid], version_contents[key] = content, eid
                             evidence_identity[eid] = source_item
+                            evidence_versions[eid] = e
                             max_age = e["max_age_seconds"]
                             if not _number(max_age) or max_age < 0:
                                 raise ReplayError("AGE_POLICY_INVALID")
@@ -343,7 +365,14 @@ def _replay(case, *, ledger_context, stop_after):
                                 raise ReplayError("EVIDENCE_STATUS_INVALID")
                             else:
                                 state, reason = "AVAILABLE_SYNTHETIC_CLAIM", "DECLARED_SYNTHETIC_ONLY"
-                                visible_ids.add(eid)
+            assessed.append((e, state, reason))
+        # Resolve all replacements before emitting current evidence or supporting lists.
+        for e, state, reason in assessed:
+            eid = e["id"]
+            if state == "AVAILABLE_SYNTHETIC_CLAIM" and latest_evidence[(e["source_id"], e["item_id"])] != eid:
+                state, reason = "UNKNOWN", "SUPERSEDED_EVIDENCE"
+            if state == "AVAILABLE_SYNTHETIC_CLAIM":
+                visible_ids.add(eid)
             if state == "UNKNOWN":
                 missing.append(fingerprint(eid))
                 if e.get("used_as_current") is True:
@@ -388,9 +417,20 @@ def _replay(case, *, ledger_context, stop_after):
                     ev = {e["id"]: e for e in evidence}
                     progression = transition["classification"] == "TARGET_PROGRESSION"
                     def eligible_at_change(eid):
-                        return (eid in visible_ids and utc(ev[eid]["available_at_utc"]) <= utc(transition["at_utc"])
-                            and utc(ev[eid]["available_at_utc"]) <= utc(d2["cutoff"]["as_of_utc"])
-                            and ev[eid]["sequence"] <= d2["cutoff"]["maximum_visible_ledger_sequence"])
+                        e = ev.get(eid)
+                        if e is None or eligible.get(eid) != fingerprint(e):
+                            return False
+                        change = utc(transition["at_utc"])
+                        decision = utc(d2["cutoff"]["as_of_utc"])
+                        # A later report correction must not rewrite the frozen decision.
+                        head = None
+                        for vid, version in evidence_versions.items():
+                            if (evidence_identity[vid] == (e["source_id"], e["item_id"])
+                                    and utc(version["available_at_utc"]) <= min(change, decision)
+                                    and version["sequence"] <= d2["cutoff"]["maximum_visible_ledger_sequence"]):
+                                head = vid
+                        return (head == eid and e["status"] == "current"
+                                and (max(change, decision) - utc(e["observed_at_utc"])).total_seconds() <= e["max_age_seconds"])
                     valid_transition = all(eligible_at_change(i) for i in transition["evidence_ids"])
                     if progression:
                         candidates = [ev[i] for i in transition["evidence_ids"] if i in ev and

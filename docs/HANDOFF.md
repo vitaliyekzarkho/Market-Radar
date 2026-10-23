@@ -1,5 +1,26 @@
 # MarketRadar handoff — D5
 
+## D5 R1 correction-order repair — 2026-10-23
+
+**CHANGES REQUIRED / REPAIR AWAITING INDEPENDENT ACCEPTANCE**. PR #1 is not merged.
+Base reviewed HEAD: `c314cc038cd0d64ced1c9ccae06f0f00c70624a3`.
+The acceptance probe reproduced order-dependent scenario justification on that SHA.
+Cause: current evidence was emitted before all replacements were resolved.
+The D5-only repair resolves predecessor order, emits current sets after resolution,
+and selects historical causal evidence at change/decision time rather than report
+time. Duplicate IDs and cyclic input lineage fail closed. Accepted D1–D4 are unchanged.
+Thirteen added tests cover both orders, replacement use, multi-revision chains,
+stale/unknown replacements, post-decision time/sequence, post-report availability,
+report-time staleness, immutable earlier reports, new chains, duplicate IDs and cycles.
+Gold IDM chronology and UNKNOWN classifications retain their existing tests.
+Repair verification: **118/118 D5**, **927/927 full offline regression**, zero
+failures/errors/skips on Windows-11-10.0.26200-SP0 / CPython 3.12.10. Full run
+37.342 seconds. A separate exact-commit export recheck follows this commit;
+these initial results alone do not constitute independent acceptance.
+The isolated runner uses unittest loadTestsFromName('test_offline_shadow_assessment')
+and discover('.', pattern='test_*.py'), with synthetic temporary SQLite journals.
+No production Radar, MT5, Telegram, trading operation or live integration authorized.
+
 ## D5 controlled shadow assessment — 2026-10-22
 
 **D5 — IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.

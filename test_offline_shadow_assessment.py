@@ -498,6 +498,115 @@ class IdmProgressionTests(CaseAssertions, unittest.TestCase):
         self.assertNotEqual(self.last()["transition"]["classification"], "TARGET_PROGRESSION")
 
 
+class EvidenceCorrectionTests(CaseAssertions, unittest.TestCase):
+    def corrected(self):
+        n = second(self.case)
+        n["snapshot"]["payload"]["d2"]["scenario"]["point_a"]["price"] = 4200
+        old = n["evidence"][0]
+        replacement = deepcopy(old)
+        replacement.update(id="synthetic:correction", revision="2", predecessor_id=old["id"], relation="conflicts")
+        replacement["payload"] = {"corrected": True}
+        replacement["content_hash"] = fingerprint(replacement["payload"])
+        return n, old, replacement
+
+    def both_orders(self, n, items):
+        results = []
+        for ordering in (items, list(reversed(items))):
+            n["evidence"] = ordering
+            results.append(self.run_case())
+        self.assertEqual(results[0], results[1])
+        return results[0]["timeline"][-1]
+
+    def test_replaced_cause_rejected_in_both_orders(self):
+        n, old, replacement = self.corrected()
+        r = self.both_orders(n, [old, replacement])
+        self.assertEqual(r["transition"]["classification"], "UNEXPLAINED_TRANSITION")
+        self.assertNotIn(fingerprint(old["id"]), r["supporting"])
+        self.assertIn(fingerprint(old["id"]), r["missing"])
+        self.assertIn("CHANGE_WITHOUT_CAUSAL_AVAILABLE_EVIDENCE", {x["reason_code"] for x in r["discrepancies"]})
+
+    def test_replacement_cause_accepted_in_both_orders(self):
+        n, old, replacement = self.corrected()
+        n["transition"]["evidence_ids"] = [replacement["id"]]
+        self.assertEqual(self.both_orders(n, [old, replacement])["transition"]["classification"], "SCENARIO_REVISION")
+
+    def test_multiple_corrections_resolve_before_selection(self):
+        n, old, replacement = self.corrected()
+        latest = deepcopy(replacement)
+        latest.update(id="synthetic:correction-3", revision="3", predecessor_id=replacement["id"])
+        n["transition"]["evidence_ids"] = [replacement["id"]]
+        r = self.both_orders(n, [old, replacement, latest])
+        self.assertEqual(r["transition"]["classification"], "UNEXPLAINED_TRANSITION")
+        self.assertEqual(r["contradicting"], [fingerprint(latest["id"])])
+
+    def test_stale_replacement_does_not_fall_back(self):
+        n, old, replacement = self.corrected()
+        replacement["status"] = "stale"
+        r = self.both_orders(n, [old, replacement])
+        self.assertFalse(r["supporting"] or r["contradicting"])
+        self.assertEqual(r["transition"]["classification"], "UNEXPLAINED_TRANSITION")
+
+    def test_unknown_replacement_does_not_fall_back(self):
+        n, old, replacement = self.corrected()
+        replacement["status"] = "unknown"
+        r = self.both_orders(n, [old, replacement])
+        self.assertEqual(r["transition"]["classification"], "UNEXPLAINED_TRANSITION")
+        self.assertFalse(r["supporting"])
+
+    def test_after_decision_correction_preserves_historical_cause(self):
+        n, old, replacement = self.corrected()
+        replacement["available_at_utc"] = "2026-10-21T10:00:18Z"
+        r = self.both_orders(n, [old, replacement])
+        self.assertEqual(r["transition"]["classification"], "SCENARIO_REVISION")
+        self.assertNotIn(fingerprint(old["id"]), r["supporting"])
+
+    def test_after_report_correction_does_not_supersede(self):
+        n, old, replacement = self.corrected()
+        replacement["available_at_utc"] = "2026-10-21T11:00:00Z"
+        r = self.both_orders(n, [old, replacement])
+        self.assertEqual(r["transition"]["classification"], "SCENARIO_REVISION")
+        self.assertIn(fingerprint(old["id"]), r["supporting"])
+
+    def test_correction_after_decision_sequence_preserves_cause(self):
+        n, old, replacement = self.corrected()
+        replacement["sequence"] = 4
+        r = self.both_orders(n, [old, replacement])
+        self.assertEqual(r["transition"]["classification"], "SCENARIO_REVISION")
+
+    def test_report_staleness_does_not_rewrite_decision(self):
+        n, old, replacement = self.corrected()
+        for step in self.case["steps"]:
+            step["evidence"][0]["max_age_seconds"] = 17
+        replacement["available_at_utc"] = "2026-10-21T10:00:18Z"
+        r = self.both_orders(n, [old, replacement])
+        self.assertEqual(r["transition"]["classification"], "SCENARIO_REVISION")
+
+    def test_correction_preserves_earlier_report(self):
+        before = self.run_case()["timeline"][0]
+        n, old, replacement = self.corrected()
+        n["evidence"] = [replacement, old]
+        self.assertEqual(before, self.run_case()["timeline"][0])
+
+    def test_new_chain_in_same_batch_is_order_independent(self):
+        n, old, replacement = self.corrected()
+        old.update(id="synthetic:new-source", item_id="new-source")
+        replacement.update(item_id=old["item_id"], predecessor_id=old["id"])
+        n["transition"]["evidence_ids"] = [old["id"]]
+        self.assertEqual(self.both_orders(n, [old, replacement])["transition"]["classification"], "UNEXPLAINED_TRANSITION")
+
+    def test_duplicate_ids_rejected(self):
+        n, old, replacement = self.corrected()
+        replacement["id"] = old["id"]
+        n["evidence"] = [old, replacement]
+        self.assertEqual(d5.replay(seal(self.case)).report["reasons"], ["DUPLICATE_OR_INVALID_EVIDENCE_ID"])
+
+    def test_cycle_rejected(self):
+        n, old, replacement = self.corrected()
+        old["predecessor_id"] = replacement["id"]
+        n["evidence"] = [old, replacement]
+        self.assertEqual(d5.replay(seal(self.case)).report["reasons"], ["CYCLIC_EVIDENCE_LINEAGE"])
+
+
 class InputBoundaryTests(CaseAssertions, unittest.TestCase):
     def test_malformed_and_executable(self):
         for raw in (b"import os", b"\x80pickle", b'{"a":', b'{"x":NaN}', b'{"x":1,"x":2}'):
