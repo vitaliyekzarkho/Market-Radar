@@ -1,0 +1,525 @@
+{
+  "schema_version": "d5_case_catalog_v1",
+  "classification": "synthetic",
+  "historical_status": "INSUFFICIENT_EVIDENCE",
+  "scenarios": [
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_stable_primary",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_stable_primary",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_nested_rebound",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_nested_rebound",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_rebound_then_bearish_continuation",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_rebound_then_bearish_continuation",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_valid_primary_reversal",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_valid_primary_reversal",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_unauthorized_reversal",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_unauthorized_reversal",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_silent_point_a",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_silent_point_a",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_silent_point_b",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_silent_point_b",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_new_id_without_formation",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_new_id_without_formation",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_new_id_valid_formation",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_new_id_valid_formation",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_delayed_macro",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_delayed_macro",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_usd_yields_disagreement",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_usd_yields_disagreement",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_stale_volume",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_stale_volume",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_missing_availability",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_missing_availability",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_correction_after_cutoff",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_correction_after_cutoff",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_equal_timestamp_sequence",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_equal_timestamp_sequence",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_target_reached_not_reversal",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_target_reached_not_reversal",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_fta_without_revision",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_fta_without_revision",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_permission_without_authority",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_permission_without_authority",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_duplicate_candidate_not_authorization",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_duplicate_candidate_not_authorization",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_material_candidate_no_ledger",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_material_candidate_no_ledger",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_resolution_without_authority",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_resolution_without_authority",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_expiry_without_authority",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_expiry_without_authority",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_unknown_notification",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_unknown_notification",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_corrupt_snapshot",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_corrupt_snapshot",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_d4_schema_incompatible",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_d4_schema_incompatible",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_no_d1_membership_fabricated",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_no_d1_membership_fabricated",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_d2_lifecycle_mismatch",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_d2_lifecycle_mismatch",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_d3_policy_claim_mismatch",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_d3_policy_claim_mismatch",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_interrupted_replay_recompute",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_interrupted_replay_recompute",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_fresh_process_replay",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_fresh_process_replay",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_independent_prefix",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_independent_prefix",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:GeneralReplayTests:test_immutable_report_after_mutation",
+      "group": "general",
+      "test": "test_offline_shadow_assessment.GeneralReplayTests.test_immutable_report_after_mutation",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_01_complete_target_lineage",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_01_complete_target_lineage",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_02_missing_predecessor",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_02_missing_predecessor",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_03_after_fact_target",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_03_after_fact_target",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_04_reached_not_breached",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_04_reached_not_breached",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_05_dynamic_fta_preserves_b",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_05_dynamic_fta_preserves_b",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_06_fta_without_evidence",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_06_fta_without_evidence",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_07_material_same_minute_requires_d3",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_07_material_same_minute_requires_d3",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_08_duplicate_same_minute_candidate",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_08_duplicate_same_minute_candidate",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_09_unknown_order",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_09_unknown_order",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_10_title_not_material",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_10_title_not_material",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_11_zone_positions",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_11_zone_positions",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_12_intrabar_not_close",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_12_intrabar_not_close",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_13_later_screenshot_no_backfill",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_13_later_screenshot_no_backfill",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_14_conditional_as_current",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_14_conditional_as_current",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_15_distinct_thresholds",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_15_distinct_thresholds",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_16_confirmed_direction_late_entry",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_16_confirmed_direction_late_entry",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_17_local_anchor_preserves_source",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_17_local_anchor_preserves_source",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_18_macro_contradictions_retained",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_18_macro_contradictions_retained",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_19_stale_w1_excluded",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_19_stale_w1_excluded",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_20_pending_pmi",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_20_pending_pmi",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_21_4073_to_4019_valid",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_21_4073_to_4019_valid",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_22_4073_to_4019_invalid",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_22_4073_to_4019_invalid",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_23_4019_to_4058_valid",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_23_4019_to_4058_valid",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_24_4019_to_4058_unexplained",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_24_4019_to_4058_unexplained",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_25_two_messages_causal_order",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_25_two_messages_causal_order",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_26_two_messages_without_order",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_26_two_messages_without_order",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_27_earlier_report_stable",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_27_earlier_report_stable",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:XauFocusedTests:test_28_full_prefix_equal",
+      "group": "xau_addendum",
+      "test": "test_offline_shadow_assessment.XauFocusedTests.test_28_full_prefix_equal",
+      "fixture": "base.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_known_idm_same_hypothesis_valid_progression",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_known_idm_same_hypothesis_valid_progression",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_missing_availability_is_unknown_not_invalid_target",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_missing_availability_is_unknown_not_invalid_target",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_later_available_idm_is_temporal_not_structural_failure",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_later_available_idm_is_temporal_not_structural_failure",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_equal_time_wrong_sequence_not_available",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_equal_time_wrong_sequence_not_available",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_missing_establishment_chronology_unknown",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_missing_establishment_chronology_unknown",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_established_after_availability_rejected",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_established_after_availability_rejected",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_corruption_is_not_downgraded_to_unknown_availability",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_corruption_is_not_downgraded_to_unknown_availability",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_missing_predecessor_still_rejected",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_missing_predecessor_still_rejected",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_new_version_still_required",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_new_version_still_required",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_progression_cannot_hide_reversal",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_progression_cannot_hide_reversal",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_pwl_fta_ta_and_source_preserved",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_pwl_fta_ta_and_source_preserved",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_no_htf_obstacle_is_declared_not_recalculated",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_no_htf_obstacle_is_declared_not_recalculated",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_later_proof_does_not_backfill_earlier_record",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_later_proof_does_not_backfill_earlier_record",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    },
+    {
+      "case_id": "synthetic:IdmProgressionTests:test_stale_idm_not_misreported_as_missing_availability",
+      "group": "xau_idm_clarification",
+      "test": "test_offline_shadow_assessment.IdmProgressionTests.test_stale_idm_not_misreported_as_missing_availability",
+      "fixture": "idm_progression.json",
+      "construction": "explicit deterministic mutation in named test; never live data"
+    }
+  ]
+}

@@ -1,4 +1,107 @@
-# MarketRadar handoff — D4
+# MarketRadar handoff — D5
+
+## D5 R1 correction-order repair — 2026-10-23
+
+**CHANGES REQUIRED / REPAIR AWAITING INDEPENDENT ACCEPTANCE**. PR #1 is not merged.
+Base reviewed HEAD: `c314cc038cd0d64ced1c9ccae06f0f00c70624a3`.
+The acceptance probe reproduced order-dependent scenario justification on that SHA.
+Cause: current evidence was emitted before all replacements were resolved.
+The D5-only repair resolves predecessor order, emits current sets after resolution,
+and selects historical causal evidence at change/decision time rather than report
+time. Duplicate IDs and cyclic input lineage fail closed. Accepted D1–D4 are unchanged.
+Thirteen added tests cover both orders, replacement use, multi-revision chains,
+stale/unknown replacements, post-decision time/sequence, post-report availability,
+report-time staleness, immutable earlier reports, new chains, duplicate IDs and cycles.
+Gold IDM chronology and UNKNOWN classifications retain their existing tests.
+Repair verification: **118/118 D5**, **927/927 full offline regression**, zero
+failures/errors/skips on Windows-11-10.0.26200-SP0 / CPython 3.12.10. Full run
+37.342 seconds. A separate exact-commit export recheck follows this commit;
+these initial results alone do not constitute independent acceptance.
+The isolated runner uses unittest loadTestsFromName('test_offline_shadow_assessment')
+and discover('.', pattern='test_*.py'), with synthetic temporary SQLite journals.
+No production Radar, MT5, Telegram, trading operation or live integration authorized.
+
+## D5 controlled shadow assessment — 2026-10-22
+
+**D5 — IMPLEMENTED / AWAITING INDEPENDENT REVIEW**.
+
+### D1 IDM target-progression clarification — 2026-10-22
+
+User clarification: 4019.92 is a D1 fractal IDM liquidity objective; PWL 4073.545
+is the preceding intermediate objective, with FTA 4058.97 and TA 4044.76 retained.
+No intervening relevant HTF FVG is identified by the user; that absence is a
+declaration, not independently calculated evidence. Missing IDM chronology does
+not make the structural target wrong. It remains UNKNOWN historical availability.
+
+D5 now recognizes TARGET_PROGRESSION under accepted D2 revision authority:
+same scenario/hypothesis/direction, new immutable scenario version and preserved
+predecessor, original formation, target history and causal event. No new hypothesis
+ID is required just to activate the next established objective. Explicitly late
+availability is a temporal discrepancy; corruption or lifecycle defects still fail.
+Unverified progression cannot proceed to authoritative notification assessment.
+
+Added tests/fixtures/d5/idm_progression.json and 14 focused IDM tests, plus one
+actual accepted D2 lifecycle test. Catalog now has 74 scenarios (32 general,
+28 original XAU, 14 IDM). No accepted D1–D4 source, tests or fixtures changed.
+Tested clarification implementation: `581fc3b9726960d431092a14c7a44fcaa990bbcf`.
+2026-10-22 implementer results: **28/28 original XAU + 14/14 IDM = 42/42 focused**,
+**105/105 total D5**, **914/914 full offline regression** (809 accepted + 105 D5),
+all with **0 failures, 0 errors, 0 skips**. CPython 3.12.10 (MSC v.1943 64-bit AMD64),
+Windows-11-10.0.26200-SP0, existing dependencies. Full run: 24.959 seconds.
+Exact commands are in the D5 contract. This following result commit changes
+documentation only. No independent-reviewer or historical forecast validation is claimed.
+The previous results below apply only to the pre-clarification implementation.
+
+### Earlier D5 implementation record
+
+Branch: `feature/d5-controlled-shadow-assessment`.
+Accepted D4 base: `bd0070056aa9c10ef8e74799af4bbf421cc1ba89`.
+Remote main matched exactly at preflight; approved D4 implementation
+`5e3d227772df73b6ec60c910787716b86268ef55` is an ancestor with only documentation
+changes afterwards. D1–D4 acceptance is retained, including the 809-test baseline.
+The later explicit D5 task authorizes this offline work; earlier D5 prohibitions
+below describe the historical D4 acceptance, not the current task authorization.
+
+D5 adds bounded byte-only replay, D4 compatibility calls, immutable cutoff reports,
+target/scenario continuity and structured narrative/zone diagnostics. Missing
+authoritative journals remain UNKNOWN. An explicit caller-supplied synthetic D3
+context can assess accepted ledger references using D3.assess only; it creates no
+READY events, scenarios, notifications or delivery attempts. Candidate and actual
+accepted-ledger results are separately labeled. D1/D2 input journals are read-only;
+opt-in D3 eligibility writes occur only in isolated synthetic output journals.
+
+60 named scenario cases: 32 general and 28 XAU-focused; supplemental input-boundary
+and real synthetic D1–D3 integration tests. Historical artifact chronology and
+forecast accuracy remain **INSUFFICIENT_EVIDENCE**. No image/Telegram archive was
+supplied here; described prices informed synthetic examples only.
+
+New files: offline_shadow_assessment.py, test_offline_shadow_assessment.py,
+tests/fixtures/d5/base.json, tests/fixtures/d5/case_catalog.json,
+docs/D5_CONTROLLED_SHADOW_ASSESSMENT_CONTRACT.md. Only HANDOFF is modified among
+existing tracked files. Accepted code/tests/fixtures are unchanged.
+
+Exact tested implementation SHA: `445660b4d9a0dcc5b827c77f0ff5fcb378f32b52`.
+2026-10-22 implementer results: **28/28 focused XAU**, **90/90 total D5**,
+**899/899 full offline regression** (809 accepted + 90 D5), all with **0 failures,
+0 errors and 0 skips**. CPython 3.12.10 (MSC v.1943 64-bit AMD64),
+Windows-11-10.0.26200-SP0, existing dependencies; full suite 34.211 seconds.
+The commands in the D5 contract were executed on that exact implementation commit.
+Full regression repeats D5 determinism, prefix, fresh-process and accepted-journal
+restart checks alongside all accepted lifecycle/availability tests. No independent
+reviewer execution, Linux validation or historical forecasting validation is claimed.
+This result commit changes documentation only; implementation stays unchanged.
+Remote main was rechecked and remained at the accepted D4 base.
+See [D5 contract](D5_CONTROLLED_SHADOW_ASSESSMENT_CONTRACT.md) for public APIs,
+schemas, trust/notification boundaries, exact commands and remaining limitations.
+Pure replay has no durable recovery guarantee. Structured annotations are not an
+NLP validator. D4 concurrent file-substitution limitation remains; production
+isolation and genuine source availability require separate review/authorization.
+
+The working Radar directory was not accessed or synchronized. No Radar, MT5,
+Telegram, live source, trading, background job or D6 implementation. Publish for
+independent review only; do not merge D5 into main without approval.
+
+---
 
 ## D4 read-only shadow boundary — 2026-10-22
 
