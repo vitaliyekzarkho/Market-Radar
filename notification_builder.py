@@ -548,7 +548,7 @@ def volume_reasoning_text(scenario: dict[str, Any]) -> str:
     if not volume.get("available"):
         stale = volume.get("stale_timeframes") if isinstance(volume.get("stale_timeframes"), list) else []
         if stale:
-            return f"Объёмные данные просрочены ({', '.join(stale)}) и исключены из анализа."
+            return f"Объёмные данные просрочены ({', '.join(stale)}) и исключены из нового объёмного подтверждения; это не отмена исторической PA-структуры."
         return "Данные закрытых объёмов W1/D1/H4/H1 недоступны."
     evaluations = volume.get("leg_evaluations") if isinstance(volume.get("leg_evaluations"), dict) else {}
     structural = evaluations.get("primary_structural_leg") if isinstance(evaluations.get("primary_structural_leg"), dict) else {}
@@ -576,7 +576,8 @@ def volume_reasoning_text(scenario: dict[str, Any]) -> str:
         lines.append(f"Наблюдения: {attribution}.")
     stale = volume.get("stale_timeframes") if isinstance(volume.get("stale_timeframes"), list) else []
     if stale:
-        lines.append(f"Качество данных: просроченные ТФ исключены — {', '.join(stale)}.")
+        lines.append(f"Freshness объёмов: ТФ исключены из нового объёмного подтверждения — {', '.join(stale)}.")
+    lines.append("Возраст бара включает выходные. Stale объёма ≠ ошибочная PA-свеча; freshness news/PA/derived отдельно.")
     lines.append("Ограничение: тиковый объём не создаёт вход и не меняет направление самостоятельно.")
     return "\n".join(lines)
 
@@ -676,6 +677,11 @@ def build_message(scenario: dict[str, Any], policy_payload: dict[str, Any], prev
     opportunity = market.get("opportunity") if isinstance(market.get("opportunity"), dict) else {}
     opportunity_leg = counter_leg or counter_candidate or continuation_setup or structural_leg
     opportunity_direction = str(opportunity_leg.get("direction") or direction).upper()
+    nested = counter_leg or counter_candidate
+    nested_direction = str(nested.get("direction") or "unknown").lower()
+    if kind not in {"NEWS_RISK", "NEWS_DRIVER", "SCENARIO_INVALIDATED", "SCENARIO_PAUSED"}:
+        if nested_direction in {"bullish", "bearish"} and nested_direction != direction:
+            title = f"{direction.upper()} PRIMARY · {nested_direction.upper()} PULLBACK"
     point_a = structural_leg.get("point_a") if isinstance(structural_leg.get("point_a"), dict) else {}
     point_b = hypothesis.get("point_b") if isinstance(hypothesis.get("point_b"), dict) else {}
     minimum = hypothesis.get("minimum_target") if isinstance(hypothesis.get("minimum_target"), dict) else {}
@@ -723,8 +729,7 @@ def build_message(scenario: dict[str, Any], policy_payload: dict[str, Any], prev
         "",
         "Главная гипотеза:",
         f"{direction.upper()} A→B: {point_a.get('name', 'structural origin')} {format_number(point_a.get('price'))} → {point_b.get('name', 'target')} {format_number(point_b.get('price'))}",
-        f"Причинная цепочка: {causality_summary_ru(causality)}",
-        f"Статус гипотезы: {ru_term(causality.get('status', 'incomplete'))} | противоречия: {conflict_text(causality.get('conflicts'))}",
+        f"Структурное подтверждение primary: {ru_term(causality.get('status', 'incomplete'))} (не готовность входа)",
         "ТФ-контроль: " + " | ".join(
             f"{name} {str((tf_frames.get(name) or {}).get('control_direction') or 'unknown')}"
             for name in ("W1", "D1", "H4", "H1")
@@ -787,7 +792,7 @@ def build_message(scenario: dict[str, Any], policy_payload: dict[str, Any], prev
         ])
     lines.extend([
         "",
-        f"Минимальная реакция / FTA: {format_target(minimum)}",
+        f"FTA основного {direction.upper()} маршрута: {format_target(minimum)}",
         "",
         (
             "Отменённый маршрут:"
@@ -810,8 +815,15 @@ def build_message(scenario: dict[str, Any], policy_payload: dict[str, Any], prev
         "Контекст USD:",
         usd_context_text(scenario, direction),
         "",
-        "Контекст объёмов:",
+        "Объёмное подтверждение (отдельно от структуры):",
         volume_reasoning_text(scenario),
+        "",
+        "News/intermarket подтверждение:",
+        f"{ru_term((market.get('news_context') or {}).get('role') or 'unknown')} — контекст, не разрешение входа",
+        "",
+        "Готовность входа:",
+        f"{ru_term(opportunity.get('state') or 'unknown')} — {ru_opportunity_reason(opportunity.get('reason'))}",
+        "Подтверждение направления само по себе не разрешает вход.",
         "",
         "Макро/новости:",
         *macro_context_text(scenario),
@@ -826,9 +838,13 @@ def build_message(scenario: dict[str, Any], policy_payload: dict[str, Any], prev
     if kind == "SCENARIO_INVALIDATED":
         lines.extend(["", "Инвалидация:", "Подтверждена — цена закрепилась за границей сценария."])
     lines.extend([
-        "", "Инвалидация:", ru_condition(hypothesis.get("invalidation") or conditions.get("invalidation")),
-        "", "Тайминг:", ru_opportunity_reason(opportunity.get("reason")),
+        "", "Инвалидация primary (структурная):", ru_condition(hypothesis.get("invalidation") or conditions.get("invalidation")),
     ])
+    local_invalidation = conditions.get("dynamic_execution_invalidation")
+    if local_invalidation and local_invalidation != conditions.get("invalidation"):
+        lines.extend(["Локальная граница (не отмена primary):", ru_condition(local_invalidation)])
+    if nested:
+        lines.extend(["Инвалидация вложенной реакции:", ru_condition(nested.get("invalidation")) if nested.get("invalidation") else "UNKNOWN — отдельное условие не задано"])
     if transition_band:
         lines.extend([
             "", "Переходная зона:",

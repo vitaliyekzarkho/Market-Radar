@@ -4,12 +4,12 @@ import unittest
 from pathlib import Path
 from C3_3_3_validate_diesel import validate
 
-ROOT = Path(__file__).resolve().parent / "tests" / "fixtures" / "c333"
+ROOT = Path(__file__).resolve().parent
 class BridgeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.data = [json.loads((ROOT / f).read_text(encoding='utf-8')) for f in ('fast_news_stories.json', 'fast_news_interpretations.json', 'diesel_historical_reaction.json')]
-    def test_synthetic_window(self):
+    def test_real_window(self):
         r = validate(*self.data)
         self.assertEqual(len(r['mechanisms']), 2)
         self.assertEqual(r['provenance']['anchor_offset_seconds'], 14)

@@ -18,7 +18,7 @@ try:
 except ZoneInfoNotFoundError:
     # Windows installations without the optional tzdata package still use the
     # machine's configured local timezone. MarketRadar is operated in Ireland.
-    IRELAND = datetime.now().astimezone().tzinfo
+    raise RuntimeError('Install tzdata: Europe/Dublin is required for DST-safe monitoring')
 ACTIVE_FROM = clock_time(8, 0)
 ACTIVE_TO = clock_time(20, 0)
 DEFAULT_INTERVAL_SECONDS = 60
@@ -203,14 +203,27 @@ def run_step(root: Path, script_name: str, verbose: bool, report_failure: bool =
     return True, output
 
 
-def run_pipeline(root: Path, verbose: bool, force_full: bool = False) -> bool:
+def run_pipeline(root: Path, verbose: bool, force_full: bool = False, no_telegram: bool = False) -> bool:
+    def safe_observe(root, stage, cycle_id):
+        try:
+            from cdr_operational import safe_observe as observer
+            return observer(root, stage, cycle_id)
+        except Exception as exc:
+            print('CDR_AUDIT_DEGRADED: observer unavailable: ' + type(exc).__name__)
+            try:
+                atomic_write_json(root / 'data/cdr/degraded.json', {'status':'DEGRADED','stage':stage,'cycle_id':cycle_id,'error_type':type(exc).__name__})
+            except OSError:
+                print('CDR_AUDIT_PERSIST_FAILED')
+            return None
+    from uuid import uuid4
+    audit_cycle = 'cycle_' + uuid4().hex
     cycle_time = ireland_now()
     print(f"\nRADAR_CYCLE: {cycle_time.isoformat(timespec='seconds')}")
     snapshot_passed, snapshot_output = run_step(
         root, SNAPSHOT_SCRIPT, verbose, report_failure=False
     )
     if not snapshot_passed:
-        if complete_cache_available(root) and recognized_market_closed(snapshot_output, cycle_time):
+        if complete_cache_available(root) and 'MARKET_CLOSED_CONFIRMED' in snapshot_output:
             print("MARKET_DATA: UNAVAILABLE | market closed")
             print("SNAPSHOT_FALLBACK: using last complete cached W1/D1/H4/H1/M15 snapshot")
         else:
@@ -221,6 +234,20 @@ def run_pipeline(root: Path, verbose: bool, force_full: bool = False) -> bool:
             atomic_write_json(root / HEARTBEAT_FILE, {"updated_at": cycle_time.isoformat(), "status": "failed", "step": SNAPSHOT_SCRIPT})
             return False
 
+    if snapshot_passed and 'TIME_AUTHORITY_DEFERRED:' in snapshot_output:
+        # Successful bounded observation, not a successful technical analysis.
+        # Never consume the old raw cache or execute causal/notification modules.
+        from time_ingestion import journal_deferred_cycle
+        try:
+            result=journal_deferred_cycle(root,audit_cycle)
+        except Exception as exc:
+            atomic_write_json(root / HEARTBEAT_FILE, {'updated_at':cycle_time.isoformat(),'status':'failed','step':'time_authority_journal','error':type(exc).__name__+': '+str(exc)})
+            return False
+        atomic_write_json(root / HEARTBEAT_FILE, {'updated_at':cycle_time.isoformat(),'status':'deferred','mode':'time_observation_only',**result})
+        print('RADAR_CYCLE: DEFERRED — observation journaled; no technical confirmation or notification')
+        return True
+
+    safe_observe(root, 'capture', audit_cycle)
     h1_marker = last_closed_bar_marker(root / CACHED_RAW_DIR / "H1.csv")
     run_heavy, reason = heavy_recalculation_required(root, h1_marker, force=force_full)
     if run_heavy:
@@ -239,11 +266,18 @@ def run_pipeline(root: Path, verbose: bool, force_full: bool = False) -> bool:
         print(f"HEAVY_LAYER: SKIPPED | reason={reason}")
 
     for script_name in LIGHT_PIPELINE:
+        if no_telegram and script_name == 'telegram_notifier.py':
+            print('TELEGRAM: DISABLED FOR CONTROLLED CHECK')
+            continue
         passed, _ = run_step(root, script_name, verbose)
         if not passed:
             print("RADAR_CYCLE: FAILED — remaining steps skipped")
             atomic_write_json(root / HEARTBEAT_FILE, {"updated_at": cycle_time.isoformat(), "status": "failed", "step": script_name})
             return False
+        audit_stage = {'scenario_state.py':'scenario', 'alert_policy.py':'policy',
+                       'notification_builder.py':'notification', 'telegram_notifier.py':'delivery'}.get(script_name)
+        if audit_stage:
+            safe_observe(root, audit_stage, audit_cycle)
     print("RADAR_CYCLE: PASSED")
     atomic_write_json(root / HEARTBEAT_FILE, {"updated_at": cycle_time.isoformat(), "status": "passed", "mode": "live"})
     return True
@@ -335,6 +369,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--all-hours", action="store_true", help="Ignore the 08:00-20:00 Ireland window.")
     parser.add_argument("--verbose", action="store_true", help="Print full output from every pipeline script.")
     parser.add_argument("--full", action="store_true", help="Force heavy feature/range/structure recalculation.")
+    parser.add_argument('--no-telegram', action='store_true', help='Analyze and build notification without delivery.')
     parser.add_argument(
         "--interval",
         type=int,
@@ -368,14 +403,15 @@ def main() -> int:
             if may_run:
                 waiting_reported = False
                 cycle_started = time.monotonic()
-                if run_pipeline(root, args.verbose, force_full=args.full):
+                passed = run_pipeline(root, args.verbose, force_full=args.full, no_telegram=args.no_telegram)
+                if passed and load_json_file(root / HEARTBEAT_FILE).get('status')!='DEFERRED':
                     payload = load_scenario(root)
                     signature = scenario_signature(payload)
                     changed = previous_signature is None or signature != previous_signature
                     print_compact_scenario(payload, changed)
                     previous_signature = signature
                 if args.once:
-                    return 0
+                    return 0 if passed else 1
                 elapsed = time.monotonic() - cycle_started
                 time.sleep(max(1.0, interval - elapsed))
             else:
@@ -392,4 +428,16 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from operational_startup_gate import StartupGate
+    with StartupGate():
+        import msvcrt
+        lock_path = Path(__file__).resolve().parent / 'data' / 'runtime' / 'radar.lock'
+        lock_path.parent.mkdir(parents=True, exist_ok=True)
+        with lock_path.open('a+b') as lock:
+            if lock.seek(0,2)==0:lock.write(b'0');lock.flush()
+            lock.seek(0)
+            try:msvcrt.locking(lock.fileno(),msvcrt.LK_NBLCK,1)
+            except OSError:raise SystemExit('RADAR_ALREADY_RUNNING')
+            try:raise SystemExit(main())
+            finally:
+                lock.seek(0);msvcrt.locking(lock.fileno(),msvcrt.LK_UNLCK,1)

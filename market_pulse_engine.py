@@ -77,14 +77,14 @@ def read_csv_rows(path: Path) -> list[dict[str, Any]]:
 def fetch_m5_from_mt5(count: int = 240) -> tuple[list[dict[str, Any]], str | None]:
     import MetaTrader5 as mt5
 
-    if not mt5.initialize():
+    if not mt5.initialize(r"C:\Program Files\OANDA TMS MT5 Terminal\terminal64.exe", timeout=15000):
         raise RuntimeError(f"MT5 initialize failed: {mt5.last_error()}")
     try:
         symbols = mt5.symbols_get() or []
         symbol = choose_symbol(item.name for item in symbols)
         if not symbol:
             raise RuntimeError("Gold symbol not found")
-        rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M5, 0, count)
+        rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_M5, 1, count)
         if rates is None or len(rates) < MIN_BARS:
             raise RuntimeError(f"M5 data unavailable: {mt5.last_error()}")
         rows = []

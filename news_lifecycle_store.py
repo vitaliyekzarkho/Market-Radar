@@ -30,11 +30,12 @@ CREATE TABLE attempts (ns TEXT, intent TEXT, number INTEGER, started TEXT, ackno
 class Store:
     def __init__(self, path, *, namespace, mode):
         identifier(namespace)
-        if mode not in {"offline", "replay"}:
+        if mode not in {"offline", "replay", "operational_audit"}:
             raise ValueError("only offline or replay stores are supported")
         path = Path(path).resolve()
         root = Path(__file__).resolve().parent
-        if path.is_relative_to(root) or any((p / ".git").exists() for p in path.parents):
+        audit_location = mode == 'operational_audit' and path.parent.name == 'cdr' and path.name == 'news.db'
+        if not audit_location and (path.is_relative_to(root) or any((p / ".git").exists() for p in path.parents)):
             raise ValueError("database must be outside the repository")
         self.ns = mode + ":" + namespace
         self.mode = mode

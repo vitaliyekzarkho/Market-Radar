@@ -84,6 +84,32 @@ def semantic(value):
 
 
 class Lifecycle:
+    def observe_local(self, observation, *, now):
+        """Journal an unadmitted local observation, not a verified fact or outbox item.
+
+        process() chronology and evidence gates remain unchanged. This path is
+        intentionally unable to generate a notification or assert availability.
+        """
+        moment=utc(now)
+        semantic={k:deepcopy(observation.get(k)) for k in ('event_id','expected','directional_comparison','adapter','reason')}
+        # Evaluation clock is not a material change in the expectation/response.
+        if isinstance(semantic.get('adapter'),dict):
+            semantic['adapter'].pop('as_of_utc',None)
+        identity=observation.get('event_id') or 'NO_EVENT'
+        fingerprint=digest(semantic)
+        with self.store.transaction():
+            self.store.clock(moment)
+            prior=[json.loads(r[0]) for r in self.store.db.execute("SELECT payload FROM journal WHERE ns=? AND kind='LOCAL_OBSERVATION' ORDER BY seq",(self.store.ns,))]
+            old=next((x for x in reversed(prior) if x['event_id']==identity),None)
+            if old and old['semantic_sha256']==fingerprint:return {**old,'duplicate':True}
+            comparison=observation.get('directional_comparison')
+            state='DEFERRED' if not observation.get('event_id') else comparison or 'insufficient_data'
+            result={'event_id':identity,'local_observed_at_utc':stamp(moment),'historical_available_at_utc':None,
+                'state':state,'previous_state':old['state'] if old else None,'change':'REVISION' if old else 'FIRST_OBSERVED',
+                'semantic_sha256':fingerprint,'semantic':semantic,'causality_confirmed':False,
+                'authority':'LOCAL_UNVERIFIED','notification_ids':[],'trading_permission':False,'duplicate':False}
+            self.store.log('LOCAL_OBSERVATION',moment,result)
+            return result
     def __init__(self, store, policy):
         if not isinstance(policy, Policy):
             raise ValueError("explicit policy required")

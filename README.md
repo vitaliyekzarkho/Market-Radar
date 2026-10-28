@@ -1,3 +1,7 @@
+# Current working snapshot — 28 October 2026
+
+This branch contains the current development copy for PC/laptop work. **CHANGES REQUIRED: full PA/HTF not restored.** Read [HANDOFF](docs/HANDOFF.md) and [laptop setup](docs/LAPTOP_SETUP.md). Older status text below describes the original accepted import, not the current development gate.
+
 # Market Radar
 
 Read-only market observation and scenario analysis for XAU/USD (MT5 GOLD.pro), with PA/HTF context, news hypotheses, intermarket observations and Telegram notifications. No automated trade execution.
@@ -33,4 +37,3 @@ Keep a short handoff in the relevant PR or project status document: changed beha
 
 ## Private local configuration
 Credentials are read from environment variables by the adapters. Supply your own values locally; do not paste secrets into commits, issues or documentation. No credentials, MT5 account state, broker exports, runtime data, virtual environments or archives are included. Public test fixtures are synthetic. See [AGENTS.md](AGENTS.md) for contributor safeguards.
-

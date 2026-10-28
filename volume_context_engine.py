@@ -48,6 +48,8 @@ def normalize_rows(rows: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
             continue
         normalized: dict[str, Any] = {key: float(value or 0.0) for key, value in values.items()}
         normalized["time"] = row.get("utc_time") or row.get("broker_time") or row.get("time")
+        # Closure is an explicit acquisition fact, not proof of availability.
+        normalized["is_closed"] = row.get("is_closed") is True or str(row.get("is_closed")).lower() == "true"
         output.append(normalized)
     return output
 
@@ -85,8 +87,9 @@ def classify_timeframe(rows: list[dict[str, float]], timeframe: str) -> dict[str
     # completed candle; live M5/M15 activity is handled by market_pulse_engine.
     if len(rows) < 25:
         return {"available": False, "reason": "INSUFFICIENT_BARS", "timeframe": timeframe}
-    baseline = rows[-22:-2]
-    current = rows[-2]
+    closed_only = all(row.get("is_closed") is True for row in rows)
+    baseline = rows[-21:-1] if closed_only else rows[-22:-2]
+    current = rows[-1] if closed_only else rows[-2]
     spread, efficiency, direction_sign = bar_metrics(current)
     median_volume = median([item["tick_volume"] for item in baseline])
     median_spread = median([bar_metrics(item)[0] for item in baseline])
@@ -96,8 +99,8 @@ def classify_timeframe(rows: list[dict[str, float]], timeframe: str) -> dict[str
 
     # Read effort/result as a sequence, not as one isolated candle.  The most
     # recent three closed bars are compared with the preceding five-bar push.
-    drive = rows[-10:-5]
-    recent = rows[-5:-2]
+    drive = rows[-9:-4] if closed_only else rows[-10:-5]
+    recent = rows[-4:-1] if closed_only else rows[-5:-2]
     drive_volume = sum(item["tick_volume"] for item in drive) / len(drive)
     recent_volume = sum(item["tick_volume"] for item in recent) / len(recent)
     drive_result = sum(abs(item["close"] - item["open"]) for item in drive) / len(drive)

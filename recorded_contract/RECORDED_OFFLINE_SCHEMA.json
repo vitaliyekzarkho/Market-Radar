@@ -1,0 +1,463 @@
+{
+  "type": "object",
+  "properties": {
+    "contract_version": {
+      "const": "recorded_offline/1.0.0-draft.1"
+    },
+    "classification": {
+      "const": "recorded_offline"
+    },
+    "dataset_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9_.:/-]+$"
+    },
+    "decision_system_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9_.:/-]+$"
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9_.:/-]+$"
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "historical_cutoff_utc": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?Z$"
+    },
+    "replay_executed_at_utc": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?Z$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/observation"
+      }
+    },
+    "receipts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/receipt"
+      }
+    }
+  },
+  "required": [
+    "contract_version",
+    "classification",
+    "dataset_id",
+    "decision_system_id",
+    "policy_id",
+    "policy_sha256",
+    "historical_cutoff_utc",
+    "replay_executed_at_utc",
+    "observations",
+    "receipts"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Recorded Offline Input Envelope \u2014 draft 1",
+  "$defs": {
+    "time": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "state": {
+              "const": "KNOWN"
+            },
+            "at_utc": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?Z$"
+            },
+            "uncertainty_seconds": {
+              "type": "number",
+              "minimum": 0
+            },
+            "authority_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "^[A-Za-z0-9_.:/-]+$"
+            },
+            "evidence_ref": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "^[A-Za-z0-9_.:/-]+$"
+            }
+          },
+          "required": [
+            "state",
+            "at_utc",
+            "uncertainty_seconds",
+            "authority_id",
+            "evidence_ref"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "state": {
+              "const": "UNKNOWN"
+            },
+            "at_utc": {
+              "type": "null"
+            },
+            "uncertainty_seconds": {
+              "type": "null"
+            },
+            "authority_id": {
+              "type": "null"
+            },
+            "evidence_ref": {
+              "type": "null"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "state",
+            "at_utc",
+            "uncertainty_seconds",
+            "authority_id",
+            "evidence_ref",
+            "reason"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "receipt": {
+      "type": "object",
+      "properties": {
+        "receipt_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "kind": {
+          "enum": [
+            "source_event",
+            "capture",
+            "availability",
+            "scenario_establishment",
+            "derivation_completion"
+          ]
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "subject_payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "decision_system_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "authority_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "artifact_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "at_utc": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{1,6})?Z$"
+        },
+        "uncertainty_seconds": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "receipt_id",
+        "kind",
+        "subject_id",
+        "subject_payload_sha256",
+        "source_id",
+        "decision_system_id",
+        "authority_id",
+        "artifact_ref",
+        "artifact_sha256",
+        "at_utc",
+        "uncertainty_seconds"
+      ],
+      "additionalProperties": false
+    },
+    "derivation": {
+      "type": "object",
+      "properties": {
+        "required_input_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[A-Za-z0-9_.:/-]+$"
+          },
+          "uniqueItems": true
+        },
+        "optional_input_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[A-Za-z0-9_.:/-]+$"
+          },
+          "uniqueItems": true
+        },
+        "engine_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "config_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "completion_receipt_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "^[A-Za-z0-9_.:/-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "required_input_ids",
+        "optional_input_ids",
+        "engine_sha256",
+        "config_sha256",
+        "completion_receipt_ref"
+      ],
+      "additionalProperties": false
+    },
+    "observation": {
+      "type": "object",
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "logical_item_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "capture_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "capture_stream_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "source_sequence": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "kind": {
+          "enum": [
+            "raw",
+            "feature",
+            "scenario"
+          ]
+        },
+        "role": {
+          "enum": [
+            "technical",
+            "news",
+            "usd",
+            "yields",
+            "volume"
+          ]
+        },
+        "file_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[A-Za-z0-9_.:/-]+$"
+        },
+        "file_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "payload_locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "market_event_at_utc": {
+          "$ref": "#/$defs/time"
+        },
+        "captured_at_utc": {
+          "$ref": "#/$defs/time"
+        },
+        "available_at_utc": {
+          "$ref": "#/$defs/time"
+        },
+        "scenario_established_at_utc": {
+          "$ref": "#/$defs/time"
+        },
+        "supersedes": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256,
+              "pattern": "^[A-Za-z0-9_.:/-]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "derivation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/derivation"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "observation_id",
+        "logical_item_id",
+        "source_id",
+        "capture_id",
+        "capture_stream_id",
+        "source_sequence",
+        "kind",
+        "role",
+        "file_ref",
+        "file_sha256",
+        "payload_locator",
+        "payload_sha256",
+        "market_event_at_utc",
+        "captured_at_utc",
+        "available_at_utc",
+        "scenario_established_at_utc",
+        "supersedes",
+        "derivation"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "feature",
+                  "scenario"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "derivation": {
+                "$ref": "#/$defs/derivation"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "raw"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "derivation": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "description": "Shape only. Authority verification, hash/receipt binding, DAG and temporal rules in RECORDED_OFFLINE_CONTRACT.md are mandatory. Enforce format assertions; reject duplicate JSON keys and non-finite numbers before schema validation."
+}

@@ -128,6 +128,8 @@ def delivery_decision(
         status = "skipped"
     elif digest == state.get("last_sent_digest"):
         status, reason = "skipped", "DUPLICATE_MESSAGE"
+    elif state.get('pending_digest'):
+        status, reason = 'skipped', 'PREVIOUS_DELIVERY_UNKNOWN'
     elif not token or not chat_id:
         status, reason = "pending", "TELEGRAM_NOT_CONFIGURED"
     else:
@@ -177,6 +179,7 @@ def main() -> int:
         print("TELEGRAM_NOTIFIER: DRY_RUN")
         print("\n" + decision["message"])
     elif decision["status"] == "ready":
+        atomic_write_json(STATE_FILE, dict(state, pending_digest=decision['digest'], attempt_started_at_utc=now))
         try:
             result = send_telegram(
                 str(token),
@@ -187,9 +190,9 @@ def main() -> int:
         except (OSError, TimeoutError, urllib.error.URLError, ValueError, RuntimeError) as exc:
             output["status"] = "failed"
             output["reason"] = "DELIVERY_FAILED"
-            output["error"] = str(exc)
+            output["error"] = type(exc).__name__
             atomic_write_json(DELIVERY_FILE, output)
-            print(f"TELEGRAM_NOTIFIER: FAILED | {exc}")
+            print(f"TELEGRAM_NOTIFIER: UNKNOWN | {type(exc).__name__}; no automatic retry")
             return 1
         output["status"] = "sent"
         output["reason"] = "DELIVERED"

@@ -16,16 +16,9 @@ TIMEFRAMES = {
 
 
 def connect():
-    if not mt5.initialize():
-        raise RuntimeError(f"MT5 connection failed: {mt5.last_error()}")
-
-    account = mt5.account_info()
-    if account is None:
-        mt5.shutdown()
-        raise RuntimeError(f"Account information unavailable: {mt5.last_error()}")
-
-    print(f"Connected to account: {account.login}")
-    print(f"Trade allowed: {account.trade_allowed}")
+    if not mt5.initialize(r"C:\Program Files\OANDA TMS MT5 Terminal\terminal64.exe", timeout=15000):
+        raise RuntimeError("OANDA MT5 connection failed")
+    print("Connected to OANDA MT5: market-data reads only")
 
 
 def detect_broker_utc_offset(symbol):
@@ -49,8 +42,8 @@ def detect_broker_utc_offset(symbol):
     return offset_hours
 
 
-def get_rates(symbol, timeframe, offset_hours, count=500):
-    rates = mt5.copy_rates_from_pos(symbol, timeframe, 0, count)
+def get_rates(symbol, timeframe, offset_hours, count=500, start_pos=0):
+    rates = mt5.copy_rates_from_pos(symbol, timeframe, start_pos, count)
 
     if rates is None or len(rates) == 0:
         raise RuntimeError(

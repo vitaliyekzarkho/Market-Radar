@@ -49,3 +49,12 @@ test_results*.txt
 /reproduced_diesel.json
 outputs/
 
+
+# Private evidence and generated local verification
+verification_inputs/
+admission_review/
+time_verification/
+r6_8_verification/
+*_scratch/
+PRIVATE*/
+*.pending
