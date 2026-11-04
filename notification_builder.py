@@ -889,6 +889,11 @@ def main() -> None:
         "suppressed_event_count": len(policy_payload.get("suppressed_events") or []),
         "message": message,
     }
+    from time_ingestion import integrated_runtime
+    if integrated_runtime():
+        from mt5_clock_authority import digest
+        payload['scenario_sha256'] = digest(scenario)
+        payload['capture_id'] = (scenario.get('admission') or {}).get('capture_id')
     driver = scenario.get("driver_context")
     if isinstance(driver, dict) and driver.get("available") and driver.get("source_url"):
         payload["links"] = {"driver_url": str(driver["source_url"])}

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+from source_time import bar_time
 
 
 SYMBOL = "GOLD.pro"
@@ -57,14 +58,14 @@ def raw_pivots(data: pd.DataFrame, width: int) -> list[dict[str, Any]]:
         if float(bar["high"]) > float(left["high"].max()) and float(bar["high"]) > float(right["high"].max()):
             pivots.append({
                 "index": index,
-                "time": bar["_time"].isoformat(),
+                "time": bar_time(bar, "_time"),
                 "type": "high",
                 "price": float(bar["high"]),
             })
         if float(bar["low"]) < float(left["low"].min()) and float(bar["low"]) < float(right["low"].min()):
             pivots.append({
                 "index": index,
-                "time": bar["_time"].isoformat(),
+                "time": bar_time(bar, "_time"),
                 "type": "low",
                 "price": float(bar["low"]),
             })
@@ -190,7 +191,7 @@ def displacement_candidates(data: pd.DataFrame) -> list[dict[str, Any]]:
             continue
         candidates.append({
             "index": index,
-            "time": bar["_time"].isoformat(),
+            "time": bar_time(bar, "_time"),
             "direction": direction,
             "body_ratio": round(body_ratio, 2),
             "range_ratio": round(range_ratio, 2),
@@ -207,7 +208,7 @@ def active_leg(data: pd.DataFrame) -> dict[str, Any]:
             "confirmed": False,
             "direction": "unknown",
             "start_index": start_index,
-            "start_time": data.iloc[start_index]["_time"].isoformat(),
+            "start_time": bar_time(data.iloc[start_index], "_time"),
             "reason": "no_displacement_with_structure_break",
         }
     displacement = candidates[-1]
@@ -226,7 +227,7 @@ def active_leg(data: pd.DataFrame) -> dict[str, Any]:
         bar = data.iloc[start_index]
         anchor = {
             "index": start_index,
-            "time": bar["_time"].isoformat(),
+            "time": bar_time(bar, "_time"),
             "type": opposite_type,
             "price": float(bar["low"] if opposite_type == "low" else bar["high"]),
         }
@@ -234,7 +235,7 @@ def active_leg(data: pd.DataFrame) -> dict[str, Any]:
         "confirmed": True,
         "direction": displacement["direction"],
         "start_index": start_index,
-        "start_time": data.iloc[start_index]["_time"].isoformat(),
+        "start_time": bar_time(data.iloc[start_index], "_time"),
         "anchor": anchor,
         "displacement": displacement,
         "reason": "displacement_closed_through_structural_pivot",
@@ -247,7 +248,7 @@ def candle_liquidity(data: pd.DataFrame) -> dict[str, Any]:
     took_previous_high = float(latest["high"]) > float(previous["high"])
     took_previous_low = float(latest["low"]) < float(previous["low"])
     return {
-        "latest_closed_time": latest["_time"].isoformat(),
+        "latest_closed_time": bar_time(latest, "_time"),
         "previous_high": float(previous["high"]),
         "previous_low": float(previous["low"]),
         "latest_high": float(latest["high"]),
@@ -332,6 +333,8 @@ def nested_parent_check(
     child_tf: str,
     expected_children: int,
 ) -> dict[str, Any]:
+    if "source_time" in parent.columns or "source_time" in child.columns:
+        return {"parent_timeframe": parent_tf, "child_timeframe": child_tf, "status": "UNKNOWN", "reason": "UTC_INTERVAL_MAPPING_UNVERIFIED", "complete": False, "aligned": False}
     latest = parent.iloc[-1]
     start = latest["_time"]
     durations = {"W1": pd.Timedelta(days=7), "D1": pd.Timedelta(days=1), "H4": pd.Timedelta(hours=4)}

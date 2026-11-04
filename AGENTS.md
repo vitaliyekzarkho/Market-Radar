@@ -11,3 +11,6 @@
 
 ## Current development handoff (28 October 2026)
 Read docs/HANDOFF.md and docs/LAPTOP_SETUP.md first. The historical C3.3.4 note above is superseded by that handoff. This branch is a development snapshot, not production acceptance. Ordinary verification uses verify_portable.py. Real verification_inputs and runtime evidence remain private; never publish them to make tests pass. No native MT5 or Telegram run is authorized by repository presence.
+
+## Current handoff (4 November 2026)
+The 28 October status is superseded by docs/HANDOFF.md on work/live-observation-2026-11-04. The operating PC is already observing; ordinary repository verification must remain offline and must not launch a second Radar. Use verify_portable.py. Preserve private fixtures locally, and do not claim a full private test run from the public subset.

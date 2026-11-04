@@ -10,6 +10,12 @@ from zoneinfo import ZoneInfo
 import pandas as pd
 
 
+def unverified_source_context():
+    """No positive session evidence can be inferred from source-order labels."""
+    return {"status": "UNKNOWN", "reason": "UTC_SESSION_MAPPING_UNVERIFIED",
+            "active_sessions": [], "sessions": [], "scoring_applied": False}
+
+
 DATA_FILE = (
     Path("data")
     / "raw"

@@ -275,6 +275,10 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
+    from time_ingestion import integrated_runtime, deferred_context
+    if integrated_runtime():
+        atomic_json(OUTPUT_FILE, deferred_context("FOMC_REACTION_WINDOW_UTC_AND_RECEIPTS_UNVERIFIED"))
+        return 0
     args = parse_args()
     plan = load_json(PLAN_FILE)
     try:

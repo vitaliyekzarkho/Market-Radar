@@ -62,7 +62,11 @@ def context_from_frames(frames: dict[str, list[dict[str, float]]], symbol: str) 
 
 def read_mt5() -> tuple[str, dict[str, list[dict[str, float]]]]:
     import MetaTrader5 as mt5
-    if not mt5.initialize():
+    from time_ingestion import integrated_runtime
+    if integrated_runtime():
+        from mt5_reader import connect
+        connect()
+    elif not mt5.initialize():
         raise RuntimeError("MT5_INIT_FAILED")
     try:
         names = {str(item.name) for item in (mt5.symbols_get() or [])}
@@ -73,6 +77,11 @@ def read_mt5() -> tuple[str, dict[str, list[dict[str, float]]]]:
         mapping = {"D1": mt5.TIMEFRAME_D1, "H4": mt5.TIMEFRAME_H4, "H1": mt5.TIMEFRAME_H1}
         frames: dict[str, list[dict[str, float]]] = {}
         for name, timeframe in mapping.items():
+            from time_ingestion import integrated_runtime, capture_source_rows
+            if integrated_runtime():
+                rates,receipt = capture_source_rows(mt5,symbol,timeframe,name,220)
+                frames[name] = [dict(r,receipt_lineage=receipt) for r in rates]
+                continue
             rates = mt5.copy_rates_from_pos(symbol, timeframe, 1, 220)
             if rates is None:
                 frames[name] = []
@@ -87,6 +96,7 @@ def main() -> int:
     try:
         symbol, frames = read_mt5()
         context = context_from_frames(frames, symbol)
+        context['receipt_lineage']={tf:rows[0]['receipt_lineage'] for tf,rows in frames.items() if rows and 'receipt_lineage' in rows[0]}
     except Exception as exc:
         context = {"available": False, "reason": str(exc), "source_type": "direct DXY/USDX broker chart"}
     payload = {"schema_version": 1, "generated_at_utc": datetime.now(timezone.utc).isoformat(), "context": context}

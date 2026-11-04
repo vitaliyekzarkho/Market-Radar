@@ -1,0 +1,616 @@
+{
+  "version": "v0.5.2-integrated-runtime-dev.4-tick-wait",
+  "files": [
+    {
+      "path": "alert_policy.py",
+      "sha256": "28e90a31ad61fea680b58f8bc961f2060e5058d4a05506c313e329fb63cb46de",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "C3_3_3_validate_diesel.py",
+      "sha256": "6cc98bc58f153d2715611e33d9e33d1c5ff48a70d1a11b2b2183e294a3a87453",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "causal_mechanism_engine.py",
+      "sha256": "1b6c4b6fe05ec20a42b73b0405e9dec2a5714e6765f4022861341e51c0e10ce7",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "causal_replay_runner.py",
+      "sha256": "94d2a47fd36f72a294c9ffe574e6d20e66b052990e84be33dc116d12c07ece5f",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "causal_validation_engine.py",
+      "sha256": "cd6a0f553175a816a98734846d47cf6a6508a8dbd64a468c97559e989509c59f",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "cdr_news_bridge.py",
+      "sha256": "cc09e7041cf36e825e468dfdb8de14e313cf4609999df29c91bc6a8ede33a77b",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "cdr_operational.py",
+      "sha256": "0de1bc64902502a2c08b7a6d2ccc377c4da9f8fd3970b5e872e9b383f863d2c9",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "clock_capture_adapter.py",
+      "sha256": "c1d9912010391c10248b680290bce780ca7f122a928349024ffa1b921dd855f7",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "cot_context_adapter.py",
+      "sha256": "a483183711f01d3e8c76a68f0b2c5631ce7761a978939e8f8469735111ea2163",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "dealing_range_engine.py",
+      "sha256": "49f3e1440e2c7df057fb510c0c1591f59f25bbffd06d06c449c01d2d10009bce",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "decision_journal.py",
+      "sha256": "8e6792d0dbb3d3d8379f32e7bdddcd29a0bac294e176ed937530f7068a9bbbdc",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "driver_contract.py",
+      "sha256": "d2fd5f46b71c673657960ae4c8187ebc237a3ef999e2eb956c35e6ce2b627654",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "dxy_context_engine.py",
+      "sha256": "bda01bd89099444552a004cc9fc04d0d09e96012af8b70ebbd2592d1286b55da",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "event_monitor.py",
+      "sha256": "ac97604f41839edfb017405bd64c96d72d06220dbea6e85030193b4a2c854ee7",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "event_simulator.py",
+      "sha256": "5567268a42f01a122109de0a769ee0fced45f3f55ddb45303f8b1a0b8dd9bf0e",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "evidence_recorder.py",
+      "sha256": "bad31aa5e3022ba40d248f74a69d9285b18f201cf4d4a0e8277f71b692edca7e",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fast_news_collector.py",
+      "sha256": "1521449349786d430cbda1c039f5debf15c86bada01e8283a467eaad255ddb53",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fast_news_interpretation_engine.py",
+      "sha256": "0770dc6ec6c69940fc29a3e58bf1e4b9b3a5c3ce034cdf34915612fadd2e8b20",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fast_news_story_engine.py",
+      "sha256": "ce7cb8c5d3468f168d5a4d137c78709456dfebc6deeacfc63e806c34634da28e",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fed_expectations_adapter.py",
+      "sha256": "d8beb60334ca2a3f5e9abb3c3b602fa42618d47ebf6c0948c8facb0a642104e9",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fomc_contamination_engine.py",
+      "sha256": "7f72b329bc95af3fa7cc0cd2cfe163624e7856e12bebf229977312c332105be1",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fomc_historical_calendar_adapter.py",
+      "sha256": "a6e517a58482062762c72932cbf923e740f7901cf7511dbea5b7b10eabfcc648",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fomc_interpretation_engine.py",
+      "sha256": "3376a7acf9ad081627698808f674b442d48e72f4afa8f17a5b3e977bff98cab2",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fomc_market_reaction_engine.py",
+      "sha256": "016ae199a23fd65b13f379e0e7b0cc441839e79ad4e2fd40b448567d98910e27",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "fomc_phase_engine.py",
+      "sha256": "70188414efeb07b1a9ccd567468aa1ad531a1d16625e8dbc14c242b5c3dfcd5a",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "forex_factory_adapter.py",
+      "sha256": "f54b335cca1b8e567bdccf988e188d69e36abd0ae63dbfeefcda6c612bd60278",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "health_check.py",
+      "sha256": "690ecedad6566b19872c3d2eabe0702b01d60a86bb8bfdbbeb33c17300f555ab",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "historical_admission_pipeline.py",
+      "sha256": "f80d7411ab25bb4d8c5f7527b50cb58c5213ecfb6b8bad57ee0a868aa459cc0b",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "historical_evidence_assessment.py",
+      "sha256": "90e2aaa9090855e58e81c1ec806ca8df07980bb0d359fc11a6ce662c2040a725",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "history_receipts.py",
+      "sha256": "c36b1d0f5a7c823fe88b2df5aaef44e177286d1251166f1ce1b511c8e99421d7",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "intermarket_context_engine.py",
+      "sha256": "dcf8d693a87c5155563d38e606c592164ab5228c619267dd5f6ae3c11343bf38",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "key_levels.py",
+      "sha256": "c37a90b39db03030b1ffbec1a3165ccee8e93e172eaddc78f3c2b90c55809857",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "legacy_instance_lock.py",
+      "sha256": "ea6ce24198444126160937d4fa678de25f3d72c315585202ce68ed101a5320e6",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "level_state.py",
+      "sha256": "dfa50cdd04200412e4a77d697abcd3ed3dd1a4c6c37337426e39d1e687e14a22",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "liquidity_map.py",
+      "sha256": "da323491db33426aa0882c33ee913383c00a3eb518b873b52a4b035cd6439dde",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "live_causal_engine.py",
+      "sha256": "789ed675661e185a971be19da3e8f0c7301d832fd0fe5ee0488e7f2ea161ee8b",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "live_history_admission.py",
+      "sha256": "67c4def38653305d184cc13619c5a57cde2c38ed630b2e97fd2b8cbbaa087b2c",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "live_reaction_engine.py",
+      "sha256": "112c6c1e03c6d158e8c76337be319d36672fa381802c8bd17d5c42923e522205",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "macro_context_engine.py",
+      "sha256": "88560358e602f3d26f20bf2ca021c39948600194c63858187a7f180a09a67bfa",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "macro_release_cluster.py",
+      "sha256": "ceaedf44a00a7e2536dcb187af1fce2ec3e00befe2b8a7932e1996d353d7a733",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "MarketRadar_C3_3_3_export_history.py",
+      "sha256": "91cb6341dd2a4ad36741cbd59211e32b6b73ebc94dee4f20bb12bca36dbedf1e",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "market_data_quality.py",
+      "sha256": "c2b2a38786560d06d1e4e7349979c48dc2e9e98d7710cf84e42710930edbadd1",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "market_features.py",
+      "sha256": "32c4716a3efbcdf78bbf0fc77377f1bff1d4cd839ea5a6b4e6589418777cd214",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "market_news_adapter.py",
+      "sha256": "8adf08f0cf986102d9b876df6bfa6d78674c83dd190901ffee46c9d7e13b3503",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "market_pulse_engine.py",
+      "sha256": "f5fa0a8ea0011952181d53403d190062fef28e72deca25cfcd4e745025923d19",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "market_reasoning_engine.py",
+      "sha256": "62d70cd309af0a3164ccba6887b3c953762f5d18858d5139e334e807e81ccc5d",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "mt5_clock_authority.py",
+      "sha256": "e07caa0dde3bb04138ef5a1c7a3e772d793da2d38eebb10649580d21eee23deb",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "mt5_clock_probe.py",
+      "sha256": "4fe804404eff133958d6ce3eadf8c603dfb33eb5cf7abd58022ffd88fcc81a6b",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "mt5_reader.py",
+      "sha256": "fd43b17682725db75a76628c06c12b01a8857d1f66f6499d88338b4809c0e8e6",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "mt5_time_validation.py",
+      "sha256": "c66bcdb2675b371238c01f26486acefe72524fb043b03f53cecd948d1efc8154",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "news_delivery_state.py",
+      "sha256": "6f2823e0c8cc9693b4e6ee58c8bd60b7b54a87dfbf8d637a7b7046f8bb8539e2",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "news_driver_engine.py",
+      "sha256": "f9edc29b99529d03970ef160fc11c99acdefd6da83131e1586f2d02161cba509",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "news_interpretation_engine.py",
+      "sha256": "cd31ba7cec13baffeb362db2872e97c00fcf30b837d1f184be538689c783efe2",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "news_lifecycle_engine.py",
+      "sha256": "9449dd47956abe4e050a59f91fa8195fd08522143e76b6b5dd4c860e3524c48d",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "news_lifecycle_store.py",
+      "sha256": "a1dc9ff95d17cbbeef55a205d7fd0e188cc825ce724090171fd26398adfb9319",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "news_notification_policy.py",
+      "sha256": "79e60547c1634feab6f7572193ba48ee4622f4e89eebfca54d37a3f38115e086",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "news_pa_context_adapter.py",
+      "sha256": "6dcb1aa887fa707ba9cd83a93b06f29d7b8f8c6587467acb6be8eb1aefba8e05",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "nonpublishable_observation.py",
+      "sha256": "a41a114d9a3af1a69c3fe5021f7b30232aa29b9813b7044d55f9bcf99f032c1f",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "notification_builder.py",
+      "sha256": "6c55869ba2f639399eb34207bb41d44e33736e74bfc1afbbedd26bab9f2dee20",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "notification_simulator.py",
+      "sha256": "1aaa510bc2bea75ac271dc32c7ce397343c8990769fc161d37273cf8a6b50306",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "official_bea_adapter.py",
+      "sha256": "05d1aecc97e3267c626f98301a492011b3dfe6acdd0ad7f8dd2726fcf1fe3577",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "official_bls_adapter.py",
+      "sha256": "560ff414d5f5cec8101b8109250a7faf57e0eed3025fa5eed3193f51042d17b2",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "official_event_matcher.py",
+      "sha256": "ad42c14cf8727fc3738a35bf8a7a9469ae241a06685de07c1f796daf1e2269e5",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "official_fomc_adapter.py",
+      "sha256": "352465b72a3a89ed6b9f1177a6d04f1bc95da2dfb13d09662c5a57631686a08b",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "official_ism_adapter.py",
+      "sha256": "44b8b17162dc42d1761dc8610dd48f22c175b62788e4ff4aba7a0870b3a53aa3",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "official_macro_adapter.py",
+      "sha256": "15eca0dc2fcd17fe916965348aeb136a57196a6109e6da095ab7be055d31ef91",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "offline_evidence_ledger.py",
+      "sha256": "5fdfe15edf072e09c4b568b598963d6cab14562b9df07287352ed23cf8999f9c",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "offline_integration.py",
+      "sha256": "1bf384a8fe79a4ec32b39326f27f89ce08fe4a4906fc6912ad92db29afb8a560",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "offline_notification_audit.py",
+      "sha256": "4659256203a8f95415ed90ea237834274a51b405e0980051cddbdd41eb710769",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "offline_scenario_ledger.py",
+      "sha256": "fbbb741563f7cd746f93701b6d8b00297b26df669b78341585416790ab358e72",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "offline_shadow_assessment.py",
+      "sha256": "8714ece95849218bed777167c05883609640e8a916d9d8474719f08b0986cf1a",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "offline_shadow_boundary.py",
+      "sha256": "c662f65bb6dd7db03deb53685f1cad094272b2246ff84aa160b7f9b96433c1bb",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "offline_validation.py",
+      "sha256": "3eaaa1feefc0e98e4f183f4d6728e3554f827a8f449e34beb6707d7212c0e5bf",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "oil_context_engine.py",
+      "sha256": "b18678d3548c43018f8f977d9a8690ebcc5a27d4824762bce9c13d31ef329fa3",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "operational_startup_gate.py",
+      "sha256": "ec32385942b44b3e6dcf5ecc43bb38b6e62377e94f8005ecb664f0d35ce5c9da",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "order_flow_structure.py",
+      "sha256": "ddd33c40db237acf4c8309ef6c25878863183ca0cb30d3fd954c0724c8c5588d",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "prepare_causal_replay_pack.py",
+      "sha256": "e85b109c28f3b1f74e081b33f631cdd91f31b5a488718eb081d64a83b280d72b",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "prepare_hour_rollover.py",
+      "sha256": "58303b0f1918dae0d02bfa142950c5d2330a50a025fe6cc820af0f7f59b245e1",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "prepare_replay_data.py",
+      "sha256": "25701540251154df6d250c2e6905ac359870ec74964c4528f30e6edc5546b764",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "priced_in_engine.py",
+      "sha256": "d534925a01570e795d93584857675420351eaf42c6cbe666f9152fbaa0a9135a",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r5_bridge.py",
+      "sha256": "ade618a1b3bb951d45a0ee11cb5e20d5e3ba76c0d64f9da6e52c341bf1257ad4",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r5_fixtures.py",
+      "sha256": "76cc61f7ed143602e69f4728d8068d3e30af932c5d20ae121ea8dc9fc332bb69",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r5_input.py",
+      "sha256": "faf953d841f0b08a7a02403e42e08b1fe220d08d6e81b567180d8274174c8601",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r5_legacy.py",
+      "sha256": "e816cddff605e03b9c5adaa5c4d30a098d8016d4d8b7ca0649a80445ba2f8c2b",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r5_offline.py",
+      "sha256": "f3f927da8bc5b15eae69e48c1cbf8e5d6fcbcdca7bd27d6b52f15f006dc67888",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_8_job.py",
+      "sha256": "bc9aab25adccedf5bbd1496ab877580a8febe5973c4428d4bca4b128d5f468e1",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_8_launcher.py",
+      "sha256": "ebfd10f77723f3f8d5c4d9e99af7e36ae63fcd0a4e26d05fabc1165781e9c0a7",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_8_process_fixture.py",
+      "sha256": "a6a846de98400c9368b79ba6f19e88212e565d640c4313fedda33948e08aa1ad",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_8_worker.py",
+      "sha256": "e2244c790bec30bd6a11221599e8e5972ddf24da00823e2f878d153f71cfa016",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_adapter.py",
+      "sha256": "92b7b68aeff2d04bad793f665bb6b6a200f461842f8d5c93e9a11965409525c6",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_fixtures.py",
+      "sha256": "c93fb8d06f3698bdecf929b3dca9e5474f5127014af6839714e9f4f9970c5a8d",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_offline.py",
+      "sha256": "c5173aadf650c5fb20b0dc1a0e05168c86c9a79e6b731736b66b18649598b27c",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_pipeline.py",
+      "sha256": "6028dd158106f2a17138a77a0ba533ade7e93c42c88ac4ecebc9ee6bd8742d96",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "r6_safety.py",
+      "sha256": "08cd404baac96eafc00c93a8a6760c4fbbebefbe55b7fa1c56310eae50efef1a",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "rates_context_engine.py",
+      "sha256": "d1c051315004d02f923ee799a268eb042d2e2952b8072b4bef7b5698ea69d08d",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "reaction_window_engine.py",
+      "sha256": "5ae7f1dac9cc01e6c0c8d6e49b5852adbbf04f81ffa0fb53b4bd894591c873c8",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "recorded_assessment.py",
+      "sha256": "d885e34591385ea086d1d9a600814d13832a59ba7e478aa2d2a731a47c0ea1f3",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "recorded_authority.py",
+      "sha256": "a77cbbec20bd345c436168af92a89c90b85d14160e135f15059b4680d7958f25",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "recorded_context.py",
+      "sha256": "66f523c897d3e9db9b7018f54323d6fbbf7f6bfcf9fd1fec05aba5b2945ed641",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "recorded_ledger.py",
+      "sha256": "029c1ab2fc7e26f67d94a4ee9ff60db9ba2244058d4cd8d15a5a28afcf75c671",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "recorded_scenario.py",
+      "sha256": "7941bfc1faecd42bdd3d0f04c29534482d276e0918224d31016cc0fb84323eb9",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "recovery_fixtures.py",
+      "sha256": "4c36745877bbb88a9e617a517d1d1f8f0864cb1a6fd0db6d6f557b8c0eb2cf8e",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "replay_admitted_history.py",
+      "sha256": "9f1d099a503bb3c723fdcedcd927c27934f76249f96c97385baf4bd0c71bc5e6",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "replay_radar.py",
+      "sha256": "49a77370823c8255d9071442dcfbb29947b0e39ac4615aeaec1f093532d2c68a",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "replay_time_integration.py",
+      "sha256": "d73aef361d578915d79ecfc8258ee3cd6d2d7a92282792000f34c54920d37646",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "requirements-lock.txt",
+      "sha256": "f0dd401c8532fa522520bb4b356ec915183ce99114d22586703d3a9b7b7d6903",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "run_cycle.py",
+      "sha256": "e29e264e139187e5516d124c40e84b5d311b040bea0a1a2c7142bf659e860703",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "run_radar.py",
+      "sha256": "05534d4540efb9ac441e0213ca3190a12ea87172f8ac0fee89d6b85ba0c1affc",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "save_snapshot.py",
+      "sha256": "6bebab6171eca988956bcbd500c4adc111f15dcaede192df6e47b76a457c6ce0",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "scenario_ranker.py",
+      "sha256": "38daad96973ea641332dea99aa6657a5234b75064afe69d9c0177fd6ddcacd26",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "scenario_state.py",
+      "sha256": "ce13ea15d163f29cf8b4593bc764fb501befcea9204161146a225c272520ad5d",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "session_context.py",
+      "sha256": "d2213f723bba7e3b6828face41e9e848439cc71386f17d848716c15f2368289f",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "source_provenance.py",
+      "sha256": "a2d25d9c8ca98c01f75450103112648b5a4ce72b56edfe5dbcd60a721d524489",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "source_time.py",
+      "sha256": "a7f4cbab594c9da3cd764cf7549ce0c5e6a59e9fd10ea7973f1620ae52fb3442",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "start_market_radar.cmd",
+      "sha256": "5c2c560d3bfd3bcfb0e6aed326d4a400c2185e4a8af562599add9b6cadc76cbc",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "story_intermarket_validation_engine.py",
+      "sha256": "a0a2e1268982e285204c3bf3316f93e533eeac76bb2095e4472051a06b906632",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "telegram_notifier.py",
+      "sha256": "6c5d7094c75957c3371e012c3a3bc7fb749477632ba8f4a6d0038156dbaa308d",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "time_ingestion.py",
+      "sha256": "3709d0f7f915039ed340c8c5aca3a8cf5a8c65017fa90e81a598538c2214dc8c",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "trade_idea_engine.py",
+      "sha256": "c10fb516902a3e083e5d0878d9e73974b38378b5e2d867c18b0a83d60e8ca459",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "trading_economics_adapter.py",
+      "sha256": "5959bd51581df223b8779d9a5d1355bb9d053d59a3d9c487705770aafa8b85ba",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "usd_breadth_engine.py",
+      "sha256": "20b0815150d1f78ef4cb249cd338bcea7b5dc9580bc592794c673091ba4104d9",
+      "origin": "deployed_runtime"
+    },
+    {
+      "path": "volume_context_engine.py",
+      "sha256": "cb746e04149c4589dcb4012011d42a77c58b5f539d8d0b54b3ee3688a594a173",
+      "origin": "deployed_runtime"
+    }
+  ],
+  "excluded": "All private data, receipts, broker exports, credentials, journals, archives and environments"
+}

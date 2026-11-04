@@ -1,12 +1,12 @@
-# Current working snapshot — 28 October 2026
+# Current working snapshot — 4 November 2026
 
-This branch contains the current development copy for PC/laptop work. **CHANGES REQUIRED: full PA/HTF not restored.** Read [HANDOFF](docs/HANDOFF.md) and [laptop setup](docs/LAPTOP_SETUP.md). Older status text below describes the original accepted import, not the current development gate.
+Active observation source: `work/live-observation-2026-11-04`, version `v0.5.2-integrated-runtime-dev.4-tick-wait`. Read [HANDOFF](docs/HANDOFF.md) and [laptop setup](docs/LAPTOP_SETUP.md). Live operation is locally verified; historical UTC and runtime latency limitations remain. Historical status text below is retained for context.
 
 # Market Radar
 
 Read-only market observation and scenario analysis for XAU/USD (MT5 GOLD.pro), with PA/HTF context, news hypotheses, intermarket observations and Telegram notifications. No automated trade execution.
 
-## Current snapshot — 19 October 2026
+## Current snapshot вЂ” 19 October 2026
 The repository now includes the current Python source and tests, including C3.3.3 intermarket validation and the historical diesel bridge. Technical integration is verified; C3.3.3 research validation is still incomplete. C3.3.4 has not been started in this import. Trading logic, PA/HTF and trade permissions were not changed.
 
 See [status and roadmap](docs/PROJECT_STATUS_2026-10-19.md), [C3.3.3 handoff](C3_3_3_HANDOFF.md), [bridge notes](README_C3_3_3_BRIDGE.md) and [publication report](docs/SOURCE_IMPORT_2026-10-19.md).
@@ -17,7 +17,7 @@ Python 3.12 is the verified interpreter. Create an isolated environment and inst
 ```sh
 python -m venv .venv
 python -m pip install -r requirements.txt
-python -m unittest discover -p "test_*.py"
+python -B verify_portable.py
 ```
 
 Activate the virtual environment before the pip/test commands (Windows PowerShell: `.\.venv\Scripts\Activate.ps1`; Linux: `source .venv/bin/activate`). Requirements pin the versions present in the verified local environment; a clean installation has not yet been verified.

@@ -1,3 +1,4 @@
+from source_time import bar_time
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -80,15 +81,11 @@ def find_fractals(data, limit=8):
 
             fractal_highs.append(
                 {
-                    "time": middle_bar[
-                        "utc_time"
-                    ].isoformat(),
+                    "time": bar_time(middle_bar),
                     "price": float(middle_bar["high"]),
                     "swept": not swept_bars.empty,
                     "sweep_time": (
-                        swept_bars.iloc[0][
-                            "utc_time"
-                        ].isoformat()
+                        bar_time(swept_bars.iloc[0])
                         if not swept_bars.empty
                         else None
                     ),
@@ -102,15 +99,11 @@ def find_fractals(data, limit=8):
 
             fractal_lows.append(
                 {
-                    "time": middle_bar[
-                        "utc_time"
-                    ].isoformat(),
+                    "time": bar_time(middle_bar),
                     "price": float(middle_bar["low"]),
                     "swept": not swept_bars.empty,
                     "sweep_time": (
-                        swept_bars.iloc[0][
-                            "utc_time"
-                        ].isoformat()
+                        bar_time(swept_bars.iloc[0])
                         if not swept_bars.empty
                         else None
                     ),
@@ -179,7 +172,7 @@ def validity_status(data, index, direction, lower, upper):
             else "valid"
         ),
         "invalidation_time": (
-            invalidating_bars.iloc[0]["utc_time"].isoformat()
+            bar_time(invalidating_bars.iloc[0])
             if not invalidating_bars.empty
             else None
         ),
@@ -220,7 +213,7 @@ def build_imbalance_object(
     result = {
         "type": feature_type,
         "direction": direction,
-        "time": data.iloc[index]["utc_time"].isoformat(),
+        "time": bar_time(data.iloc[index]),
         "lower": float(lower),
         "upper": float(upper),
         "midpoint": (float(lower) + float(upper)) / 2,
@@ -429,7 +422,7 @@ def find_displacements(data, limit=8):
 
         displacements.append(
             {
-                "time": bar["utc_time"].isoformat(),
+                "time": bar_time(bar),
                 "direction": direction,
                 "body_ratio": round(
                     float(current_body / median_body),
@@ -501,8 +494,10 @@ def calculate_volume_context(data):
     }
 
 
-def analyse_timeframe(timeframe):
-    data = load_closed_bars(timeframe)
+def analyse_timeframe(timeframe, admitted_data=None):
+    data = load_closed_bars(timeframe) if admitted_data is None else admitted_data
+    if data.empty:
+        raise ValueError("NO_ADMITTED_BARS")
 
     fractals = find_fractals(data)
     fvgs = find_fvgs(data)
@@ -513,7 +508,7 @@ def analyse_timeframe(timeframe):
     return {
         "bars_used": int(len(data)),
         "last_closed_time": (
-            data.iloc[-1]["utc_time"].isoformat()
+            bar_time(data.iloc[-1])
         ),
         "last_close": float(
             data.iloc[-1]["close"]

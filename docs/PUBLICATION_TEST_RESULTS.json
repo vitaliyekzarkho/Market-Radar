@@ -1,0 +1,19 @@
+{
+  "profile": "portable-public-synthetic",
+  "tests": 278,
+  "failures": 0,
+  "errors": 0,
+  "skips": 0,
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "full_private_regression": false,
+  "date": "2026-11-04",
+  "command": "python -B verify_portable.py",
+  "exit_code": 0,
+  "environment": "Existing Windows Python 3.12.10 environment; fresh laptop dependency installation not tested",
+  "secret_scan": {
+    "token_patterns": 0,
+    "exact_local_secret_matches": 0,
+    "forbidden_files": 0
+  },
+  "runtime_modified_during_publication": false
+}

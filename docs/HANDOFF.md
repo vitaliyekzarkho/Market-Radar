@@ -1,37 +1,37 @@
-# Market Radar — handoff, 28 October 2026
+# Market Radar — active observation handoff, 4 November 2026
 
-## Start here
-Working branch: `work/laptop-handoff-2026-10-28`.
-Accepted GitHub main before this import: `a3c4f27f5f2f9307e7e4c645b54e55ee18668caa` (D1–D5).
-This branch publishes the later local development snapshot for PC/laptop collaboration. It is not an acceptance merge or a production release.
+Current working branch: `work/live-observation-2026-11-04`.
+Version: `v0.5.2-integrated-runtime-dev.4-tick-wait`.
+Previous published handoff: `1d2e6bfb772ab132348c5ac1a7c3994260d95eeb`.
+Accepted D1–D5 main ancestor: `a3c4f27f5f2f9307e7e4c645b54e55ee18668caa`.
+This publication records the locally deployed source. It does not change main or deploy anything to another computer. GitHub synchronizes code and this handoff, not chat memory, credentials or running processes.
 
-## Current task / status
-Restore Historical PA/HTF Admission — CHANGES REQUIRED.
-Full PA/HTF has NOT been restored. Production monitoring and Telegram must not be enabled automatically.
+## Operational state and observation start
+The integrated runner receives OANDA MT5 GOLD.pro, admits closed source-order bars, uses existing PA/HTF/reasoning/scenario logic, persists C/D/R stages and applies alert policy/Telegram gates. Read-only market access, no trade execution.
+Continuous observation was resumed on 4 November at 18:03:55 UTC. A complete cycle passed, Telegram confirmed a genuine eligible notification at 18:09:02 UTC, and the next cycle began at 18:09:38 UTC. No test alert was forced. Runtime and delivery evidence remain private.
+The interval between the 2 November controlled check and 4 November restart is not proven continuous observation and must not count as a full forward-test week.
 
-The last isolated local build separates BAR_CLOSED, DATA_AVAILABLE_NOW and HISTORICALLY_AVAILABLE_AT. `live_history_admission.py` is a prototype for source-relative closure/present availability, NOT connected to the production UTC/session consumers. It does not invent historical UTC or new scoring.
+## Integrated changes since 28 October
+- Existing runner consumes historical admission; typed source-time enables price/order analysis without fabricated historical UTC.
+- Source-specific auxiliary admission, provenance and fail-closed UTC-dependent context/reaction windows; no new scoring engine.
+- C/D/R capture, scenario, policy, notification and delivery journals; silent/null-primary observations remain valid.
+- Bounded independent clock proofs, preserved raw epochs/receipts; no global historical broker-hour correction.
+- User-authorized administrative migration archives exact legacy bytes by SHA-256, marks LEGACY_UNVERIFIED without authority, initializes current observation without unverified invalidation, and suppresses migration-induced reversal alerts. Authorization is bound to a private legacy hash and is NOT distributed here.
+- Snapshot capture polls up to 15 seconds for three distinct real ticks. Missing ticks are never fabricated. Backward ticks fail closed. Continuous runner waits at least 60 seconds on the exact FRESH_TICKS_REQUIRED admission gap; other integrity errors remain blocking. --once still returns failure for a gap.
+- Single-instance protection, notification deduplication and 08:00–20:00 Europe/Dublin schedule remain.
 
-Actual recorded reconstruction: 2495 of 2500 rows passed source-order closure, five current bars excluded, zero admitted at an earlier replay cutoff. This does not establish historical timezone/session correctness. Real captured input remains private and is NOT in this branch.
+## Evidence / tests
+Private full suite after migration: 1235/1235 passed, zero errors/failures/skips (30 October).
+Private full suite with tick waiting/recovery: 1243/1243 passed on 2 November, 230.735 seconds, Windows/Python 3.12.10. A final backward-duplicate tick guard was subsequently checked by eight focused tests; do not describe the earlier full run as another run after that last guard edit.
+Public portable-profile publication results are recorded in PUBLICATION_TEST_RESULTS.json. This is a different subset; private recorded tests cannot be reproduced from this repository alone. Real migration fixtures and native captures intentionally remain local.
+Runtime source hashes are in DEPLOYED_SOURCE_MANIFEST_2026-11-04.json. They hash deployed bytes; Git may normalize line endings. Test files come from the corresponding development copy. Packaging adds jsonschema to portable requirements and applies the Windows-only MetaTrader dependency marker.
 
-## Completed local work represented here
-- C/D/R operational observer, recorded input/ledger/replay components, offline integration and safety helpers.
-- Native no-primary repair: silent/null primary is a non-publishable observation; no fabricated direction/Point A/B.
-- Time authority: raw epochs/content hashes, bounded clock evidence, 60-second expiry, receipts and deferred Decision Journal. The observation branch skips full analytics/Telegram.
-- Historical admission prototype and a prepared whole-hour M15/H1 observation helper. The helper's native path has NOT been executed in the latest task.
+## Limitations and next work
+- Historical UTC/session mapping remains UNKNOWN when not independently evidenced. Related causal/volume/rates/reaction features may be DEFERRED; C/D/R may report DEGRADED without an exception. Not every planned C/D/R capability is proven live.
+- First 4 November cycle took about 342 seconds, not the configured 60 seconds. Execution is serial. Measure audit/receipt overhead before claiming low-latency operation; do not delete history to speed up.
+- A delivered notification does not establish entry quality, forecast timeliness or profitability.
+- Active monitoring now means collecting actual scenarios, eligible alerts, silence, deferrals and invalidations. Paper results must use actual as-of timestamps and costs; no retrospectively invented fills. An automated paper-execution/PnL engine is not claimed.
+- Preserve accepted PA/HTF methodology and manual trade permission. No asset expansion or automatic orders.
 
-## Evidence and limits
-Last complete private offline suite on 28 October: 1181/1181 passed, 0 failures/errors/skips, Windows/Python 3.12.10. This is the original local build result, not a claim that all private fixtures exist in GitHub or that laptop setup has been independently reproduced.
-Last native observation on 27 October: one cycle, 5.55 seconds, candidate offset +3600, no rollover, all final bars TIME_UNVERIFIED, journal DEFERRED. About 32.1 MB written in the isolated build. No Telegram/trades/monitoring enabled.
-The earlier 14:00 M15/H1 rollover verifies only its measurement window, not a universal OANDA/DST history rule. No global MT5 minus one hour was installed.
-
-## Next concrete work
-1. Review current-analysis vs historical-replay contract; present analysis must not require unknown pre-capture availability.
-2. Resolve verified UTC/session handling in market_features, session_context, key_levels and order_flow_structure without fake utc_time or a replacement engine.
-3. Persist earliest verified receipt per content version; current prototype first-observed bound is capture-local.
-4. Integrate admission into existing C/D/R and test full-chain session/freshness/corrections before claiming READY FOR FULL NATIVE RETEST.
-5. Only after separate authorization execute a bounded whole-hour observation with external timeout; no automatic production launch.
-
-## Laptop workflow
-Read `docs/LAPTOP_SETUP.md`. Use `verify_portable.py` for the public synthetic profile. Never use `--once` as an offline-safety guarantee. Do not upload verification_inputs, accounts, runtime, secrets or archives. Git synchronizes committed files, not chat memory or uncommitted local changes.
-
-Public laptop profile checked for this publication: verify_portable.py — 231/231 PASS, 0 failures/errors/skips on Windows/Python 3.12.10. This uses existing synthetic fixtures only; fresh dependency installation on the home laptop remains unverified.
+## Development / rollback
+Use a separate clone and verify_portable.py. Do not run run_radar.py --once as an offline test. Do not overwrite the operating PC directory from Git. Local private backups and archived legacy state exist; stop the verified worker before an approved deployment/rollback, retain new receipts/journals and never restore stale notification state over current state.

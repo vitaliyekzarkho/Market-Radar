@@ -550,6 +550,19 @@ def policy_decision(
             else previous_state.get("last_route_alert_at_utc")
         ),
     }
+    migration = scenario.get('migration') or {}
+    migration_id = migration.get('legacy_sha256') if migration.get('rule') == 'ADMINISTRATIVE_REINITIALIZATION' else None
+    if migration_id and previous_state.get('administrative_migration_id') != migration_id:
+        output.update(should_notify=False, notification_type='NONE', priority='none',
+                      headline='Administrative observation baseline', included_events=[],
+                      suppressed_events=list(event_payload.get('events') or []),
+                      reason_codes=['ADMINISTRATIVE_MIGRATION_BASELINE_NO_MARKET_REVERSAL'])
+        next_state['last_active_snapshot'] = current if current.get('active') else None
+        for key in ('last_notified_fingerprint','last_alert_key','last_alert_at_utc',
+                    'last_notified_route_context','last_route_alert_at_utc'):
+            next_state[key] = previous_state.get(key)
+    if migration_id or previous_state.get('administrative_migration_id'):
+        next_state['administrative_migration_id'] = migration_id or previous_state['administrative_migration_id']
     return output, next_state
 
 

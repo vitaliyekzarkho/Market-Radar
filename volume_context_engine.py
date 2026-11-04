@@ -227,6 +227,10 @@ def build_payload(
 
 
 def main() -> int:
+    from time_ingestion import integrated_runtime, deferred_context
+    if integrated_runtime():
+        atomic_write_json(OUTPUT_FILE, {"schema_version":1,"volume_context":deferred_context("VOLUME_UTC_FRESHNESS_UNVERIFIED"),"timeframes":{}})
+        return 0
     frames = {timeframe: read_rows(RAW_DIR / f"{timeframe}.csv") for timeframe in TIMEFRAMES}
     payload = build_payload(frames)
     atomic_write_json(OUTPUT_FILE, payload)

@@ -104,6 +104,9 @@ def cached_context(cache: dict[str, Any], now: datetime) -> dict[str, Any] | Non
 
 
 def collect_context(now: datetime) -> dict[str, Any]:
+    from time_ingestion import integrated_runtime, deferred_context
+    if integrated_runtime():
+        return deferred_context("OIL_SOURCE_TIME_AND_RECEIPTS_UNVERIFIED")
     try:
         live = read_live(now)
     except Exception as exc:

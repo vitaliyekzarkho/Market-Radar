@@ -156,6 +156,25 @@ def main() -> int:
     args = parse_args()
     notification = load_json(NOTIFICATION_FILE)
     state = load_json(STATE_FILE, required=False)
+    if not args.dry_run and notification.get("should_send"):
+        from time_ingestion import refreshed_delivery_window, integrated_runtime, verified_delivery_window
+        root = Path.cwd()
+        admission = load_json(root/'data/admission/latest.json', required=False)
+        if integrated_runtime():
+            from mt5_clock_authority import digest
+            scenario = load_json(root/'data/scenario_states/GOLD_pro.json', required=False)
+            if (not admission.get('transport_authorized') or notification.get('scenario_sha256') != digest(scenario) or
+                notification.get('capture_id') != admission.get('capture_id') or
+                not scenario.get('primary_scenario') or scenario.get('publication_state') == 'silent'):
+                atomic_write_json(DELIVERY_FILE, {'status':'blocked','reason':'SCENARIO_LINEAGE_MISMATCH'})
+                return 1
+        allowed, reason = (refreshed_delivery_window if integrated_runtime() else verified_delivery_window)(root, datetime.now(timezone.utc).isoformat())
+        if admission.get('status') != 'READY' or not allowed:
+            atomic_write_json(DELIVERY_FILE, {'status':'blocked',
+                'reason':reason if not allowed else 'INTEGRATED_RUNTIME_NOT_READY',
+                'symbol':SYMBOL, 'trade_authorized':False})
+            print('TELEGRAM_NOTIFIER: BLOCKED — integrated admission/current clock gate')
+            return 1
     token = os.environ.get(TOKEN_ENV)
     chat_id = os.environ.get(CHAT_ID_ENV)
     decision = delivery_decision(notification, state, token, chat_id)

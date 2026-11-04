@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from source_time import parse_source_time
 import math
 import re
 from dataclasses import dataclass, asdict
@@ -306,7 +307,8 @@ def meaningful_reaction(
         latest_event = 0.0
         if isinstance(event, dict) and event.get("time"):
             try:
-                latest_event = datetime.fromisoformat(str(event["time"]).replace("Z", "+00:00")).timestamp()
+                source_time = parse_source_time(event["time"])
+                latest_event = source_time.epoch if source_time else datetime.fromisoformat(str(event["time"]).replace("Z", "+00:00")).timestamp()
             except ValueError:
                 pass
         pair = (latest_event, -distance, item)
@@ -1432,51 +1434,51 @@ def volume_leg_attribution(
     source_observation = frame(source_tf) if source_tf in {"H1", "H4", "D1", "W1"} else {}
     h1 = frame("H1")
     structural_relation = "unconfirmed"
-    structural_reason = f"Нет закрытого объёмного подтверждения на source TF {source_tf}."
+    structural_reason = f"РќРµС‚ Р·Р°РєСЂС‹С‚РѕРіРѕ РѕР±СЉС‘РјРЅРѕРіРѕ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ РЅР° source TF {source_tf}."
     if source_observation:
         if aligned_expansion(source_observation, primary_direction):
             structural_relation = "supports"
-            structural_reason = f"{source_tf}: усилие и результат согласованы с {primary_direction} structural leg."
+            structural_reason = f"{source_tf}: СѓСЃРёР»РёРµ Рё СЂРµР·СѓР»СЊС‚Р°С‚ СЃРѕРіР»Р°СЃРѕРІР°РЅС‹ СЃ {primary_direction} structural leg."
         elif stalled_effort(source_observation, primary_direction):
             structural_relation = "warning"
-            structural_reason = f"{source_tf}: усилие {primary_direction} не даёт пропорционального результата; возможны absorption/exhaustion."
+            structural_reason = f"{source_tf}: СѓСЃРёР»РёРµ {primary_direction} РЅРµ РґР°С‘С‚ РїСЂРѕРїРѕСЂС†РёРѕРЅР°Р»СЊРЅРѕРіРѕ СЂРµР·СѓР»СЊС‚Р°С‚Р°; РІРѕР·РјРѕР¶РЅС‹ absorption/exhaustion."
         elif (
             source_observation.get("direction") not in {primary_direction, "neutral", "unknown"}
             and source_observation.get("state") == "low_volume_pullback"
         ):
             structural_relation = "supports"
-            structural_reason = f"{source_tf}: противоположное движение идёт на низком участии; {primary_direction} structural leg сохраняет контроль."
+            structural_reason = f"{source_tf}: РїСЂРѕС‚РёРІРѕРїРѕР»РѕР¶РЅРѕРµ РґРІРёР¶РµРЅРёРµ РёРґС‘С‚ РЅР° РЅРёР·РєРѕРј СѓС‡Р°СЃС‚РёРё; {primary_direction} structural leg СЃРѕС…СЂР°РЅСЏРµС‚ РєРѕРЅС‚СЂРѕР»СЊ."
         elif (
             source_observation.get("direction") not in {primary_direction, "neutral", "unknown"}
             and source_observation.get("state") in {"expansion", "high_volume_acceptance_candidate"}
             and source_observation.get("effort_result") == "aligned"
         ):
             structural_relation = "conflicts"
-            structural_reason = f"{source_tf}: закрытое объёмное наблюдение направлено против {primary_direction} structural leg."
+            structural_reason = f"{source_tf}: Р·Р°РєСЂС‹С‚РѕРµ РѕР±СЉС‘РјРЅРѕРµ РЅР°Р±Р»СЋРґРµРЅРёРµ РЅР°РїСЂР°РІР»РµРЅРѕ РїСЂРѕС‚РёРІ {primary_direction} structural leg."
     elif source_tf in {"D1", "W1"} and frame("H4"):
         structural_relation = "context_only"
-        structural_reason = f"{source_tf} объём недоступен; H4 объём остаётся только контекстом и не подтверждает источник {source_tf}."
+        structural_reason = f"{source_tf} РѕР±СЉС‘Рј РЅРµРґРѕСЃС‚СѓРїРµРЅ; H4 РѕР±СЉС‘Рј РѕСЃС‚Р°С‘С‚СЃСЏ С‚РѕР»СЊРєРѕ РєРѕРЅС‚РµРєСЃС‚РѕРј Рё РЅРµ РїРѕРґС‚РІРµСЂР¶РґР°РµС‚ РёСЃС‚РѕС‡РЅРёРє {source_tf}."
     elif source_tf not in {"H1", "H4", "D1", "W1"} and frame("H4"):
         structural_relation = "context_only"
-        structural_reason = f"H4 объём доступен только как контекст и не подтверждает источник {source_tf}."
+        structural_reason = f"H4 РѕР±СЉС‘Рј РґРѕСЃС‚СѓРїРµРЅ С‚РѕР»СЊРєРѕ РєР°Рє РєРѕРЅС‚РµРєСЃС‚ Рё РЅРµ РїРѕРґС‚РІРµСЂР¶РґР°РµС‚ РёСЃС‚РѕС‡РЅРёРє {source_tf}."
 
     execution_relation = "not_applicable"
-    execution_reason = "Активная вложенная реакция отсутствует."
+    execution_reason = "РђРєС‚РёРІРЅР°СЏ РІР»РѕР¶РµРЅРЅР°СЏ СЂРµР°РєС†РёСЏ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚."
     if counter_direction in {"bullish", "bearish"}:
         execution_relation = "unconfirmed"
-        execution_reason = "H1 объём пока не подтверждает вложенную реакцию."
+        execution_reason = "H1 РѕР±СЉС‘Рј РїРѕРєР° РЅРµ РїРѕРґС‚РІРµСЂР¶РґР°РµС‚ РІР»РѕР¶РµРЅРЅСѓСЋ СЂРµР°РєС†РёСЋ."
         if aligned_expansion(h1, counter_direction):
             execution_relation = "supports"
-            execution_reason = f"H1: усилие и результат согласованы с {counter_direction} вложенной реакцией."
+            execution_reason = f"H1: СѓСЃРёР»РёРµ Рё СЂРµР·СѓР»СЊС‚Р°С‚ СЃРѕРіР»Р°СЃРѕРІР°РЅС‹ СЃ {counter_direction} РІР»РѕР¶РµРЅРЅРѕР№ СЂРµР°РєС†РёРµР№."
         elif stalled_effort(h1, primary_direction):
             execution_relation = "supports_candidate"
-            execution_reason = f"H1: {primary_direction} усилие перестало давать результат; это поддерживает наблюдение {counter_direction} реакции, но не подтверждает вход."
+            execution_reason = f"H1: {primary_direction} СѓСЃРёР»РёРµ РїРµСЂРµСЃС‚Р°Р»Рѕ РґР°РІР°С‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚; СЌС‚Рѕ РїРѕРґРґРµСЂР¶РёРІР°РµС‚ РЅР°Р±Р»СЋРґРµРЅРёРµ {counter_direction} СЂРµР°РєС†РёРё, РЅРѕ РЅРµ РїРѕРґС‚РІРµСЂР¶РґР°РµС‚ РІС…РѕРґ."
         elif aligned_expansion(h1, primary_direction):
             execution_relation = "conflicts"
-            execution_reason = f"H1: объём подтверждает {primary_direction} продолжение и противоречит {counter_direction} реакции."
+            execution_reason = f"H1: РѕР±СЉС‘Рј РїРѕРґС‚РІРµСЂР¶РґР°РµС‚ {primary_direction} РїСЂРѕРґРѕР»Р¶РµРЅРёРµ Рё РїСЂРѕС‚РёРІРѕСЂРµС‡РёС‚ {counter_direction} СЂРµР°РєС†РёРё."
         elif h1.get("direction") == counter_direction and h1.get("state") == "low_volume_pullback":
             execution_relation = "weak"
-            execution_reason = f"H1: движение {counter_direction} идёт на низком участии; реакция остаётся слабой."
+            execution_reason = f"H1: РґРІРёР¶РµРЅРёРµ {counter_direction} РёРґС‘С‚ РЅР° РЅРёР·РєРѕРј СѓС‡Р°СЃС‚РёРё; СЂРµР°РєС†РёСЏ РѕСЃС‚Р°С‘С‚СЃСЏ СЃР»Р°Р±РѕР№."
 
     for item in observations:
         tf = str(item.get("timeframe") or "")
@@ -1709,7 +1711,7 @@ def concise_console(
             print("  H1 PA / observation: none")
     print("\nPUBLISHED CONTEXT:")
     if primary is None:
-        print("SILENT — no branch has sufficient confirmed context")
+        print("SILENT вЂ” no branch has sufficient confirmed context")
         return
     print(f"{primary['direction'].upper()} {primary['status'].upper()} | score={primary['score']}")
     print(f"POINT_B: {primary['point_b']['name']} {primary['point_b']['price']}")
@@ -1739,18 +1741,9 @@ def concise_console(
     print(f"PATH_CLEAR: {primary['path_clear']}")
 
 
-def main() -> None:
-    state_data = load_json(STATE_FILE)
-    range_data = load_json(RANGE_FILE)
-    liquidity_data = load_json(LIQUIDITY_FILE, required=False)
-    session_data = load_json(SESSION_FILE, required=False)
-    order_flow_data = load_json(ORDER_FLOW_FILE, required=False)
-    news_driver_data = load_json(NEWS_DRIVER_FILE, required=False)
-    usd_context_data = load_json(USD_CONTEXT_FILE, required=False)
-    macro_context_data = load_json(MACRO_CONTEXT_FILE, required=False)
-    pulse_context_data = load_json(PULSE_CONTEXT_FILE, required=False)
-    volume_context_data = load_json(VOLUME_CONTEXT_FILE, required=False)
-
+def build_scenario(state_data, range_data, liquidity_data, session_data, order_flow_data,
+                   news_driver_data, usd_context_data, macro_context_data, pulse_context_data,
+                   volume_context_data, previous_payload, evaluated_at_utc):
     objects = state_objects(state_data)
     if not objects:
         raise RuntimeError("No objects found in level-state JSON")
@@ -1768,7 +1761,6 @@ def main() -> None:
     if not isinstance(macro_context, dict):
         macro_context = {"available": False, "reason": "NO_MACRO_CONTEXT", "scoring_applied": False}
 
-    previous_payload = load_json(OUTPUT_FILE, required=False)
     previous_primary = previous_payload.get("primary_scenario")
     previous_primary = previous_primary if isinstance(previous_primary, dict) else None
     previous_market_state = previous_payload.get("market_state")
@@ -1861,7 +1853,7 @@ def main() -> None:
 
     payload = {
         "schema_version": 2,
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "generated_at_utc": evaluated_at_utc,
         "symbol": SYMBOL,
         "current_price": price,
         "global_bias": global_bias,
@@ -1883,6 +1875,86 @@ def main() -> None:
             "execution_is_manual": True,
         },
     }
+    return payload
+
+
+def main() -> None:
+    state_data = load_json(STATE_FILE)
+    range_data = load_json(RANGE_FILE)
+    liquidity_data = load_json(LIQUIDITY_FILE, required=False)
+    session_data = load_json(SESSION_FILE, required=False)
+    order_flow_data = load_json(ORDER_FLOW_FILE, required=False)
+    news_driver_data = load_json(NEWS_DRIVER_FILE, required=False)
+    usd_context_data = load_json(USD_CONTEXT_FILE, required=False)
+    macro_context_data = load_json(MACRO_CONTEXT_FILE, required=False)
+    pulse_context_data = load_json(PULSE_CONTEXT_FILE, required=False)
+    volume_context_data = load_json(VOLUME_CONTEXT_FILE, required=False)
+
+    from time_ingestion import integrated_runtime
+    previous = load_json(OUTPUT_FILE, required=False)
+    if integrated_runtime():
+        if state_data.get('time_basis') != 'SOURCE_ORDER_ONLY':
+            raise ValueError('ADMITTED_STATE_REQUIRED')
+        liquidity_data = {}  # Legacy UTC/calendar-derived cache is not admitted.
+    migration = previous.get('migration')
+    if integrated_runtime() and previous and previous.get('time_basis') != 'SOURCE_ORDER_ONLY':
+        import hashlib
+        authorization = load_json(Path('data/admission/legacy_migration_authorization.json'), required=False)
+        raw = OUTPUT_FILE.read_bytes()
+        legacy_hash = hashlib.sha256(raw).hexdigest()
+        if authorization.get('policy') == 'ARCHIVE_UNVERIFIED_REINITIALIZE' and authorization.get('legacy_sha256') == legacy_hash:
+            if previous.get('symbol') != SYMBOL:
+                raise ValueError('LEGACY_SYMBOL_MISMATCH')
+            archive = Path('data/admission/migration') / (legacy_hash + '.legacy.json')
+            archive.parent.mkdir(parents=True, exist_ok=True)
+            if archive.exists() and archive.read_bytes() != raw:
+                raise ValueError('LEGACY_ARCHIVE_CONFLICT')
+            if not archive.exists():
+                with archive.open('xb') as fh: fh.write(raw)
+            migration = {'status': 'LEGACY_UNVERIFIED', 'rule': 'ADMINISTRATIVE_REINITIALIZATION',
+                         'legacy_sha256': legacy_hash, 'archive': str(archive),
+                         'historical_availability': 'UNKNOWN', 'market_reversal_confirmed': False,
+                         'active_decision_authority': False,
+                         'capture': load_json(Path('data/admission/latest.json'))}
+            metadata = archive.with_suffix('.provenance.json')
+            if not metadata.exists(): metadata.write_text(json.dumps(migration, ensure_ascii=False), encoding='utf-8')
+            previous = {}
+    if integrated_runtime() and previous and previous.get('time_basis') != 'SOURCE_ORDER_ONLY':
+        from mt5_clock_authority import digest
+        if previous.get('symbol') != SYMBOL:
+            raise ValueError('LEGACY_SCENARIO_MIGRATION_REQUIRES_REVIEW')
+        # Re-establish technical facts from admitted input before importing continuity.
+        fresh = build_scenario(state_data, range_data, liquidity_data, session_data, order_flow_data,
+            news_driver_data, usd_context_data, macro_context_data, pulse_context_data, volume_context_data,
+            {}, datetime.now(timezone.utc).isoformat())
+        def identity(value):
+            p=value.get('primary_scenario')
+            if p is None and value.get('publication_state')=='silent':return ('silent',)
+            if not isinstance(p,dict):return None
+            a=p.get('point_a') or {};b=p.get('point_b') or {}
+            if p.get('direction') not in {'bullish','bearish'} or any(number(x) is None for x in (a.get('low'),a.get('high'),b.get('price'))):return None
+            return (p['direction'],a['low'],a['high'],b['price'],(p.get('conditions') or {}).get('invalidation'))
+        if previous.get('symbol') != SYMBOL or identity(previous) is None or identity(previous)!=identity(fresh):
+            raise ValueError('LEGACY_SCENARIO_MIGRATION_REQUIRES_REVIEW')
+        archive=Path('data/admission/migration')/(digest(previous)+'.json')
+        archive.parent.mkdir(parents=True,exist_ok=True)
+        if not archive.exists():archive.write_text(json.dumps(previous,ensure_ascii=False),encoding='utf-8')
+        previous=dict(previous,time_basis='SOURCE_ORDER_ONLY')
+        previous['migration']={'archive':str(archive),'historical_availability':'UNKNOWN',
+                               'rule':'NUMERIC_ANCHORS_DIRECTION_INVALIDATION_REESTABLISHED'}
+    payload = build_scenario(state_data, range_data, liquidity_data, session_data, order_flow_data,
+        news_driver_data, usd_context_data, macro_context_data, pulse_context_data, volume_context_data,
+        previous, datetime.now(timezone.utc).isoformat())
+    if integrated_runtime():
+        payload['time_basis'] = 'SOURCE_ORDER_ONLY'
+        payload['historical_availability'] = 'UNKNOWN'
+        payload['admission'] = load_json(Path('data/admission/latest.json'))
+        if migration or previous.get('migration'):payload['migration']=migration or previous['migration']
+    primary = payload['primary_scenario']
+    branches = payload['internal_branches']
+    price, global_bias = payload['current_price'], payload['global_bias']
+    order_flow_context, market_state = payload['order_flow_context'], payload['market_state']
+    hypothesis_transition = market_state['hypothesis_transition']
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT_FILE.open("w", encoding="utf-8") as fh:
         json.dump(payload, fh, ensure_ascii=False, indent=2)

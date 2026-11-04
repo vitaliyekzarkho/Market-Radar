@@ -5,7 +5,7 @@ def guard(event,args):
     if event in {'socket.connect','socket.getaddrinfo'} or (event=='import' and args[0].split('.')[0]=='MetaTrader5'):
         raise PermissionError('PORTABLE_OFFLINE_ONLY')
 sys.addaudithook(guard)
-modules=['test_live_history_admission','test_news_pa_context_adapter','test_offline_evidence_ledger','test_offline_scenario_ledger','test_offline_notification_audit','test_offline_validation']
+modules=['test_live_history_admission','test_news_pa_context_adapter','test_offline_evidence_ledger','test_offline_scenario_ledger','test_offline_notification_audit','test_offline_validation','test_historical_admission_pipeline','test_integrated_time_gate','test_deployment_clock_recovery','test_tick_wait_recovery']
 if __name__=='__main__':
     suite=unittest.defaultTestLoader.loadTestsFromNames(modules)
     result=unittest.TextTestRunner(verbosity=2).run(suite)

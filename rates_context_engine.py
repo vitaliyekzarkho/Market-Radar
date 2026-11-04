@@ -244,6 +244,9 @@ def cached_context(cache: dict[str, Any], now: datetime) -> dict[str, Any] | Non
 
 
 def collect_context(now: datetime) -> dict[str, Any]:
+    from time_ingestion import integrated_runtime, deferred_context
+    if integrated_runtime():
+        return deferred_context("YIELDS_SOURCE_TIME_AND_RECEIPTS_UNVERIFIED")
     mt5_error = None
     try:
         intraday = read_mt5(now)

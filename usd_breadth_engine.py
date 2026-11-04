@@ -172,8 +172,12 @@ def aggregate_components(components: list[dict[str, Any]], contamination: dict[s
 def read_components_from_mt5() -> tuple[list[dict[str, Any]], list[str]]:
     import MetaTrader5 as mt5
 
-    if not mt5.initialize():
-        raise RuntimeError(f"MT5 initialize failed: {mt5.last_error()}")
+    from time_ingestion import integrated_runtime
+    if integrated_runtime():
+        from mt5_reader import connect
+        connect()
+    elif not mt5.initialize():
+        raise RuntimeError("MT5_INIT_FAILED")
     missing: list[str] = []
     components: list[dict[str, Any]] = []
     try:
@@ -185,12 +189,22 @@ def read_components_from_mt5() -> tuple[list[dict[str, Any]], list[str]]:
                 missing.append(base)
                 continue
             mt5.symbol_select(symbol, True)
-            rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H1, 1, LOOKBACK_BARS + 1)
+            from time_ingestion import integrated_runtime, capture_source_rows
+            receipt = None
+            if integrated_runtime():
+                try:
+                    rates,receipt=capture_source_rows(mt5,symbol,mt5.TIMEFRAME_H1,'H1',LOOKBACK_BARS+1)
+                except ValueError:
+                    missing.append(base)
+                    continue
+            else:
+                rates = mt5.copy_rates_from_pos(symbol, mt5.TIMEFRAME_H1, 1, LOOKBACK_BARS + 1)
             if rates is None or len(rates) < 6:
                 missing.append(base)
                 continue
             component = component_from_closes(base, symbol, usd_sign, [float(row["close"]) for row in rates])
             if component:
+                if receipt:component["receipt_lineage"]=receipt
                 components.append(component)
             else:
                 missing.append(base)
@@ -203,6 +217,8 @@ def build_payload(now: datetime | None = None) -> dict[str, Any]:
     generated = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
     try:
         components, missing = read_components_from_mt5()
+        from time_ingestion import integrated_runtime
+        if integrated_runtime():generated = datetime.now(timezone.utc)
         raw = load_json(EVENTS_FILE)
         events = [item for item in raw.get("events", []) if isinstance(item, dict)]
         contamination = contaminated_pairs(events, generated)

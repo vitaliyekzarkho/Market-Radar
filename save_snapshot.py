@@ -31,7 +31,18 @@ def main(allow_deferred=False):
             capture=collect(mt5,TIMEFRAMES,probes,count=BAR_COUNT)
             capture_id='clock_'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S')+'_'+uuid.uuid4().hex[:12]
             persist_capture(Path.cwd(),capture_id,capture,datetime.now(timezone.utc).isoformat())
-            print('TIME_AUTHORITY_DEFERRED: capture retained; historical analytics and transport skipped')
+            # Wait for the upper uncertainty bound of the complete after-proof;
+            # never move the decision timestamp forward artificially.
+            from mt5_clock_authority import candidate,epoch
+            import time
+            try:
+                bound=candidate(capture)
+                available=max(epoch(x['end_utc']) for x in capture['external_after'])+max(0,bound['hi'])
+                delay=available-time.time()
+                if delay>0:time.sleep(delay)
+            except ValueError:
+                pass  # persisted failed evidence remains unadmitted
+            print('HISTORICAL_ADMISSION_CAPTURE: receipt retained for the common Radar pipeline')
             return
         # Preserve the documented UTC interpretation as a candidate, not authority.
         # No offset is inferred; admission is gated on time validation below.

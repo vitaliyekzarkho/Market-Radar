@@ -207,6 +207,26 @@ def load_json(path: Path) -> dict[str, Any]:
 
 
 def main() -> int:
+    from time_ingestion import integrated_runtime, deferred_context
+    if integrated_runtime():
+        try:
+            import MetaTrader5 as mt5
+            from mt5_reader import connect
+            from time_ingestion import capture_source_rows
+            connect()
+            try:
+                rows, receipt = capture_source_rows(mt5, 'GOLD.pro', mt5.TIMEFRAME_M5, 'M5', 100)
+            finally:
+                mt5.shutdown()
+            # Minute windows need contiguous source bars, not merely row counts.
+            if any(b['time']-a['time'] != 300 for a,b in zip(rows,rows[1:])):
+                raise ValueError('M5_WINDOW_HAS_GAPS')
+            payload=build_payload(rows, load_json(OUTPUT_FILE), 'admitted MT5 source-order M5')
+            payload['receipt_lineage']=receipt
+        except Exception as exc:
+            payload={"schema_version":1,"pulse":deferred_context(str(exc))}
+        atomic_write_json(OUTPUT_FILE,payload)
+        return 0
     previous = load_json(OUTPUT_FILE)
     rows = read_csv_rows(M5_FILE)
     source = "M5 cache"

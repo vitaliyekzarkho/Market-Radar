@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from source_time import parse_source_time, time_label
 import json
 import math
 import re
@@ -34,6 +35,9 @@ def number(value: Any) -> float | None:
 
 
 def parse_time(value: Any) -> datetime | None:
+    source = parse_source_time(value)
+    if source is not None:
+        return source
     text = str(value or "").strip()
     if not text:
         return None
@@ -110,7 +114,7 @@ def latest_htf_reaction(objects: list[dict[str, Any]]) -> dict[str, Any] | None:
             "low": min(low, high),
             "high": max(low, high),
             "price": source_price if source_price is not None else (low + high) / 2.0,
-            "confirmed_at": event_time.isoformat(),
+            "confirmed_at": time_label(event_time),
             "confirmation": "native closed rejection",
         }))
     if not candidates:
@@ -149,7 +153,7 @@ def last_pivot_source(order_flow: dict[str, Any], direction: str) -> dict[str, A
                     "timeframe": tf,
                     "direction": direction,
                     "price": price,
-                    "confirmed_at": event_time.isoformat(),
+                    "confirmed_at": time_label(event_time),
                     "confirmation": f"{tf} confirmed pivot",
                 }))
     if not candidates:
@@ -1083,8 +1087,8 @@ def causal_hypothesis(
         "conflicts": conflicts,
         "missing": missing,
         "summary": (
-            f"{source['claim']} → reaction {reaction['status']} → "
-            f"H1 {confirmation['status']} → {(path.get('first_objective') or point_b).get('name', 'no target')}"
+            f"{source['claim']} в†’ reaction {reaction['status']} в†’ "
+            f"H1 {confirmation['status']} в†’ {(path.get('first_objective') or point_b).get('name', 'no target')}"
         ),
         "rule": "No causal claim may be promoted from price location alone.",
     }

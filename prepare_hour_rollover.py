@@ -1,18 +1,38 @@
 """Default is planning only. --execute is a separately authorized read-only run."""
-import argparse,json,time,subprocess
+import argparse,json,time,subprocess,sys
 from pathlib import Path
 from datetime import datetime,timezone
 from mt5_clock_authority import epoch,utc
 
+def run_owned_worker(arguments, timeout_seconds=45):
+    """Use the existing Windows Job supervisor, with pinned-handle shutdown."""
+    from r6_8_job import run_owned
+    command = [sys.executable, '-B', str(Path(__file__).resolve()), *arguments, '--owned-worker']
+    result = run_owned(command, cwd=Path(__file__).resolve().parent, seconds=timeout_seconds)
+    if result['timed_out']:
+        raise RuntimeError('OWNED_OBSERVATION_WORKER_TIMEOUT_NO_SUCCESS')
+    return result
+
+
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--boundary',required=True);p.add_argument('--output',required=True);p.add_argument('--execute',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--boundary',required=True);p.add_argument('--output',required=True);p.add_argument('--execute',action='store_true');p.add_argument('--owned-worker',action='store_true',help=argparse.SUPPRESS);a=p.parse_args()
     boundary=epoch(a.boundary)
     if boundary%3600:raise ValueError('WHOLE_UTC_HOUR_REQUIRED')
-    plan=dict(boundary_utc=a.boundary,start_window_utc=[utc(boundary-20),utc(boundary-5)],stop_by_utc=utc(boundary+10),native_limit_seconds=40,symbol='GOLD.pro',timeframes=['W1','D1','H4','H1','M15'],mode='PREPARED_NOT_EXECUTED',requires='Independent explicit permission before --execute; no trading, Telegram or production analysis')
+    plan=dict(boundary_utc=a.boundary,start_window_utc=[utc(boundary-20),utc(boundary-5)],soft_stop_by_utc=utc(boundary+10),owned_worker_hard_timeout_seconds=45,native_limit_seconds=40,symbol='GOLD.pro',history_bars_per_timeframe=500,timeframes=['W1','D1','H4','H1','M15'],mode='PREPARED_NOT_EXECUTED',requires='Independent explicit permission before --execute; no trading, Telegram or production analysis')
     print(json.dumps(plan,indent=2))
     if not a.execute:return
+    if not a.owned_worker:
+        if not boundary-20<=time.time()<=boundary-5:
+            raise RuntimeError('OUTSIDE_START_WINDOW_NO_NATIVE_CONNECTION')
+        result = run_owned_worker(['--boundary', a.boundary, '--output', a.output, '--execute'])
+        print(json.dumps(result))
+        if result['exit_code']:
+            raise RuntimeError('OBSERVATION_CHILD_FAILED')
+        return
     if not boundary-20<=time.time()<=boundary-5:raise RuntimeError('OUTSIDE_START_WINDOW_NO_NATIVE_CONNECTION')
     output=Path(a.output).resolve()
+    if not output.is_relative_to(Path(__file__).resolve().parent):
+        raise ValueError("OUTPUT_MUST_STAY_IN_ISOLATED_BUILD")
     if output.exists():raise ValueError('OUTPUT_ALREADY_EXISTS_NO_REPEAT')
     from operational_startup_gate import StartupGate
     from mt5_clock_probe import probes
@@ -34,7 +54,7 @@ def main():
                 measurements=[];s=utc(time.time());v=mt5.symbol_info_tick('GOLD.pro')
                 measurements.append(dict(kind='tick',start_utc=s,end_utc=utc(time.time()),value=None if v is None else {'time':v.time,'time_msc':v.time_msc}))
                 for name in plan['timeframes']:
-                    s=utc(time.time());rows=mt5.copy_rates_from_pos('GOLD.pro',getattr(mt5,'TIMEFRAME_'+name),0,5)
+                    s=utc(time.time());rows=mt5.copy_rates_from_pos('GOLD.pro',getattr(mt5,'TIMEFRAME_'+name),0,plan['history_bars_per_timeframe'])
                     measurements.append(dict(kind='bars',timeframe=name,start_utc=s,end_utc=utc(time.time()),rows=[] if rows is None else [{k:r[k].item() for k in rows.dtype.names} for r in rows]))
                 capture['samples'].append(dict(measurements=measurements));time.sleep(.5)
         finally:

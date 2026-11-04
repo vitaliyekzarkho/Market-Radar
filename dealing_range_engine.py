@@ -1,4 +1,5 @@
 import json
+from source_time import time_label
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -68,7 +69,7 @@ def find_confirmed_pivots(data, span):
                     "index": index,
                     "type": "high",
                     "price": float(bar["high"]),
-                    "time": bar["utc_time"],
+                    "time": bar["source_time"] if "source_time" in bar else bar["utc_time"],
                 }
             )
 
@@ -78,7 +79,7 @@ def find_confirmed_pivots(data, span):
                     "index": index,
                     "type": "low",
                     "price": float(bar["low"]),
-                    "time": bar["utc_time"],
+                    "time": bar["source_time"] if "source_time" in bar else bar["utc_time"],
                 }
             )
 
@@ -545,7 +546,7 @@ def create_candidate(
         "start": {
             "type": start_pivot["type"],
             "time": (
-                start_pivot["time"].isoformat()
+                time_label(start_pivot["time"])
             ),
             "price": start_pivot["price"],
             "fib_value": 0,
@@ -553,7 +554,7 @@ def create_candidate(
         "end": {
             "type": end_pivot["type"],
             "time": (
-                end_pivot["time"].isoformat()
+                time_label(end_pivot["time"])
             ),
             "price": end_pivot["price"],
             "fib_value": 1,
@@ -732,9 +733,9 @@ def select_relevant_candidates(
     return selected
 
 
-def analyse_timeframe(timeframe):
+def analyse_timeframe(timeframe, admitted_data=None):
     settings = TIMEFRAME_SETTINGS[timeframe]
-    data = load_closed_bars(timeframe)
+    data = load_closed_bars(timeframe) if admitted_data is None else admitted_data
 
     pivots = find_confirmed_pivots(
         data,

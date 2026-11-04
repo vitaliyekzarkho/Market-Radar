@@ -58,3 +58,11 @@ r6_8_verification/
 *_scratch/
 PRIVATE*/
 *.pending
+
+# Local operational evidence (never publish)
+deployment_logs/
+recorded_replay_final/
+fixtures/legacy_deployment/
+DEPLOYED_VERSION.json
+BUILD_MANIFEST.json
+verification/

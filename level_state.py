@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 import pandas as pd
+from source_time import bar_time, parse_source_time, time_label
 
 
 SYMBOL = "GOLD.pro"
@@ -122,7 +123,7 @@ def extract_key_levels(data: dict[str, Any]) -> list[MarketObject]:
         if name in allowed and price is not None:
             role = "support" if name.endswith("L") else "resistance" if name.endswith("H") else "neutral"
             add_object(objects, MarketObject(
-                f"KEY:{name}", "key_level", name, None, price, price, role, "key_levels"
+                f"KEY:{name}", "key_level", name, None, price, price, role, "key_levels", active_from=item.get("active_from")
             ))
 
         # Shape B: {"PDL": 4253.68, "PWL": 4292.11, ...}
@@ -268,7 +269,7 @@ def candle_record(row: pd.Series | None) -> dict[str, Any] | None:
     if row is None:
         return None
     return {
-        "time": row["time"].isoformat(),
+        "time": bar_time(row, "time"),
         "open": round(float(row["open"]), 5),
         "high": round(float(row["high"]), 5),
         "low": round(float(row["low"]), 5),
@@ -491,6 +492,11 @@ def object_window(
     frame: pd.DataFrame,
     anchors: dict[str, pd.Timestamp],
 ) -> pd.DataFrame:
+    if "source_time" in frame.columns:
+        source = parse_source_time(obj.active_from)
+        if source is None:
+            return frame.iloc[0:0].copy()  # UNKNOWN lifecycle never means all history
+        return frame.loc[frame["time"] >= source.epoch].copy() if obj.kind == "key_level" else frame.loc[frame["time"] > source.epoch].copy()
     start = lifecycle_start(obj, anchors)
     if start is None or pd.isna(start):
         return frame
@@ -604,26 +610,9 @@ def print_summary(states: list[dict[str, Any]]) -> None:
             )
 
 
-def main() -> None:
-    levels = load_json(LEVELS_FILE)
-    features = load_json(FEATURES_FILE)
-    objects = extract_key_levels(levels) + extract_imbalances(features)
-    if not objects:
-        raise RuntimeError(
-            "No key levels or imbalance objects found in input JSON files"
-        )
-
-    primary = load_bars(PRIMARY_TF)
-    fast = load_bars(FAST_TF)
-    live_frame = load_bars(FAST_TF, closed_only=False)
-    live_price = float(live_frame.iloc[-1]["close"])
-    frame_cache: dict[str, pd.DataFrame] = {
-        PRIMARY_TF: primary,
-        FAST_TF: fast,
-    }
-    for timeframe in ("W1", "D1", "H4"):
-        frame_cache[timeframe] = load_bars(timeframe)
-    anchors = build_anchors(primary)
+def build_state(objects, frames, live_price, anchors, evaluated_at_utc):
+    primary, fast = frames[PRIMARY_TF], frames[FAST_TF]
+    frame_cache = frames
     states = []
     for obj in objects:
         h1_window = object_window(obj, primary, anchors)
@@ -692,8 +681,8 @@ def main() -> None:
             state["native_confirmation"] = native_layer
         else:
             state["native_confirmation"] = None
-        state["lifecycle_start"] = (
-            lifecycle_start(obj, anchors).isoformat()
+        state["lifecycle_start"] = obj.active_from if "source_time" in primary.columns else (
+            time_label(lifecycle_start(obj, anchors))
             if lifecycle_start(obj, anchors) is not None
             and not pd.isna(lifecycle_start(obj, anchors))
             else None
@@ -704,7 +693,7 @@ def main() -> None:
 
     payload = {
         "schema_version": 3,
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "generated_at_utc": evaluated_at_utc,
         "symbol": SYMBOL,
         "primary_timeframe": PRIMARY_TF,
         "fast_timeframe": FAST_TF,
@@ -725,6 +714,31 @@ def main() -> None:
         },
         "objects": states,
     }
+    return payload
+
+
+def main() -> None:
+    levels = load_json(LEVELS_FILE)
+    features = load_json(FEATURES_FILE)
+    objects = extract_key_levels(levels) + extract_imbalances(features)
+    if not objects:
+        raise RuntimeError(
+            "No key levels or imbalance objects found in input JSON files"
+        )
+
+    primary = load_bars(PRIMARY_TF)
+    fast = load_bars(FAST_TF)
+    live_frame = load_bars(FAST_TF, closed_only=False)
+    live_price = float(live_frame.iloc[-1]["close"])
+    frame_cache: dict[str, pd.DataFrame] = {
+        PRIMARY_TF: primary,
+        FAST_TF: fast,
+    }
+    for timeframe in ("W1", "D1", "H4"):
+        frame_cache[timeframe] = load_bars(timeframe)
+    anchors = build_anchors(primary)
+    payload = build_state(objects, frame_cache, live_price, anchors, datetime.now(timezone.utc).isoformat())
+    states = payload['objects']
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
     with OUTPUT_FILE.open("w", encoding="utf-8") as fh:
         json.dump(payload, fh, ensure_ascii=False, indent=2)

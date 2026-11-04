@@ -69,6 +69,7 @@ class LaunchTests(unittest.TestCase):
             r=run_owned([sys.executable,'-I',str(ROOT/'r6_8_process_fixture.py'),'tree',str(self.root)],cwd=ROOT,seconds=3)
             self.assertEqual(r['exit_code'],124);self.assertEqual(r['remaining_owned_processes'],0)
             self.assertGreaterEqual(r['owned_total_processes'],2)
+            self.assertGreaterEqual(r['waited_owned_processes'],2)
             self.assertTrue((self.root/'descendant.pid').exists())
             self.assertFalse(alive(int((self.root/'descendant.pid').read_text())))
             self.assertIsNone(sentinel.poll());self.assertLess(r['elapsed_seconds'],8)

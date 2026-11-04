@@ -113,6 +113,9 @@ def collect_assets(event_time: datetime, now: datetime) -> dict[str, dict[str, A
 
 
 def build_payload(raw: dict[str, Any], now: datetime, assets: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
+    from time_ingestion import integrated_runtime, deferred_context
+    if integrated_runtime() and assets is None:
+        return deferred_context("REACTION_WINDOW_UTC_AND_RECEIPTS_UNVERIFIED")
     events = raw.get("events") if isinstance(raw.get("events"), list) else []
     event = select_recent_event(events, now)
     if not event:

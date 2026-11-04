@@ -30,6 +30,7 @@ resume=api('ResumeThread',[w.HANDLE],w.DWORD)
 terminate=api('TerminateJobObject',[w.HANDLE,w.UINT])
 query=api('QueryInformationJobObject',[w.HANDLE,c.c_int,c.c_void_p,w.DWORD,c.c_void_p])
 close=api('CloseHandle',[w.HANDLE])
+in_job=api('IsProcessInJob',[w.HANDLE,w.HANDLE,c.POINTER(w.BOOL)])
 init_attrs=api('InitializeProcThreadAttributeList',[c.c_void_p,w.DWORD,w.DWORD,c.POINTER(c.c_size_t)])
 update_attrs=api('UpdateProcThreadAttribute',[c.c_void_p,w.DWORD,c.c_size_t,c.c_void_p,c.c_size_t,c.c_void_p,c.c_void_p])
 delete_attrs=api('DeleteProcThreadAttributeList',[c.c_void_p],None)
@@ -41,6 +42,46 @@ def checked(ok):
 def clean_env():
     return {key:value for key,value in os.environ.items() if key.upper() in
             {'SYSTEMROOT','WINDIR','TEMP','TMP','PATH','COMSPEC','PATHEXT'}}
+
+
+def pin_owned_processes(job):
+    """Pin synchronizable handles from this job only, not a system process scan."""
+    capacity = 64
+    while capacity <= 4096:
+        class ProcessIds(c.Structure):
+            _fields_ = [('assigned', w.DWORD), ('count', w.DWORD), ('ids', c.c_size_t * capacity)]
+        ids = ProcessIds()
+        ok = query(job, 3, c.byref(ids), c.sizeof(ids), None)
+        if ok and ids.assigned <= ids.count:
+            break
+        if not ok and c.get_last_error() != 234:
+            checked(ok)
+        capacity *= 2
+    else:
+        raise RuntimeError('OWNED_PROCESS_LIST_UNSTABLE')
+    handles = []
+    try:
+        for pid in ids.ids[:ids.count]:
+            try:
+                h = _winapi.OpenProcess(0x100000 | 0x1000, False, pid)
+            except OSError as exc:
+                if exc.winerror == 87:  # exited before a handle could be pinned
+                    continue
+                raise
+            member = w.BOOL()
+            try:
+                checked(in_job(h, job, c.byref(member)))
+                if not member.value:
+                    raise RuntimeError('OWNED_PID_IDENTITY_CHANGED')
+                handles.append(h)
+            except BaseException:
+                _winapi.CloseHandle(h)
+                raise
+        return handles
+    except BaseException:
+        for h in handles:
+            _winapi.CloseHandle(h)
+        raise
 
 def create_owned(command,cwd,job):
     # Atomic job assignment at creation closes the supervisor-crash window
@@ -62,7 +103,7 @@ def create_owned(command,cwd,job):
 def run_owned(command,*,cwd,seconds):
     if type(seconds) not in (int,float) or not 0<seconds<=60:raise ValueError('TIME_LIMIT_0_TO_60_REQUIRED')
     started=time.monotonic();job=create(None,None);checked(job)
-    hp=ht=None;assigned=False
+    hp=ht=None;assigned=False;owned_handles=[]
     try:
         limits=Extended();limits.basic.flags=0x2000 # KILL_ON_JOB_CLOSE; NO breakaway flags
         checked(set_info(job,9,c.byref(limits),c.sizeof(limits)))
@@ -74,22 +115,32 @@ def run_owned(command,*,cwd,seconds):
         timed_out=wait==258
         if wait not in (0,258):raise RuntimeError('WAIT_FAILED')
         code=124 if timed_out else _winapi.GetExitCodeProcess(hp)
-        checked(terminate(job,code)) # remove descendants even when parent exits first
         accounting=Accounting()
+        checked(query(job,1,c.byref(accounting),c.sizeof(accounting),None))
+        total_before = accounting.total
+        owned_handles = pin_owned_processes(job)
+        checked(terminate(job,code)) # remove descendants even when parent exits first
         deadline=time.monotonic()+5
+        for handle in owned_handles:
+            if _winapi.WaitForSingleObject(handle, max(0, int((deadline-time.monotonic())*1000))) != 0:
+                raise RuntimeError('OWNED_PROCESS_HANDLE_NOT_SIGNALED')
         while True:
             checked(query(job,1,c.byref(accounting),c.sizeof(accounting),None))
             if accounting.active==0:break
             if time.monotonic()>deadline:raise RuntimeError('PROCESS_TREE_DID_NOT_EXIT')
             time.sleep(.01)
+        if accounting.total != total_before:
+            raise RuntimeError('PROCESS_TREE_CHANGED_DURING_SHUTDOWN')
         return dict(exit_code=code,timed_out=timed_out,created_pid=pid,
             elapsed_seconds=time.monotonic()-started,owned_total_processes=accounting.total,
-            remaining_owned_processes=accounting.active)
+            remaining_owned_processes=accounting.active, waited_owned_processes=len(owned_handles))
     finally:
         # On supervisor exception/keyboard interrupt the only handles targeted
         # are the ones created above. Closing job also kills on supervisor death.
         if assigned:terminate(job,70)
         close(job) # final owned handle: KILL_ON_JOB_CLOSE even on cleanup error
+        for handle in owned_handles:
+            _winapi.CloseHandle(handle)
         if hp is not None:
             try:
                 if not assigned:_winapi.TerminateProcess(hp,70)

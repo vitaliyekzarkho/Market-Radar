@@ -1,6 +1,9 @@
 @echo off
+setlocal
 cd /d "%~dp0"
-:restart
-".venv\Scripts\python.exe" run_radar.py --all-hours --interval 60
-timeout /t 10 /nobreak >nul
-goto restart
+if not exist ".venv\Scripts\python.exe" (
+  echo MarketRadar: missing approved local Python environment.
+  exit /b 2
+)
+".venv\Scripts\python.exe" -B "run_radar.py" --interval 60
+exit /b %errorlevel%

@@ -1,5 +1,5 @@
 """Read-only external UTC probes; never adjusts local time."""
-import socket,struct,time,secrets,urllib.request,email.utils
+import socket,struct,time,secrets,urllib.request,urllib.error,email.utils
 from datetime import datetime,timezone
 def utc(t):return datetime.fromtimestamp(t,timezone.utc).isoformat()
 def ntp(host):
@@ -30,8 +30,13 @@ def https_date(base):
     t1=time.time();m1=time.perf_counter();result={'method':'HTTPS_DATE_TLS','source':base,'start_utc':utc(t1)}
     try:
         url=base+'?clock_probe='+secrets.token_hex(12)
-        req=urllib.request.Request(url,headers={'Cache-Control':'no-cache','Pragma':'no-cache','User-Agent':'MarketRadar-ReadOnly-TimeCheck/1'})
-        with urllib.request.urlopen(req,timeout=4) as response:
+        req=urllib.request.Request(url,method='HEAD',headers={'Cache-Control':'no-cache','Pragma':'no-cache','User-Agent':'MarketRadar-ReadOnly-TimeCheck/1'})
+        try:response=urllib.request.urlopen(req,timeout=4)
+        except urllib.error.HTTPError as response_error:
+            # An authenticated HTTP error still carries a Date header. Preserve
+            # the real status; clock checks concern Date/age/latency, not page content.
+            response=response_error
+        with response:
             date=response.headers.get('Date');age=response.headers.get('Age');status=response.status
         t4=time.time();m4=time.perf_counter();server=email.utils.parsedate_to_datetime(date).timestamp()
         if age is not None and float(age)>0:raise ValueError('CACHED_DATE_REJECTED')
@@ -43,7 +48,17 @@ def https_date(base):
     return result
 
 def probes():
-    return [ntp('time.cloudflare.com'),ntp('time.google.com'),https_date('https://www.cloudflare.com/cdn-cgi/trace'),https_date('https://www.google.com/generate_204')]
+    results=[]
+    for function,source in ((ntp,'time.cloudflare.com'),(ntp,'time.google.com'),(https_date,'https://www.cloudflare.com/cdn-cgi/trace'),(https_date,'https://www.google.com/generate_204')):
+        attempts=[]
+        for _ in range(3):
+            value=function(source)
+            if value.get('status')=='OK' and 0<=value.get('elapsed_seconds',999)<=2 and abs(value.get('local_clock_step_seconds',999))<=.05:
+                break
+            attempts.append(value)
+        if attempts:value=dict(value,rejected_attempts=attempts)
+        results.append(value)
+    return results
 
 if __name__=='__main__':
     import json

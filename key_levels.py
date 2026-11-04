@@ -5,6 +5,11 @@ from pathlib import Path
 import pandas as pd
 
 
+def unverified_calendar_context():
+    return {"status": "UNKNOWN", "reason": "UTC_CALENDAR_MAPPING_UNVERIFIED",
+            "levels": {}, "scoring_applied": False}
+
+
 DATA_DIRECTORY = Path("data") / "raw" / "GOLD_pro"
 OUTPUT_DIRECTORY = Path("data") / "levels"
 OUTPUT_FILE = OUTPUT_DIRECTORY / "GOLD_pro.json"
@@ -81,7 +86,7 @@ def make_level(
     return {
         "name": name,
         "price": round(float(price), 5),
-        "source_time": source_time.isoformat(),
+        "source_time": __import__("source_time").time_label(source_time),
         "location": location,
         "distance": round(float(distance), 5),
         "distance_percent": round(

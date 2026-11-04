@@ -179,6 +179,9 @@ def heavy_recalculation_required(root: Path, marker: str | None, force: bool = F
 
 def run_step(root: Path, script_name: str, verbose: bool, report_failure: bool = True) -> tuple[bool, str]:
     started = time.monotonic()
+    environment = utf8_subprocess_environment()
+    if (root / "data/admission/latest.json").is_file():
+        environment["MARKET_RADAR_ADMISSION"] = "1"
     result = subprocess.run(
         [sys.executable, str(root / script_name)],
         cwd=root,
@@ -187,7 +190,7 @@ def run_step(root: Path, script_name: str, verbose: bool, report_failure: bool =
         errors="replace",
         capture_output=True,
         check=False,
-        env=utf8_subprocess_environment(),
+        env=environment,
     )
     elapsed = time.monotonic() - started
     output = "\n".join(part.strip() for part in (result.stdout, result.stderr) if part.strip())
@@ -223,6 +226,10 @@ def run_pipeline(root: Path, verbose: bool, force_full: bool = False, no_telegra
         root, SNAPSHOT_SCRIPT, verbose, report_failure=False
     )
     if not snapshot_passed:
+        if (root/'data/admission/latest.json').exists():
+            atomic_write_json(root / HEARTBEAT_FILE, {'status':'BLOCKED','step':SNAPSHOT_SCRIPT,
+                'reason':'NO_FRESH_ADMITTED_CAPTURE_NO_LEGACY_CACHE_FALLBACK'})
+            return False
         if complete_cache_available(root) and 'MARKET_CLOSED_CONFIRMED' in snapshot_output:
             print("MARKET_DATA: UNAVAILABLE | market closed")
             print("SNAPSHOT_FALLBACK: using last complete cached W1/D1/H4/H1/M15 snapshot")
@@ -232,6 +239,19 @@ def run_pipeline(root: Path, verbose: bool, force_full: bool = False, no_telegra
                 print(snapshot_output)
             print("RADAR_CYCLE: FAILED — remaining steps skipped")
             atomic_write_json(root / HEARTBEAT_FILE, {"updated_at": cycle_time.isoformat(), "status": "failed", "step": SNAPSHOT_SCRIPT})
+            return False
+
+    integrated = snapshot_passed and 'HISTORICAL_ADMISSION_CAPTURE:' in snapshot_output
+    if integrated:
+        from historical_admission_pipeline import prepare_runtime
+        try:
+            result = prepare_runtime(root, datetime.now(ZoneInfo('UTC')).isoformat())
+            if result['status'] != 'READY':
+                atomic_write_json(root / HEARTBEAT_FILE, result)
+                return False
+        except Exception as exc:
+            atomic_write_json(root / HEARTBEAT_FILE, {'updated_at':cycle_time.isoformat(),
+                'status':'BLOCKED','step':'integrated_admission','error':type(exc).__name__+': '+str(exc)})
             return False
 
     if snapshot_passed and 'TIME_AUTHORITY_DEFERRED:' in snapshot_output:
@@ -250,6 +270,9 @@ def run_pipeline(root: Path, verbose: bool, force_full: bool = False, no_telegra
     safe_observe(root, 'capture', audit_cycle)
     h1_marker = last_closed_bar_marker(root / CACHED_RAW_DIR / "H1.csv")
     run_heavy, reason = heavy_recalculation_required(root, h1_marker, force=force_full)
+    if integrated:
+        run_heavy = False
+        reason = "admitted core already evaluated"
     if run_heavy:
         print(f"HEAVY_LAYER: RUN | reason={reason}")
         for script_name in HEAVY_PIPELINE:
@@ -266,6 +289,15 @@ def run_pipeline(root: Path, verbose: bool, force_full: bool = False, no_telegra
         print(f"HEAVY_LAYER: SKIPPED | reason={reason}")
 
     for script_name in LIGHT_PIPELINE:
+        if integrated and script_name in {'session_context.py', 'level_state.py'}:
+            continue  # Produced from admitted bars; do not re-read legacy UTC cache.
+        if integrated and script_name == 'telegram_notifier.py' and not no_telegram and load_json_file(root/'data/notifications/GOLD_pro.json').get('should_send'):
+            from time_ingestion import refresh_delivery_clock
+            try:
+                refresh_delivery_clock(root)
+            except Exception as exc:
+                atomic_write_json(root / HEARTBEAT_FILE, {'status':'BLOCKED','step':'delivery_clock','error':type(exc).__name__})
+                return False
         if no_telegram and script_name == 'telegram_notifier.py':
             print('TELEGRAM: DISABLED FOR CONTROLLED CHECK')
             continue
@@ -277,7 +309,16 @@ def run_pipeline(root: Path, verbose: bool, force_full: bool = False, no_telegra
         audit_stage = {'scenario_state.py':'scenario', 'alert_policy.py':'policy',
                        'notification_builder.py':'notification', 'telegram_notifier.py':'delivery'}.get(script_name)
         if audit_stage:
-            safe_observe(root, audit_stage, audit_cycle)
+            observed = safe_observe(root, audit_stage, audit_cycle)
+            if integrated and (not observed or observed.get('error_type')):
+                atomic_write_json(root / HEARTBEAT_FILE, {'status':'BLOCKED','step':'cdr_'+audit_stage})
+                return False
+            if integrated and audit_stage == 'notification':
+                admission = load_json_file(root/'data/admission/latest.json')
+                notification = load_json_file(root/'data/notifications/GOLD_pro.json')
+                admission['transport_authorized'] = bool(notification.get('should_send'))
+                admission['completed_cycle_id'] = audit_cycle
+                atomic_write_json(root/'data/admission/latest.json',admission)
     print("RADAR_CYCLE: PASSED")
     atomic_write_json(root / HEARTBEAT_FILE, {"updated_at": cycle_time.isoformat(), "status": "passed", "mode": "live"})
     return True
@@ -379,6 +420,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def retryable_observation_gap(heartbeat):
+    """Only missing tick progression is a recoverable observation gap, not proof."""
+    return (heartbeat.get('status') == 'BLOCKED'
+            and heartbeat.get('step') == 'integrated_admission'
+            and heartbeat.get('error') == 'ValueError: FRESH_TICKS_REQUIRED')
+
+
 def main() -> int:
     configure_console_utf8()
     args = parse_args()
@@ -404,6 +452,16 @@ def main() -> int:
                 waiting_reported = False
                 cycle_started = time.monotonic()
                 passed = run_pipeline(root, args.verbose, force_full=args.full, no_telegram=args.no_telegram)
+                heartbeat = load_json_file(root / HEARTBEAT_FILE)
+                if heartbeat.get('status') == 'BLOCKED':
+                    if not args.once and retryable_observation_gap(heartbeat):
+                        atomic_write_json(root / HEARTBEAT_FILE, dict(heartbeat,
+                            status='WAITING_FOR_FRESH_TICKS', retry_after_seconds=max(60,interval)))
+                        print('RADAR_WAITING: fresh ticks unavailable; analysis/transport skipped; retry in at least 60 seconds', flush=True)
+                        time.sleep(max(60,interval))
+                        continue
+                    print('RUN_RADAR: BLOCKED — no automatic retry or transport')
+                    return 2
                 if passed and load_json_file(root / HEARTBEAT_FILE).get('status')!='DEFERRED':
                     payload = load_scenario(root)
                     signature = scenario_signature(payload)
